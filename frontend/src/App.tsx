@@ -4,6 +4,10 @@ import LoginPage from './features/auth/LoginPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import DashboardPage from './features/dashboard/DashboardPage';
 import ProfilePage from "./features/profile/ProfilePage.tsx";
+import BloodHome from "./features/blood/BloodHome.tsx";
+import RequestBlood from "./features/blood/RequestBlood.tsx";
+import BloodFeed from "./features/blood/BloodFeed.tsx";
+import DonorRegistration from "./features/blood/DonorRegistration.tsx";
 
 function App() {
     return (
@@ -16,6 +20,10 @@ function App() {
                 <Route element={<DashboardLayout />}>
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/profile" element={<ProfilePage/>} />
+                    <Route path="/blood" element={<BloodHome />} />
+                    <Route path="/blood/request" element={<RequestBlood />} />
+                    <Route path="/blood/feed" element={<BloodFeed />} />
+                    <Route path="/blood/register" element={<DonorRegistration />} />
                 </Route>
             </Routes>
         </BrowserRouter>

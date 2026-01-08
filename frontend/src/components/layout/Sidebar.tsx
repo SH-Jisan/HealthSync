@@ -42,10 +42,25 @@ export default function Sidebar({ onClose } : {onClose?: () => void}) {
     };
 
     const menuItems = [
-        { name: 'Dashboard', icon: <SquaresFour size={24} />, path: '/dashboard' },
-        { name: 'Blood Bank', icon: <Drop size={24} color="#EF4444" />, path: '/blood-bank' }, // Red color for blood
-        { name: 'About App', icon: <Info size={24} color="#60A5FA" />, path: '/about' },
-        { name: 'Profile', icon: <User size={24} />, path: '/profile' },
+        {
+            name: 'Dashboard',
+            icon: <SquaresFour size={24} />,
+            path: '/dashboard'
+        },
+        {
+            name: 'Blood Bank',
+            icon: <Drop size={24} color="#EF4444" />,
+            path: '/blood'
+        }, // Red color for blood
+        {
+            name: 'About App',
+            icon: <Info size={24} color="#60A5FA" />,
+            path: '/about' },
+        {
+            name: 'Profile',
+            icon: <User size={24} />,
+            path: '/profile'
+        },
     ];
 
     return (
