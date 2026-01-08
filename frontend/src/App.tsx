@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './features/auth/LoginPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import DashboardPage from './features/dashboard/DashboardPage';
+import ProfilePage from "./features/profile/ProfilePage.tsx";
 
 function App() {
     return (
@@ -14,7 +15,7 @@ function App() {
                 {/* প্রোটেক্টেড রুট (Sidebar সহ) */}
                 <Route element={<DashboardLayout />}>
                     <Route path="/dashboard" element={<DashboardPage />} />
-                    {/* ভবিষ্যতে এখানে /profile, /blood-bank ইত্যাদি আসবে */}
+                    <Route path="/profile" element={<ProfilePage/>} />
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -4,12 +4,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import {
-    SquaresFour, // Dashboard Icon
-    Drop,        // Blood Icon
-    Info,        // About Icon
-    Moon,        // Dark Mode Icon
-    Sun,         // Light Mode Icon
-    SignOut      // Logout Icon
+    SquaresFour,      // Dashboard Icon
+    Drop,            // Blood Icon
+    Info,           // About Icon
+    Moon,          // Dark Mode Icon
+    Sun,          // Light Mode Icon
+    SignOut,     // Logout Icon
+    User,       // User Icon
 } from 'phosphor-react';
 import styles from './Sidebar.module.css'; // আমরা নিচে CSS ফাইল বানাবো
 
@@ -44,6 +45,7 @@ export default function Sidebar({ onClose } : {onClose?: () => void}) {
         { name: 'Dashboard', icon: <SquaresFour size={24} />, path: '/dashboard' },
         { name: 'Blood Bank', icon: <Drop size={24} color="#EF4444" />, path: '/blood-bank' }, // Red color for blood
         { name: 'About App', icon: <Info size={24} color="#60A5FA" />, path: '/about' },
+        { name: 'Profile', icon: <User size={24} />, path: '/profile' },
     ];
 
     return (
