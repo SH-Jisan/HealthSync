@@ -38,3 +38,20 @@ export interface DonorProfile {
         phone: string;
     };
 }
+
+export interface Doctor {
+    id: string;
+    full_name: string;
+    specialty?: string;
+    phone?: string;
+    avatar_url?: string;
+}
+
+export interface Appointment {
+    id: string;
+    doctor_id: string;
+    patient_id: string;
+    appointment_date: string;
+    status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+    reason?: string;
+}

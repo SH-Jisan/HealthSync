@@ -8,6 +8,7 @@ import BloodHome from "./features/blood/BloodHome.tsx";
 import RequestBlood from "./features/blood/RequestBlood.tsx";
 import BloodFeed from "./features/blood/BloodFeed.tsx";
 import DonorRegistration from "./features/blood/DonorRegistration.tsx";
+import DoctorList from "./features/doctors/DoctorList.tsx";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/blood/request" element={<RequestBlood />} />
                     <Route path="/blood/feed" element={<BloodFeed />} />
                     <Route path="/blood/register" element={<DonorRegistration />} />
+                    <Route path="/doctors" element={<DoctorList />} />
                 </Route>
             </Routes>
         </BrowserRouter>

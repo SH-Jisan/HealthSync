@@ -11,6 +11,7 @@ import {
     Sun,          // Light Mode Icon
     SignOut,     // Logout Icon
     User,       // User Icon
+    FirstAid,  // Doctor Icon
 } from 'phosphor-react';
 import styles from './Sidebar.module.css'; // আমরা নিচে CSS ফাইল বানাবো
 
@@ -60,6 +61,11 @@ export default function Sidebar({ onClose } : {onClose?: () => void}) {
             name: 'Profile',
             icon: <User size={24} />,
             path: '/profile'
+        },
+        {
+            name: 'Find Doctors',
+            icon: <FirstAid size={24} />,
+            path: '/doctors'
         },
     ];
 
