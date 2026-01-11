@@ -3,9 +3,12 @@ import { FileText, Heartbeat, Plus } from 'phosphor-react';
 import TimelineView from '../timeline/TimelineView';
 import HealthPlanView from '../health-plan/HealthPlanView';
 import UploadModal from '../upload/UploadModal';
+import { Robot } from 'phosphor-react';
+import AIDoctor from "../../features/ai-doctor/AIDoctor.tsx";
+
 
 export default function CitizenHome() {
-    const [activeTab, setActiveTab] = useState<'timeline' | 'plan'>('timeline');
+    const [activeTab, setActiveTab] = useState<'timeline' | 'plan' | 'ai'>('timeline');
     const [showUpload, setShowUpload] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0); // টাইমলাইন রিফ্রেশ করার জন্য
 
@@ -102,16 +105,26 @@ export default function CitizenHome() {
                     <Heartbeat size={22} weight={activeTab === 'plan' ? 'fill' : 'regular'} />
                     Health Plan
                 </button>
+                <button
+                    onClick={() => setActiveTab('ai')}
+                    style={{
+                        display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 0', background: 'none', border: 'none',
+                        borderBottom: activeTab === 'ai' ? '3px solid var(--primary)' : '3px solid transparent',
+                        color: activeTab === 'ai' ? 'var(--primary)' : 'var(--text-secondary)',
+                        fontWeight: activeTab === 'ai' ? '600' : '500', cursor: 'pointer', fontSize: '1rem',
+                        marginBottom: '-2px', transition: 'color 0.2s'
+                    }}
+                >
+                    <Robot size={22} weight={activeTab === 'ai' ? 'fill' : 'regular'} />
+                    AI Doctor
+                </button>
             </div>
 
             {/* Tab Content Area */}
             <div style={{ minHeight: '400px', animation: 'fadeIn 0.3s ease-in' }}>
-                {activeTab === 'timeline' ? (
-                    // key পরিবর্তন করলে কম্পোনেন্ট রিলোড হবে (নতুন আপলোডের পর)
-                    <TimelineView key={refreshKey} />
-                ) : (
-                    <HealthPlanView />
-                )}
+                {activeTab === 'timeline' && <TimelineView key={refreshKey} />}
+                {activeTab === 'plan' && <HealthPlanView />}
+                {activeTab === 'ai' && <AIDoctor />}
             </div>
 
             {/* Upload Modal Popup */}
