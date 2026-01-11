@@ -1,0 +1,142 @@
+{
+  "translation": {
+    "common": {
+      "loading": "Loading...",
+      "processing": "Processing...",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "delete": "Delete",
+      "edit": "Edit",
+      "view": "View",
+      "back": "Back",
+      "search": "Search",
+      "filter": "Filter",
+      "status": "Status",
+      "date": "Date",
+      "success": "Success",
+      "error": "Error",
+      "logout": "Log Out",
+      "confirm_logout": "Are you sure you want to logout?",
+      "call": "Call Now",
+      "location": "Location",
+      "switch_lang": "বাংলায় দেখুন"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "profile": "My Profile",
+      "blood_bank": "Blood Bank",
+      "doctors": "Find Doctors",
+      "notifications": "Updates",
+      "settings": "Settings"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled",
+      "COMPLETED": "Completed",
+      "FULFILLED": "Fulfilled"
+    },
+    "dashboard": {
+      "welcome": "Welcome Back!",
+      "overview": "Here is your health overview.",
+      "add_report": "Add Report",
+      "timeline": "Medical History",
+      "health_plan": "Health Plan",
+      "ai_doctor": "AI Doctor",
+      "upload_title": "Upload Medical Report",
+      "upload_desc": "Upload prescriptions or test reports for AI analysis.",
+      "drag_drop": "Drag & drop files here, or click to select"
+    },
+    "doctor_list": {
+      "title": "Find a Specialist",
+      "subtitle": "Book appointments with top doctors.",
+      "filter_by": "Filtered by:",
+      "no_doctors": "No doctors found.",
+      "view_all": "View All Doctors",
+      "book_btn": "Book Appointment",
+      "tabs": {
+        "app_doctors": "HealthSync Doctors",
+        "google_doctors": "From Google"
+      },
+      "specialties": {
+        "All": "All",
+        "Cardiology": "Cardiology",
+        "General Medicine": "General Medicine",
+        "Neurology": "Neurology",
+        "Pediatrics": "Pediatrics",
+        "Dermatology": "Dermatology",
+        "Orthopedics": "Orthopedics",
+        "Gynecology": "Gynecology"
+      }
+    },
+    "ai_doctor": {
+      "title": "AI Health Assistant",
+      "subtitle": "Describe your symptoms, and AI will suggest the next steps.",
+      "placeholder": "e.g. I have severe chest pain on the left side and sweating...",
+      "consult_btn": "Consult AI Doctor",
+      "analyzing": "Analyzing...",
+      "result_title": "AI Analysis Result",
+      "urgency": "URGENCY",
+      "causes": "Potential Causes:",
+      "advice": "Immediate Advice",
+      "rec_specialist": "Recommended Specialist:",
+      "find_btn": "Find Specialist",
+      "search_google": "Search Google"
+    },
+    "blood": {
+      "title": "Blood Bank",
+      "tabs": {
+        "request": "Request Blood",
+        "feed": "Live Feed",
+        "search": "Find Donors",
+        "my_requests": "My Requests",
+        "register": "Become Donor"
+      },
+      "form": {
+        "select_group": "Select Blood Group",
+        "bags": "Number of Bags",
+        "hospital": "Hospital Name",
+        "phone": "Contact Phone",
+        "location": "Location / District",
+        "reason": "Reason (Optional)",
+        "urgency": "Is it Critical?",
+        "submit_req": "Post Request"
+      },
+      "donor_search": {
+        "title": "Find Blood Donors",
+        "no_donor": "No donors found in this area."
+      }
+    },
+    "appointments": {
+      "title": "My Care History",
+      "tabs": {
+        "appt": "Appointments",
+        "rx": "Prescriptions",
+        "diag": "Diagnostic",
+        "hosp": "Hospitals"
+      },
+      "no_data": "No records found.",
+      "reason": "Reason"
+    },
+    "profile": {
+      "title": "My Profile",
+      "role": "Role",
+      "personal": "Personal Information",
+      "professional": "Professional Info",
+      "activity": "Activity & Settings",
+      "edit": "Edit Profile",
+      "fields": {
+        "full_name": "Full Name",
+        "phone": "Phone",
+        "email": "Email",
+        "blood": "Blood Group",
+        "district": "District",
+        "specialty": "Specialty",
+        "degree": "Degrees",
+        "fees": "Consultation Fee",
+        "about": "About"
+      }
+    }
+  }
+}

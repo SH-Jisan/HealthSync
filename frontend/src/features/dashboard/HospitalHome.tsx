@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import HospitalOverview from './hospital/HospitalOverview';
 import HospitalDoctors from './hospital/HospitalDoctors';
-import HospitalPatients from './hospital/HospitalPatients'; // <--- Import
+import HospitalPatients from './hospital/HospitalPatients';
+import HospitalBloodBank from "./hospital/HospitalBloodBank.tsx"; // <--- Import
 
 export default function HospitalHome() {
-    const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients'>('overview'); // <--- Updated State Type
+    const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients' | 'blood'>('overview'); // <--- Updated State Type
 
     return (
         <div>
@@ -30,12 +31,19 @@ export default function HospitalHome() {
                 >
                     Patients
                 </button>
+                <button
+                    onClick={() => setActiveTab('blood')}
+                    style={getTabStyle(activeTab === 'blood')}
+                >
+                    Blood Bank
+                </button>
             </div>
 
             {/* Tab Content */}
             {activeTab === 'overview' && <HospitalOverview />}
             {activeTab === 'doctors' && <HospitalDoctors />}
             {activeTab === 'patients' && <HospitalPatients />}
+            {activeTab === 'blood' && <HospitalBloodBank />}
         </div>
     );
 }
