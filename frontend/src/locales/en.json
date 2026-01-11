@@ -24,7 +24,8 @@
       "health_sync": "HealthSync",
       "login": "Login",
       "light_mode": "Light Mode",
-      "dark_mode": "Dark Mode"
+      "dark_mode": "Dark Mode",
+      "unknown": "Unknown"
     },
     "landing": {
       "hero_title": "Your Personal <1>AI Health</1> Assistant",
@@ -396,10 +397,11 @@
       "no_history_user": "Upload your first report to start tracking."
     },
     "severity": {
-      "HIGH": "HIGH",
-      "MEDIUM": "MEDIUM",
-      "LOW": "LOW",
-      "NORMAL": "NORMAL"
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low",
+      "NORMAL": "Normal",
+      "UNKNOWN": "Unknown"
     }
   }
 }

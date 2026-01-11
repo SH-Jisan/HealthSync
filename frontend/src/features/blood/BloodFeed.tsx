@@ -5,10 +5,10 @@ import { supabase } from '../../lib/supabaseClient';
 // Fixed TS1484: Added 'type' keyword
 import type { BloodRequest } from '../../types';
 import { Drop, Clock, Warning } from 'phosphor-react'; // Removed unused 'MapPin'
-import { formatDistanceToNow } from 'date-fns';
+import { bn } from 'date-fns/locale';
 
 export default function BloodFeed() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [requests, setRequests] = useState<BloodRequest[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -78,7 +78,7 @@ export default function BloodFeed() {
                         borderLeft: req.urgency === 'CRITICAL' ? '5px solid red' : '5px solid var(--border)',
                         boxShadow: 'var(--shadow-sm)'
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                             <div style={{ display: 'flex', gap: '1rem' }}>
                                 <div style={{
                                     background: req.urgency === 'CRITICAL' ? '#EF4444' : '#FCA5A5',
@@ -95,7 +95,10 @@ export default function BloodFeed() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                                         <Clock size={16} />
                                         {/* Ensure valid date for date-fns */}
-                                        {req.created_at && formatDistanceToNow(new Date(req.created_at))} ago
+                                        {req.created_at && formatDistanceToNow(new Date(req.created_at), {
+                                            addSuffix: true,
+                                            locale: i18n.language === 'bn' ? bn : undefined
+                                        })}
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +114,7 @@ export default function BloodFeed() {
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem' }}>
                             <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                {t('blood.feed.requested_by')} <strong>{req.profiles?.full_name || 'Unknown'}</strong>
+                                {t('blood.feed.requested_by')} <strong>{req.profiles?.full_name || t('common.unknown')}</strong>
                             </div>
                             <button
                                 onClick={() => handleDonate(req)}

@@ -114,7 +114,7 @@ export default function AIDoctor() {
                             background: 'white', color: getUrgencyColor(result.urgency).text,
                             padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem'
                         }}>
-                            {result.urgency} {t('ai_doctor.urgency')}
+                            {t(`severity.${result.urgency}`)} {t('ai_doctor.urgency')}
                         </span>
                     </div>
 
