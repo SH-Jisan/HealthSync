@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { MagnifyingGlass, Phone, MapPin } from 'phosphor-react'; // Fix: Removed 'User'
 
@@ -15,6 +16,7 @@ interface Donor {
 }
 
 export default function DonorSearch() {
+    const { t } = useTranslation();
     const [bloodGroup, setBloodGroup] = useState('A+');
     const [district, setDistrict] = useState('');
     const [donors, setDonors] = useState<Donor[]>([]);
@@ -54,7 +56,7 @@ export default function DonorSearch() {
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <MagnifyingGlass size={32} /> Find Blood Donors
+                <MagnifyingGlass size={32} /> {t('blood.search.title')}
             </h2>
 
             {/* Search Bar */}
@@ -66,7 +68,7 @@ export default function DonorSearch() {
                 }}
             >
                 <div style={{ flex: 1, minWidth: '120px' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>Blood Group</label>
+                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.request.group_label')}</label>
                     <select
                         value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}
                         style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}
@@ -76,10 +78,10 @@ export default function DonorSearch() {
                 </div>
 
                 <div style={{ flex: 2, minWidth: '200px' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>District / City</label>
+                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.search.district_label')}</label>
                     <input
                         type="text"
-                        placeholder="e.g. Dhaka"
+                        placeholder={t('blood.search.district_placeholder')}
                         value={district} onChange={(e) => setDistrict(e.target.value)}
                         style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
                     />
@@ -94,7 +96,7 @@ export default function DonorSearch() {
                             border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', height: '42px'
                         }}
                     >
-                        {loading ? 'Searching...' : 'Search'}
+                        {loading ? t('blood.search.searching') : t('blood.search.search_btn')}
                     </button>
                 </div>
             </form>
@@ -102,7 +104,7 @@ export default function DonorSearch() {
             {/* Results */}
             {hasSearched && donors.length === 0 && !loading ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
-                    No available donors found for this criteria.
+                    {t('blood.search.no_donors')}
                 </div>
             ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
@@ -138,7 +140,7 @@ export default function DonorSearch() {
                                         padding: '10px', borderRadius: '8px', fontWeight: 'bold'
                                     }}
                                 >
-                                    <Phone size={20} weight="fill" /> Call Now
+                                    <Phone size={20} weight="fill" /> {t('blood.search.call')}
                                 </a>
                             </div>
                         </div>

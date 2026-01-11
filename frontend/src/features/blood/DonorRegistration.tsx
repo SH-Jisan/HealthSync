@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 
 export default function DonorRegistration() {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
@@ -59,27 +61,27 @@ export default function DonorRegistration() {
                 await supabase.from('blood_donors').insert(donorData);
             }
 
-            alert('Donor Profile Updated Successfully! 🎉');
+            alert(t('blood.register.success'));
         } catch (err) {
             console.error(err);
-            alert('Failed to save.');
+            alert(t('blood.register.fail'));
         } finally {
             setSaving(false);
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div>{t('common.loading')}</div>;
 
     return (
         <div style={{ maxWidth: '500px', margin: '0 auto' }}>
             <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>
-                {isAlreadyDonor ? 'Manage Donor Profile' : 'Register as Donor'}
+                {isAlreadyDonor ? t('blood.register.title_update') : t('blood.register.title_register')}
             </h2>
 
             <form onSubmit={handleSave} style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
 
                 <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '5px' }}>Blood Group</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>{t('blood.request.group_label')}</label>
                     <select
                         value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}
                         style={{ width: '100%', padding: '10px', borderRadius: '8px' }}
@@ -89,7 +91,7 @@ export default function DonorRegistration() {
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '5px' }}>District / City</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>{t('blood.search.district_label')}</label>
                     <input
                         type="text" required value={district} onChange={(e) => setDistrict(e.target.value)}
                         style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
@@ -97,7 +99,7 @@ export default function DonorRegistration() {
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '5px' }}>Phone Number</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>{t('blood.register.phone_label')}</label>
                     <input
                         type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
                         style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
@@ -109,14 +111,14 @@ export default function DonorRegistration() {
                         type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)}
                         style={{ width: '20px', height: '20px' }}
                     />
-                    <label>I am available to donate blood now.</label>
+                    <label>{t('blood.register.available_label')}</label>
                 </div>
 
                 <button
                     type="submit" disabled={saving}
                     style={{ width: '100%', padding: '12px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
                 >
-                    {saving ? 'Saving...' : (isAlreadyDonor ? 'Update Profile' : 'Register Now')}
+                    {saving ? t('blood.register.saving') : (isAlreadyDonor ? t('blood.register.update_btn') : t('blood.register.register_btn'))}
                 </button>
             </form>
         </div>

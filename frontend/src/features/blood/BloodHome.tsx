@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
     Drop,
     MagnifyingGlass,
@@ -10,39 +11,40 @@ import styles from './BloodHome.module.css';
 
 export default function BloodHome() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const options = [
         {
-            title: 'Request Blood',
-            desc: 'Post a request to find donors nearby.',
+            title: t('blood.options.request'),
+            desc: t('blood.options.request_desc'),
             icon: <Megaphone color="#EF4444" weight="fill" />,
             bg: '#FEF2F2',
             path: '/blood/request'
         },
         {
-            title: 'Live Requests Feed',
-            desc: 'See who needs help right now.',
+            title: t('blood.options.feed'),
+            desc: t('blood.options.feed_desc'),
             icon: <Drop color="#F97316" weight="fill" />,
             bg: '#FFF7ED',
             path: '/blood/feed'
         },
         {
-            title: 'My Requests', // <--- Added this
-            desc: 'Manage requests you posted.',
+            title: t('blood.options.my_requests'),
+            desc: t('blood.options.my_requests_desc'),
             icon: <ListBullets color="#8B5CF6" weight="bold" />,
             bg: '#F3E8FF',
             path: '/blood/my-requests'
         },
         {
-            title: 'Become a Donor',
-            desc: 'Register yourself to save lives.',
+            title: t('blood.options.register'),
+            desc: t('blood.options.register_desc'),
             icon: <UserPlus color="#10B981" weight="fill" />,
             bg: '#ECFDF5',
             path: '/blood/register'
         },
         {
-            title: 'Find Donors',
-            desc: 'Search donors by group & location.',
+            title: t('blood.options.search'),
+            desc: t('blood.options.search_desc'),
             icon: <MagnifyingGlass color="#3B82F6" weight="bold" />,
             bg: '#EFF6FF',
             path: '/blood/search' // (Optional: Implement later)
@@ -52,9 +54,9 @@ export default function BloodHome() {
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                <h1 style={{ color: 'var(--primary)', fontSize: '2.5rem' }}>Blood Bank</h1>
+                <h1 style={{ color: 'var(--primary)', fontSize: '2.5rem' }}>{t('blood.title')}</h1>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-                    Connect, donate, and save lives. Every drop counts.
+                    {t('blood.subtitle')}
                 </p>
             </div>
 

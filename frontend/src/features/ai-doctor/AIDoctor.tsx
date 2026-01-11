@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { Robot, Warning, FirstAid, Heartbeat, MagnifyingGlass } from 'phosphor-react';
 
@@ -22,6 +23,7 @@ interface AIResponse {
 }
 
 export default function AIDoctor() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [symptoms, setSymptoms] = useState('');
     const [loading, setLoading] = useState(false);
@@ -40,7 +42,7 @@ export default function AIDoctor() {
             if (error) throw error;
             setResult(data);
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : 'Analysis failed. Please try again.';
+            const message = err instanceof Error ? err.message : t('ai_doctor.error_fail');
             alert(message);
         } finally {
             setLoading(false);
@@ -67,19 +69,19 @@ export default function AIDoctor() {
                 }}>
                     <Robot size={32} color="white" />
                 </div>
-                <h1 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>AI Health Assistant</h1>
-                <p style={{ color: 'var(--text-secondary)' }}>Describe your symptoms, and AI will suggest the next steps.</p>
+                <h1 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>{t('ai_doctor.title')}</h1>
+                <p style={{ color: 'var(--text-secondary)' }}>{t('ai_doctor.subtitle')}</p>
             </div>
 
             {/* Input Section */}
             <div style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
-        <textarea
-            rows={4}
-            placeholder="e.g. I have severe chest pain on the left side and sweating..."
-            value={symptoms}
-            onChange={(e) => setSymptoms(e.target.value)}
-            style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #ccc', fontSize: '1rem', marginBottom: '1rem', fontFamily: 'inherit' }}
-        />
+                <textarea
+                    rows={4}
+                    placeholder={t('ai_doctor.placeholder')}
+                    value={symptoms}
+                    onChange={(e) => setSymptoms(e.target.value)}
+                    style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #ccc', fontSize: '1rem', marginBottom: '1rem', fontFamily: 'inherit' }}
+                />
                 <button
                     onClick={handleConsult}
                     disabled={loading || !symptoms}
@@ -89,7 +91,7 @@ export default function AIDoctor() {
                         cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
                     }}
                 >
-                    {loading ? 'Analyzing...' : <><Heartbeat size={24} /> Consult AI Doctor</>}
+                    {loading ? t('ai_doctor.analyzing') : <><Heartbeat size={24} /> {t('ai_doctor.consult_btn')}</>}
                 </button>
             </div>
 
@@ -112,15 +114,15 @@ export default function AIDoctor() {
                             background: 'white', color: getUrgencyColor(result.urgency).text,
                             padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem'
                         }}>
-                {result.urgency} URGENCY
-            </span>
+                            {result.urgency} {t('ai_doctor.urgency')}
+                        </span>
                     </div>
 
                     <div style={{ padding: '2rem' }}>
 
                         {/* Causes */}
                         <div style={{ marginBottom: '1.5rem' }}>
-                            <h4 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Potential Causes:</h4>
+                            <h4 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>{t('ai_doctor.causes')}</h4>
                             <ul style={{ paddingLeft: '20px', margin: 0 }}>
                                 {result.potential_causes.map((cause, idx) => (
                                     <li key={idx} style={{ marginBottom: '5px', color: 'var(--text-primary)' }}>{cause}</li>
@@ -131,14 +133,14 @@ export default function AIDoctor() {
                         {/* Advice */}
                         <div style={{ marginBottom: '2rem', background: '#F8FAFC', padding: '1rem', borderRadius: '12px', borderLeft: '4px solid var(--primary)' }}>
                             <h4 style={{ color: 'var(--primary)', margin: '0 0 5px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <FirstAid size={20} /> Immediate Advice
+                                <FirstAid size={20} /> {t('ai_doctor.advice')}
                             </h4>
                             <p style={{ margin: 0, fontStyle: 'italic', color: '#475569' }}>"{result.advice}"</p>
                         </div>
 
                         {/* Action Button */}
                         <div style={{ textAlign: 'center' }}>
-                            <p style={{ marginBottom: '10px', color: 'var(--text-secondary)' }}>Recommended Specialist: <strong>{result.specialty}</strong></p>
+                            <p style={{ marginBottom: '10px', color: 'var(--text-secondary)' }}>{t('ai_doctor.rec_specialist')} <strong>{result.specialty}</strong></p>
 
                             <button
                                 onClick={() => navigate(`/doctors?specialty=${result.specialty}`, {
@@ -152,7 +154,7 @@ export default function AIDoctor() {
                                 }}
                             >
                                 <MagnifyingGlass size={20} weight="bold" />
-                                Find {result.specialty} Specialist
+                                {t('ai_doctor.find_specialist', { specialty: result.specialty })}
                             </button>
                         </div>
 

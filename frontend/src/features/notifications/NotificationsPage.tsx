@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { Bell, CheckCircle, Info, Warning, Trash } from 'phosphor-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -13,6 +14,7 @@ interface Notification {
 }
 
 export default function NotificationsPage() {
+    const { t } = useTranslation();
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -58,19 +60,19 @@ export default function NotificationsPage() {
         }
     };
 
-    if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading Updates...</div>;
+    if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>{t('notifications.loading')}</div>;
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
                 <Bell size={32} color="var(--primary)" weight="fill" />
-                <h2 style={{ color: 'var(--primary)', margin: 0 }}>Notifications</h2>
+                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('notifications.title')}</h2>
             </div>
 
             {notifications.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '3rem', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)' }}>
                     <Bell size={48} color="var(--text-secondary)" style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                    <p style={{ color: 'var(--text-secondary)' }}>You have no new notifications.</p>
+                    <p style={{ color: 'var(--text-secondary)' }}>{t('notifications.no_notifications')}</p>
                 </div>
             ) : (
                 <div style={{ display: 'grid', gap: '1rem' }}>
@@ -88,8 +90,8 @@ export default function NotificationsPage() {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
                                     <h4 style={{ margin: 0, fontSize: '1.05rem' }}>{notif.title}</h4>
                                     <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    {formatDistanceToNow(new Date(notif.created_at))} ago
-                  </span>
+                                        {formatDistanceToNow(new Date(notif.created_at))} ago
+                                    </span>
                                 </div>
                                 <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.5' }}>{notif.message}</p>
                             </div>
@@ -97,7 +99,7 @@ export default function NotificationsPage() {
                             <button
                                 onClick={() => deleteNotification(notif.id)}
                                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}
-                                title="Delete"
+                                title={t('notifications.delete_tooltip')}
                             >
                                 <Trash size={18} />
                             </button>

@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useLanguage } from '../../context/LanguageContext';
 import { supabase } from '../../lib/supabaseClient';
 import {
     Sun,
@@ -14,15 +13,15 @@ import {
     SignOut,
     FirstAid,
     SquaresFour,
-    Translate,
 } from 'phosphor-react';
 import styles from './Sidebar.module.css';
+import LanguageSwitcher from '../common/LanguageSwitcher';
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
     const navigate = useNavigate();
     const location = useLocation();
-    const { t, i18n } = useTranslation();
-    const { changeLanguage } = useLanguage(); // 🔥 Context-based language switch
+
+    const { t } = useTranslation();
 
     const [user, setUser] = useState<any>(null);
     const [isDark, setIsDark] = useState(false);
@@ -39,11 +38,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         document.body.classList.toggle('dark-theme', next);
     };
 
-    // 🌐 Language Toggle (Context-driven)
-    const toggleLanguage = () => {
-        const newLang = i18n.language === 'en' ? 'bn' : 'en';
-        changeLanguage(newLang); // 🔥 single source of truth
-    };
+
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -76,9 +71,8 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                 {menuItems.map((item) => (
                     <div
                         key={item.key}
-                        className={`${styles.navItem} ${
-                            location.pathname === item.path ? styles.active : ''
-                        }`}
+                        className={`${styles.navItem} ${location.pathname === item.path ? styles.active : ''
+                            }`}
                         onClick={() => {
                             navigate(item.path);
                             if (onClose) onClose();
@@ -111,26 +105,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
 
             {/* 🌐 Language Switcher */}
             <div style={{ padding: '1rem', borderTop: '1px solid var(--border)' }}>
-                <button
-                    onClick={toggleLanguage}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        width: '100%',
-                        padding: '10px',
-                        background: 'var(--surface)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        color: 'var(--text-primary)',
-                    }}
-                >
-                    <Translate size={24} color="var(--primary)" />
-                    <span style={{ fontWeight: 600 }}>
-            {t('common.switch_lang')}
-          </span>
-                </button>
+                <LanguageSwitcher style={{ width: '100%' }} />
             </div>
 
             {/* Logout */}

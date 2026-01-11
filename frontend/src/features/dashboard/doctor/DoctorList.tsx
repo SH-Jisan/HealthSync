@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom'; // Import useLocation
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient';
 import type { Doctor } from '../../../types';
 import { FirstAid, MagnifyingGlass, User, Globe, MapPin, Star } from 'phosphor-react';
@@ -15,6 +16,7 @@ interface InternetDoctor {
 }
 
 export default function DoctorList() {
+    const { t } = useTranslation();
     // 1. Get URL params & Location State
     const [searchParams] = useSearchParams();
     const { state } = useLocation(); // Data passed from AI Doctor
@@ -59,15 +61,15 @@ export default function DoctorList() {
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                <h1 style={{ color: 'var(--primary)' }}>Find a Specialist</h1>
-                <p style={{ color: 'var(--text-secondary)' }}>Book appointments with top doctors.</p>
+                <h1 style={{ color: 'var(--primary)' }}>{t('doctor_list.title')}</h1>
+                <p style={{ color: 'var(--text-secondary)' }}>{t('doctor_list.subtitle')}</p>
 
                 {selectedSpec !== 'All' && (
                     <div style={{
                         display: 'inline-block', marginTop: '10px', padding: '4px 12px',
                         background: '#E0F2F1', color: 'var(--primary)', borderRadius: '20px', fontSize: '0.9rem'
                     }}>
-                        Filtered by: <strong>{selectedSpec}</strong>
+                        {t('doctor_list.filter_by')} <strong>{selectedSpec}</strong>
                     </div>
                 )}
             </div>
@@ -83,7 +85,7 @@ export default function DoctorList() {
                         fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem'
                     }}
                 >
-                    HealthSync Doctors
+                    {t('doctor_list.tabs.app_doctors')}
                 </button>
                 <button
                     onClick={() => setActiveTab('google')}
@@ -94,7 +96,7 @@ export default function DoctorList() {
                         fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px'
                     }}
                 >
-                    <Globe size={20} /> From Google
+                    <Globe size={20} /> {t('doctor_list.tabs.google_doctors')}
                 </button>
             </div>
 
@@ -116,18 +118,18 @@ export default function DoctorList() {
                                     cursor: 'pointer', fontWeight: 500, transition: 'all 0.2s', textTransform: 'capitalize'
                                 }}
                             >
-                                {spec}
+                                {t(`doctor_list.specialties.${spec}`, spec)}
                             </button>
                         ))}
                     </div>
 
                     {/* App Doctor Grid */}
                     {loading ? (
-                        <div style={{ textAlign: 'center', marginTop: '3rem' }}>Loading Doctors...</div>
+                        <div style={{ textAlign: 'center', marginTop: '3rem' }}>{t('doctor_list.loading')}</div>
                     ) : doctors.length === 0 ? (
                         <div style={{ textAlign: 'center', marginTop: '3rem', color: 'var(--text-secondary)' }}>
                             <MagnifyingGlass size={48} />
-                            <p>No registered doctors found for <strong>"{selectedSpec}"</strong>.</p>
+                            <p>{t('doctor_list.no_results', { spec: selectedSpec })}</p>
                         </div>
                     ) : (
                         <div style={{
@@ -150,7 +152,7 @@ export default function DoctorList() {
                                         background: '#F1F5F9', color: 'var(--text-secondary)', padding: '4px 10px',
                                         borderRadius: '6px', fontSize: '0.85rem', fontWeight: 500
                                     }}>
-                                        {doc.specialty || 'General Physician'}
+                                        {doc.specialty || t('doctor_list.general_physician')}
                                     </span>
                                     <button
                                         onClick={() => setBookingDoctor(doc)}
@@ -161,7 +163,7 @@ export default function DoctorList() {
                                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
                                         }}
                                     >
-                                        <FirstAid size={20} /> Book Appointment
+                                        <FirstAid size={20} /> {t('doctor_list.book_btn')}
                                     </button>
                                 </div>
                             ))}
@@ -176,7 +178,7 @@ export default function DoctorList() {
                     {internetDoctors.length === 0 ? (
                         <div style={{ textAlign: 'center', marginTop: '3rem', color: 'var(--text-secondary)' }}>
                             <Globe size={48} />
-                            <p>No internet results available. Try consulting AI Doctor first.</p>
+                            <p>{t('doctor_list.no_internet')}</p>
                         </div>
                     ) : (
                         <div style={{ display: 'grid', gap: '1rem' }}>
@@ -219,7 +221,7 @@ export default function DoctorList() {
                                             display: 'flex', alignItems: 'center', gap: '8px'
                                         }}
                                     >
-                                        <MapPin size={20} /> View Map
+                                        <MapPin size={20} /> {t('doctor_list.view_map')}
                                     </a>
                                 </div>
                             ))}

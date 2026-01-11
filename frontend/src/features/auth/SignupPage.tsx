@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import {
     User,
@@ -13,6 +14,7 @@ import {
 
 export default function SignupPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
 
     // Form State
@@ -23,10 +25,10 @@ export default function SignupPage() {
     const [role, setRole] = useState('CITIZEN');
 
     const roles = [
-        { value: 'CITIZEN', label: 'Normal User (Citizen)', icon: <User size={20} /> },
-        { value: 'DOCTOR', label: 'Doctor', icon: <Heartbeat size={20} /> }, // <--- Used Heartbeat here
-        { value: 'HOSPITAL', label: 'Hospital', icon: <Buildings size={20} /> },
-        { value: 'DIAGNOSTIC', label: 'Diagnostic Center', icon: <FirstAid size={20} /> },
+        { value: 'CITIZEN', label: t('auth.roles.CITIZEN'), icon: <User size={20} /> },
+        { value: 'DOCTOR', label: t('auth.roles.DOCTOR'), icon: <Heartbeat size={20} /> }, // <--- Used Heartbeat here
+        { value: 'HOSPITAL', label: t('auth.roles.HOSPITAL'), icon: <Buildings size={20} /> },
+        { value: 'DIAGNOSTIC', label: t('auth.roles.DIAGNOSTIC'), icon: <FirstAid size={20} /> },
     ];
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -50,11 +52,11 @@ export default function SignupPage() {
             if (error) throw error;
 
             if (data.user) {
-                alert('Account created successfully! Please check your email to verify.');
+                alert(t('auth.success_msg'));
                 navigate('/login');
             }
         } catch (err: unknown) { // <--- Fix 2: Replaced 'any' with 'unknown'
-            let message = 'Signup failed';
+            let message = t('auth.error_msg');
             if (err instanceof Error) {
                 message = err.message;
             }
@@ -75,15 +77,15 @@ export default function SignupPage() {
                 border: '1px solid var(--border)'
             }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h1 style={{ color: 'var(--primary)', fontSize: '2rem', marginBottom: '0.5rem' }}>Create Account</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Join HealthSync to manage healthcare efficiently.</p>
+                    <h1 style={{ color: 'var(--primary)', fontSize: '2rem', marginBottom: '0.5rem' }}>{t('auth.signup_title')}</h1>
+                    <p style={{ color: 'var(--text-secondary)' }}>{t('auth.signup_subtitle')}</p>
                 </div>
 
                 <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
                     {/* Role Selection */}
                     <div>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>I am a...</label>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>{t('auth.role_label')}</label>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                             {roles.map((r) => (
                                 <div
@@ -110,7 +112,7 @@ export default function SignupPage() {
                     <div style={inputGroupStyle}>
                         <User size={20} color="var(--text-secondary)" />
                         <input
-                            required type="text" placeholder="Full Name / Org Name"
+                            required type="text" placeholder={t('auth.full_name_label')}
                             value={fullName} onChange={e => setFullName(e.target.value)}
                             style={inputStyle}
                         />
@@ -120,7 +122,7 @@ export default function SignupPage() {
                     <div style={inputGroupStyle}>
                         <Phone size={20} color="var(--text-secondary)" />
                         <input
-                            required type="tel" placeholder="Phone Number"
+                            required type="tel" placeholder={t('auth.phone_label')}
                             value={phone} onChange={e => setPhone(e.target.value)}
                             style={inputStyle}
                         />
@@ -130,7 +132,7 @@ export default function SignupPage() {
                     <div style={inputGroupStyle}>
                         <Envelope size={20} color="var(--text-secondary)" />
                         <input
-                            required type="email" placeholder="Email Address"
+                            required type="email" placeholder={t('auth.email_label')}
                             value={email} onChange={e => setEmail(e.target.value)}
                             style={inputStyle}
                         />
@@ -140,7 +142,7 @@ export default function SignupPage() {
                     <div style={inputGroupStyle}>
                         <Lock size={20} color="var(--text-secondary)" />
                         <input
-                            required type="password" placeholder="Password (Min 6 chars)"
+                            required type="password" placeholder={t('auth.password_hint')}
                             value={password} onChange={e => setPassword(e.target.value)}
                             style={inputStyle}
                         />
@@ -154,14 +156,14 @@ export default function SignupPage() {
                             cursor: 'pointer', transition: 'background 0.2s'
                         }}
                     >
-                        {loading ? 'Creating Account...' : 'Sign Up'}
+                        {loading ? t('auth.creating_account') : t('auth.signup_button')}
                     </button>
                 </form>
 
                 <p style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-secondary)' }}>
-                    Already have an account?{' '}
+                    {t('auth.already_have_account')}{' '}
                     <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none' }}>
-                        Log In
+                        {t('auth.login_button')}
                     </Link>
                 </p>
             </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient.ts';
 import { User, UserPlus, ArrowRight } from 'phosphor-react';
 
@@ -17,6 +18,7 @@ interface DoctorPatientRow {
 }
 
 export default function DoctorMyPatients() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [patients, setPatients] = useState<DoctorPatientRow[]>([]);
     const [loading, setLoading] = useState(true);
@@ -83,12 +85,12 @@ export default function DoctorMyPatients() {
         }
     };
 
-    if (loading) return <div>Loading Patients...</div>;
+    if (loading) return <div>{t('dashboard.doctor.patients.loading')}</div>;
 
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ color: 'var(--primary)', margin: 0 }}>Under Treatment</h2>
+                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('dashboard.doctor.patients.title')}</h2>
                 <button
                     onClick={() => setShowAddModal(true)}
                     style={{
@@ -96,13 +98,13 @@ export default function DoctorMyPatients() {
                         color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
                     }}
                 >
-                    <UserPlus size={20} /> Add Patient
+                    <UserPlus size={20} /> {t('dashboard.doctor.patients.add_btn')}
                 </button>
             </div>
 
             {patients.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
-                    No permanent patients added yet.
+                    {t('dashboard.doctor.patients.no_patients')}
                 </div>
             ) : (
                 <div style={{ display: 'grid', gap: '1rem' }}>
@@ -131,7 +133,7 @@ export default function DoctorMyPatients() {
                                     border: '1px solid var(--primary)', color: 'var(--primary)', padding: '6px 12px', borderRadius: '20px', cursor: 'pointer'
                                 }}
                             >
-                                View Profile <ArrowRight />
+                                {t('dashboard.doctor.patients.view_profile')} <ArrowRight />
                             </button>
                         </div>
                     ))}
@@ -141,16 +143,16 @@ export default function DoctorMyPatients() {
             {showAddModal && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
                     <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '400px' }}>
-                        <h3>Add New Patient</h3>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enter patient's email to add them to your list.</p>
+                        <h3>{t('dashboard.doctor.patients.add_modal_title')}</h3>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{t('dashboard.doctor.patients.add_modal_desc')}</p>
                         <input
-                            placeholder="Patient Email"
+                            placeholder={t('dashboard.doctor.patients.email_placeholder')}
                             value={searchEmail} onChange={e => setSearchEmail(e.target.value)}
                             style={{ width: '100%', padding: '10px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ccc' }}
                         />
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowAddModal(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
-                            <button onClick={addNewPatient} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Add</button>
+                            <button onClick={() => setShowAddModal(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.cancel')}</button>
+                            <button onClick={addNewPatient} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('dashboard.doctor.patients.add_action')}</button>
                         </div>
                     </div>
                 </div>

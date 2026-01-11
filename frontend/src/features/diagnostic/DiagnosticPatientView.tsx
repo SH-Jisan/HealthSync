@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
-import { ArrowLeft, CheckCircle, Upload, Plus } from 'phosphor-react'; // Fix: Removed CurrencyDollar
+import { useTranslation } from 'react-i18next';
+import { supabase } from '../../lib/supabaseClient.ts';
+import { ArrowLeft, CheckCircle, Upload, Plus } from 'phosphor-react';
 import UploadModal from '../upload/UploadModal';
 
 interface Patient {
@@ -31,7 +32,7 @@ interface Props {
 }
 
 export default function DiagnosticPatientView({ patient, onBack }: Props) {
-    // Fix: Replaced 'any[]' with proper types
+    const { t } = useTranslation();
     const [orders, setOrders] = useState<Order[]>([]);
     const [availableTests, setAvailableTests] = useState<Test[]>([]);
     const [showNewOrder, setShowNewOrder] = useState(false);
@@ -41,7 +42,6 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
     const [selectedTests, setSelectedTests] = useState<string[]>([]);
     const [totalAmount, setTotalAmount] = useState(0);
 
-    // Fix: Moved functions ABOVE useEffect to prevent "access before declaration" error
     const fetchOrders = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
@@ -68,7 +68,7 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
     }, []);
 
     const handleCreateOrder = async () => {
-        if (selectedTests.length === 0) return alert('Select at least one test');
+        if (selectedTests.length === 0) return alert(t('dashboard.diagnostic.view.alert_select_test'));
 
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
@@ -83,9 +83,9 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
             report_status: 'PENDING'
         });
 
-        if (error) alert('Failed to create order');
+        if (error) alert(t('dashboard.diagnostic.view.alert_fail'));
         else {
-            alert('Order Created!');
+            alert(t('dashboard.diagnostic.view.order_created'));
             setShowNewOrder(false);
             fetchOrders();
             setSelectedTests([]);
@@ -121,7 +121,7 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
                     border: 'none', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold'
                 }}
             >
-                <Plus size={20} /> New Test Order
+                <Plus size={20} /> {t('dashboard.diagnostic.view.new_order_btn')}
             </button>
 
             {/* Orders List */}
@@ -160,12 +160,12 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
                                         cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px'
                                     }}
                                 >
-                                    <Upload size={18} /> Upload Report
+                                    <Upload size={18} /> {t('dashboard.diagnostic.view.upload_report')}
                                 </button>
                             ) : (
                                 <span style={{ color: 'green', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
-                  <CheckCircle size={20} /> Completed
-                </span>
+                                    <CheckCircle size={20} /> {t('dashboard.diagnostic.view.completed')}
+                                </span>
                             )}
                         </div>
                     </div>
@@ -176,7 +176,7 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
             {showNewOrder && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
                     <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '500px', maxHeight: '80vh', overflowY: 'auto' }}>
-                        <h3>Select Tests</h3>
+                        <h3>{t('dashboard.diagnostic.view.select_tests_title')}</h3>
                         <div style={{ maxHeight: '200px', overflowY: 'auto', marginBottom: '1rem', border: '1px solid #eee', padding: '10px' }}>
                             {availableTests.map(test => (
                                 <div key={test.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', borderBottom: '1px solid #f0f0f0' }}>
@@ -201,13 +201,13 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
                         </div>
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', marginBottom: '1rem', fontSize: '1.2rem' }}>
-                            <span>Total:</span>
+                            <span>{t('dashboard.diagnostic.view.total')}</span>
                             <span>৳{totalAmount}</span>
                         </div>
 
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowNewOrder(false)} style={{ flex: 1, padding: '12px', border: '1px solid #ccc', borderRadius: '8px', background: 'white', cursor: 'pointer' }}>Cancel</button>
-                            <button onClick={handleCreateOrder} style={{ flex: 1, padding: '12px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Create Order</button>
+                            <button onClick={() => setShowNewOrder(false)} style={{ flex: 1, padding: '12px', border: '1px solid #ccc', borderRadius: '8px', background: 'white', cursor: 'pointer' }}>{t('common.cancel')}</button>
+                            <button onClick={handleCreateOrder} style={{ flex: 1, padding: '12px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('dashboard.diagnostic.view.create_order_btn')}</button>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 // src/features/dashboard/DashboardPage.tsx
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import CitizenHome from './CitizenHome';
 import DoctorHome from './DoctorHome';
@@ -7,6 +8,7 @@ import HospitalHome from './HospitalHome';
 import DiagnosticHome from "../diagnostic/DiagnosticHome.tsx";
 
 export default function DashboardPage() {
+    const { t } = useTranslation();
     const [role, setRole] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -31,7 +33,7 @@ export default function DashboardPage() {
         fetchRole();
     }, []);
 
-    if (loading) return <div>Loading Dashboard...</div>;
+    if (loading) return <div>{t('dashboard.loading')}</div>;
 
     // - Role based switch
     switch (role) {

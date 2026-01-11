@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient';
 import type { Appointment } from '../../../types';
 import { CheckCircle, XCircle, Clock, User, Calendar } from 'phosphor-react';
@@ -14,6 +15,7 @@ interface AppointmentWithPatient extends Appointment {
 }
 
 export default function DoctorAppointments() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [appointments, setAppointments] = useState<AppointmentWithPatient[]>([]);
     const [loading, setLoading] = useState(true);
@@ -46,7 +48,7 @@ export default function DoctorAppointments() {
             .eq('id', id);
 
         if (error) {
-            alert('Error updating status');
+            alert(t('common.error'));
         } else {
             setAppointments(prev => prev.map(app =>
                 app.id === id ? { ...app, status } : app
@@ -54,15 +56,15 @@ export default function DoctorAppointments() {
         }
     };
 
-    if (loading) return <div>Loading Appointments...</div>;
+    if (loading) return <div>{t('dashboard.doctor.appointments.loading')}</div>;
 
     return (
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Patient Appointments</h2>
+            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>{t('dashboard.doctor.appointments.title')}</h2>
 
             {appointments.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
-                    <h3>No appointments scheduled yet.</h3>
+                    <h3>{t('dashboard.doctor.appointments.no_appointments')}</h3>
                 </div>
             ) : (
                 <div style={{ display: 'grid', gap: '1rem' }}>
@@ -80,18 +82,18 @@ export default function DoctorAppointments() {
                                     <User size={24} />
                                 </div>
                                 <div>
-                                    <h3 style={{ margin: '0 0 5px 0' }}>{app.profiles?.full_name || 'Unknown Patient'}</h3>
+                                    <h3 style={{ margin: '0 0 5px 0' }}>{app.profiles?.full_name || t('dashboard.doctor.appointments.unknown_patient')}</h3>
                                     <div style={{ display: 'flex', gap: '10px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <Calendar size={16} />
-                        {format(new Date(app.appointment_date), 'dd MMM yyyy')}
-                    </span>
                                         <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <Clock size={16} />
+                                            <Calendar size={16} />
+                                            {format(new Date(app.appointment_date), 'dd MMM yyyy')}
+                                        </span>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            <Clock size={16} />
                                             {format(new Date(app.appointment_date), 'hh:mm a')}
-                    </span>
+                                        </span>
                                     </div>
-                                    {app.reason && <p style={{ margin: '5px 0 0', fontSize: '0.9rem', color: '#64748B' }}>Reason: "{app.reason}"</p>}
+                                    {app.reason && <p style={{ margin: '5px 0 0', fontSize: '0.9rem', color: '#64748B' }}>{t('dashboard.doctor.appointments.reason')} "{app.reason}"</p>}
 
                                     <button
                                         onClick={() => navigate(`/dashboard/patient/${app.patient_id}`)}
@@ -107,7 +109,7 @@ export default function DoctorAppointments() {
                                             fontWeight: 600
                                         }}
                                     >
-                                        View Profile & History
+                                        {t('dashboard.doctor.appointments.view_profile')}
                                     </button>
                                 </div>
                             </div>
@@ -122,7 +124,7 @@ export default function DoctorAppointments() {
                                                 cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px'
                                             }}
                                         >
-                                            <CheckCircle size={18} /> Accept
+                                            <CheckCircle size={18} /> {t('dashboard.doctor.appointments.accept')}
                                         </button>
                                         <button
                                             onClick={() => updateStatus(app.id, 'CANCELLED')}
@@ -131,21 +133,21 @@ export default function DoctorAppointments() {
                                                 cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px'
                                             }}
                                         >
-                                            <XCircle size={18} /> Decline
+                                            <XCircle size={18} /> {t('dashboard.doctor.appointments.decline')}
                                         </button>
                                     </>
                                 )}
 
                                 {app.status === 'CONFIRMED' && (
                                     <span style={{ color: '#16A34A', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <CheckCircle size={20} weight="fill" /> Confirmed
-                  </span>
+                                        <CheckCircle size={20} weight="fill" /> {t('dashboard.doctor.appointments.confirmed')}
+                                    </span>
                                 )}
 
                                 {app.status === 'CANCELLED' && (
                                     <span style={{ color: '#DC2626', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <XCircle size={20} weight="fill" /> Cancelled
-                  </span>
+                                        <XCircle size={20} weight="fill" /> {t('dashboard.doctor.appointments.cancelled')}
+                                    </span>
                                 )}
                             </div>
                         </div>

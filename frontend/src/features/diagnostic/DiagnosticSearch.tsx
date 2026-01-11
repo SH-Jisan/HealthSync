@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
-import { MagnifyingGlass, Person } from 'phosphor-react'; // Fix: Removed UserPlus
+import { useTranslation } from 'react-i18next';
+import { supabase } from '../../lib/supabaseClient.ts';
+import { MagnifyingGlass, Person } from 'phosphor-react';
 
 interface PatientProfile {
     id: string;
@@ -9,9 +10,9 @@ interface PatientProfile {
 }
 
 export default function DiagnosticSearch() {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    // Fix: Replaced 'any' with PatientProfile | null
     const [searchedPatient, setSearchedPatient] = useState<PatientProfile | null>(null);
 
     // Registration States
@@ -39,13 +40,13 @@ export default function DiagnosticSearch() {
             if (data) {
                 setSearchedPatient(data as PatientProfile);
             } else {
-                alert('Patient not found! You can register them.');
+                alert(t('dashboard.diagnostic.search.not_found_alert'));
                 setNewEmail(email); // Pre-fill email
                 setShowRegister(true);
             }
-        } catch (err: unknown) { // Fix: Replaced 'any' with 'unknown'
+        } catch (err: unknown) {
             const message = err instanceof Error ? err.message : 'Search failed';
-            alert('Error searching: ' + message);
+            alert(t('common.error') + ': ' + message);
         } finally {
             setLoading(false);
         }
@@ -65,16 +66,16 @@ export default function DiagnosticSearch() {
             });
 
             if (error) {
-                if (error.code === '23505') alert('Patient already assigned!');
+                if (error.code === '23505') alert(t('dashboard.diagnostic.search.already_assigned'));
                 else throw error;
             } else {
-                alert('Patient Assigned Successfully! Check "Assigned" tab.');
+                alert(t('dashboard.diagnostic.search.assign_success'));
                 setSearchedPatient(null);
                 setEmail('');
             }
-        } catch (err: unknown) { // Fix: Replaced 'any' with 'unknown'
+        } catch (err: unknown) {
             const message = err instanceof Error ? err.message : 'Assignment failed';
-            alert('Error assigning: ' + message);
+            alert(t('common.error') + ': ' + message);
         } finally {
             setLoading(false);
         }
@@ -94,13 +95,13 @@ export default function DiagnosticSearch() {
 
             if (error) throw error;
 
-            alert('Patient Registered! Default password is "123456".');
+            alert(t('dashboard.diagnostic.search.success_reg'));
             setShowRegister(false);
             setEmail(newEmail);
             handleSearch();
-        } catch (err: unknown) { // Fix: Replaced 'any' with 'unknown'
+        } catch (err: unknown) {
             const message = err instanceof Error ? err.message : 'Registration failed';
-            alert('Registration Failed: ' + message);
+            alert(t('common.error') + ': ' + message);
         } finally {
             setLoading(false);
         }
@@ -111,7 +112,7 @@ export default function DiagnosticSearch() {
             <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem' }}>
                 <input
                     type="email"
-                    placeholder="Search patient by email..."
+                    placeholder={t('dashboard.diagnostic.search.placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}
@@ -151,7 +152,7 @@ export default function DiagnosticSearch() {
                             color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
                         }}
                     >
-                        Assign to Center
+                        {t('dashboard.diagnostic.search.assign_btn')}
                     </button>
                 </div>
             )}
@@ -162,22 +163,25 @@ export default function DiagnosticSearch() {
                     display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100
                 }}>
                     <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '400px' }}>
-                        <h3>Register New Patient</h3>
+                        <h3>{t('dashboard.diagnostic.search.register_title')}</h3>
                         <input
-                            placeholder="Full Name" value={newName} onChange={e => setNewName(e.target.value)}
+                            placeholder={t('dashboard.diagnostic.search.name_ph')}
+                            value={newName} onChange={e => setNewName(e.target.value)}
                             style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '8px' }}
                         />
                         <input
-                            placeholder="Email" value={newEmail} onChange={e => setNewEmail(e.target.value)}
+                            placeholder={t('dashboard.diagnostic.search.email_ph')}
+                            value={newEmail} onChange={e => setNewEmail(e.target.value)}
                             style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '8px' }}
                         />
                         <input
-                            placeholder="Phone" value={newPhone} onChange={e => setNewPhone(e.target.value)}
+                            placeholder={t('dashboard.diagnostic.search.phone_ph')}
+                            value={newPhone} onChange={e => setNewPhone(e.target.value)}
                             style={{ width: '100%', padding: '10px', marginBottom: '20px', border: '1px solid #ccc', borderRadius: '8px' }}
                         />
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setShowRegister(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
-                            <button onClick={handleRegister} disabled={loading} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Register</button>
+                            <button onClick={() => setShowRegister(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.cancel')}</button>
+                            <button onClick={handleRegister} disabled={loading} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('dashboard.diagnostic.search.register_btn')}</button>
                         </div>
                     </div>
                 </div>

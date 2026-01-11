@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import HospitalOverview from './hospital/HospitalOverview';
 import HospitalDoctors from './hospital/HospitalDoctors';
 import HospitalPatients from './hospital/HospitalPatients';
 import HospitalBloodBank from "./hospital/HospitalBloodBank.tsx"; // <--- Import
 
 export default function HospitalHome() {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients' | 'blood'>('overview'); // <--- Updated State Type
 
     return (
@@ -17,25 +19,25 @@ export default function HospitalHome() {
                     onClick={() => setActiveTab('overview')}
                     style={getTabStyle(activeTab === 'overview')}
                 >
-                    Overview
+                    {t('dashboard.hospital.tabs.overview')}
                 </button>
                 <button
                     onClick={() => setActiveTab('doctors')}
                     style={getTabStyle(activeTab === 'doctors')}
                 >
-                    Doctors List
+                    {t('dashboard.hospital.tabs.doctors')}
                 </button>
                 <button
                     onClick={() => setActiveTab('patients')}
                     style={getTabStyle(activeTab === 'patients')}
                 >
-                    Patients
+                    {t('dashboard.hospital.tabs.patients')}
                 </button>
                 <button
                     onClick={() => setActiveTab('blood')}
                     style={getTabStyle(activeTab === 'blood')}
                 >
-                    Blood Bank
+                    {t('dashboard.hospital.tabs.blood')}
                 </button>
             </div>
 

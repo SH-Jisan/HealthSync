@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation, Trans } from 'react-i18next';
 import { ShieldCheck, Heartbeat, Drop, Brain } from 'phosphor-react';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 export default function LandingPage() {
     const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
-    const toggleLang = () => {
-        i18n.changeLanguage(i18n.language === 'en' ? 'bn' : 'en');
-    };
+
 
     return (
         <div
@@ -45,19 +44,7 @@ export default function LandingPage() {
 
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                     {/* Language Toggle */}
-                    <button
-                        onClick={toggleLang}
-                        style={{
-                            background: 'none',
-                            border: '1px solid var(--primary)',
-                            borderRadius: '20px',
-                            padding: '5px 15px',
-                            cursor: 'pointer',
-                            color: 'var(--primary)',
-                        }}
-                    >
-                        {i18n.language === 'en' ? 'বাংলা' : 'English'}
-                    </button>
+                    <LanguageSwitcher variant="text" />
 
                     {/* Login */}
                     <button

@@ -3,8 +3,10 @@ import { Outlet } from 'react-router-dom';
 import { List } from 'phosphor-react';
 import Sidebar from './Sidebar';
 import styles from './Sidebar.module.css'; // স্টাইল এখান থেকেই ইমপোর্ট করছি
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardLayout() {
+    const { t } = useTranslation();
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     return (
@@ -45,7 +47,7 @@ export default function DashboardLayout() {
                     >
                         <List size={28} color="var(--text-primary)" />
                     </button>
-                    <h2 style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>HealthSync</h2>
+                    <h2 style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>{t('common.health_sync')}</h2>
                 </header>
 
                 <div style={{ padding: '1.5rem', maxWidth: '1200px', margin: '0 auto' }}>

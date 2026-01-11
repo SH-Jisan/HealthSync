@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import {
     Phone,
@@ -11,7 +12,8 @@ import {
     PencilSimple,
     Heartbeat,
     GraduationCap,
-    Wallet } from 'phosphor-react';
+    Wallet
+} from 'phosphor-react';
 import styles from './Profile.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,6 +33,7 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
@@ -63,18 +66,18 @@ export default function ProfilePage() {
     }, []);
 
     const handleLogout = async () => {
-        if (window.confirm('Are you sure you want to logout?')) {
+        if (window.confirm(t('common.confirm_logout'))) {
             await supabase.auth.signOut();
             navigate('/login');
         }
     };
 
-    if (loading) return <div style={{textAlign: 'center', marginTop: '4rem'}}>Loading Profile...</div>;
+    if (loading) return <div style={{ textAlign: 'center', marginTop: '4rem' }}>{t('profile.loading')}</div>;
 
     return (
         <div className={styles.container} style={{ maxWidth: '600px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h2 style={{ color: 'var(--primary)', margin: 0 }}>My Profile</h2>
+                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('profile.title')}</h2>
                 <button
                     onClick={() => navigate('/profile/edit')}
                     style={{
@@ -83,7 +86,7 @@ export default function ProfilePage() {
                         color: 'var(--primary)', cursor: 'pointer', fontWeight: 600
                     }}
                 >
-                    <PencilSimple size={18} /> Edit
+                    <PencilSimple size={18} /> {t('common.edit')}
                 </button>
             </div>
 
@@ -121,10 +124,10 @@ export default function ProfilePage() {
             {/* Doctor Specific Details Section */}
             {profile?.role === 'DOCTOR' && (
                 <div style={{ marginTop: '2rem' }}>
-                    <h3 style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1rem', paddingLeft: '10px' }}>Professional Info</h3>
+                    <h3 style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1rem', paddingLeft: '10px' }}>{t('profile.professional')}</h3>
                     <div className={styles.infoSection} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        {profile.degree && <InfoRow icon={<GraduationCap />} label="Degrees" value={profile.degree} />}
-                        {profile.consultation_fee && <InfoRow icon={<Wallet />} label="Consultation Fee" value={`৳${profile.consultation_fee}`} />}
+                        {profile.degree && <InfoRow icon={<GraduationCap />} label={t('profile.fields.degree')} value={profile.degree} />}
+                        {profile.consultation_fee && <InfoRow icon={<Wallet />} label={t('profile.fields.fees')} value={`৳${profile.consultation_fee}`} />}
                         {profile.about && <div style={{ background: 'white', padding: '15px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '0.9rem', color: '#64748B', fontStyle: 'italic' }}>"{profile.about}"</div>}
                     </div>
                 </div>
@@ -132,22 +135,22 @@ export default function ProfilePage() {
 
             {/* General Info */}
             <div style={{ marginTop: '2rem' }}>
-                <h3 style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1rem', paddingLeft: '10px' }}>Contact Info</h3>
+                <h3 style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1rem', paddingLeft: '10px' }}>{t('profile.contact_info')}</h3>
                 <div className={styles.infoSection} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <InfoRow icon={<Phone />} label="Phone" value={profile?.phone || 'N/A'} />
-                    <InfoRow icon={<Envelope />} label="Email" value={profile?.email || ''} />
+                    <InfoRow icon={<Phone />} label={t('profile.fields.phone')} value={profile?.phone || 'N/A'} />
+                    <InfoRow icon={<Envelope />} label={t('profile.fields.email')} value={profile?.email || ''} />
                 </div>
             </div>
 
             {/* Activity Links */}
             <div style={{ marginTop: '2rem' }}>
-                <h3 style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1rem', paddingLeft: '10px' }}>Activity & Settings</h3>
+                <h3 style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginBottom: '1rem', paddingLeft: '10px' }}>{t('profile.activity')}</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {profile?.role === 'CITIZEN' && (
-                        <NavButton onClick={() => navigate('/appointments')} icon={<CalendarCheck size={20} />} label="My Appointments" color="#3B82F6" bg="#EFF6FF" />
+                        <NavButton onClick={() => navigate('/appointments')} icon={<CalendarCheck size={20} />} label={t('profile.my_appointments')} color="#3B82F6" bg="#EFF6FF" />
                     )}
-                    <NavButton onClick={() => navigate('/blood/my-requests')} icon={<Drop size={20} />} label="My Blood Requests" color="#EF4444" bg="#FEF2F2" />
-                    <NavButton onClick={() => navigate('/blood/register')} icon={<User size={20} />} label="Donor Settings" color="#10B981" bg="#F0FDF4" />
+                    <NavButton onClick={() => navigate('/blood/my-requests')} icon={<Drop size={20} />} label={t('profile.my_blood_requests')} color="#EF4444" bg="#FEF2F2" />
+                    <NavButton onClick={() => navigate('/blood/register')} icon={<User size={20} />} label={t('profile.donor_settings')} color="#10B981" bg="#F0FDF4" />
                 </div>
             </div>
 
@@ -159,7 +162,7 @@ export default function ProfilePage() {
                     display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
                 }}
             >
-                <SignOut size={20} weight="bold" /> Log Out
+                <SignOut size={20} weight="bold" /> {t('common.logout')}
             </button>
         </div>
     );

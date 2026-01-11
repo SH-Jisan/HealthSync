@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient.ts';
 import { X, CalendarCheck } from 'phosphor-react';
 import type { Doctor } from '../../../types';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function BookAppointmentModal({ doctor, onClose }: Props) {
+    const { t } = useTranslation();
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [reason, setReason] = useState('');
@@ -20,7 +22,7 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
 
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error("Please login first");
+            if (!user) throw new Error(t('book_appointment.login_error'));
 
             // Combine Date & Time
             const appointmentDateTime = new Date(`${date}T${time}`).toISOString();
@@ -35,7 +37,7 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
 
             if (error) throw error;
 
-            alert(`Appointment request sent to Dr. ${doctor.full_name}!`);
+            alert(t('book_appointment.success', { name: doctor.full_name }));
             onClose();
 
         } catch (err: unknown) {
@@ -63,13 +65,13 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
                     <X size={24} />
                 </button>
 
-                <h3 style={{ marginTop: 0, color: 'var(--primary)' }}>Book Appointment</h3>
-                <p style={{ color: 'var(--text-secondary)' }}>with <strong>Dr. {doctor.full_name}</strong></p>
+                <h3 style={{ marginTop: 0, color: 'var(--primary)' }}>{t('book_appointment.title')}</h3>
+                <p style={{ color: 'var(--text-secondary)' }}>{t('book_appointment.with')} <strong>Dr. {doctor.full_name}</strong></p>
 
                 <form onSubmit={handleBook} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Date</label>
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>{t('book_appointment.date')}</label>
                         <input
                             type="date" required
                             value={date} onChange={e => setDate(e.target.value)}
@@ -78,7 +80,7 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
                     </div>
 
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Time</label>
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>{t('book_appointment.time')}</label>
                         <input
                             type="time" required
                             value={time} onChange={e => setTime(e.target.value)}
@@ -87,11 +89,11 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
                     </div>
 
                     <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Reason</label>
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>{t('book_appointment.reason')}</label>
                         <textarea
                             rows={3} required
                             value={reason} onChange={e => setReason(e.target.value)}
-                            placeholder="e.g. High fever for 2 days"
+                            placeholder={t('book_appointment.reason_placeholder')}
                             style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
                         />
                     </div>
@@ -105,7 +107,7 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
                         }}
                     >
                         <CalendarCheck size={20} />
-                        {loading ? 'Booking...' : 'Confirm Booking'}
+                        {loading ? t('book_appointment.booking') : t('book_appointment.confirm_btn')}
                     </button>
                 </form>
             </div>

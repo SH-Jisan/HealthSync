@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { format } from 'date-fns';
+import { bn } from 'date-fns/locale';
 import { FileText, Pill, Syringe } from 'phosphor-react'; // Icons
+import { useTranslation } from 'react-i18next';
 import type { MedicalEvent } from '../../types';
 import styles from './TimelineTile.module.css';
 
@@ -10,6 +12,8 @@ interface Props {
 }
 
 export default function TimelineTile({ event, isLast }: Props) {
+    const { t, i18n } = useTranslation();
+
     // Event Type অনুযায়ী আইকন
     const getIcon = () => {
         switch (event.event_type) {
@@ -36,12 +40,14 @@ export default function TimelineTile({ event, isLast }: Props) {
 
             <div className={styles.card}>
                 <div className={styles.header}>
-          <span className={styles.date}>
-            {format(new Date(event.event_date), 'dd MMM yyyy')}
-          </span>
+                    <span className={styles.date}>
+                        {format(new Date(event.event_date), 'dd MMM yyyy', {
+                            locale: i18n.language === 'bn' ? bn : undefined
+                        })}
+                    </span>
                     <span className={`${styles.badge} ${getBadgeClass()}`}>
-            {event.severity}
-          </span>
+                        {t(`severity.${event.severity}`, event.severity)}
+                    </span>
                 </div>
 
                 <h3 className={styles.title}>{event.title}</h3>
@@ -58,8 +64,8 @@ export default function TimelineTile({ event, isLast }: Props) {
                                 padding: '4px 8px',
                                 borderRadius: '6px'
                             }}>
-                {finding}
-              </span>
+                                {finding}
+                            </span>
                         ))}
                     </div>
                 )}

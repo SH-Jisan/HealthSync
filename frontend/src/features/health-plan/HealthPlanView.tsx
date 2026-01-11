@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { ForkKnife, Barbell, Warning, Sparkle } from 'phosphor-react';
 import styles from './HealthPlan.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface HealthPlan {
     diet: string;
@@ -12,6 +13,7 @@ interface HealthPlan {
 }
 
 export default function HealthPlanView() {
+    const { t, i18n } = useTranslation();
     const [plan, setPlan] = useState<HealthPlan | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -26,8 +28,11 @@ export default function HealthPlanView() {
                 .limit(5)
                 .order('event_date', { ascending: false });
 
+            // Pass the current language to the edge function
+            const language = i18n.language === 'bn' ? 'bangla' : 'english';
+
             const { data, error } = await supabase.functions.invoke('generate-health-plan', {
-                body: { history: events, language: 'english' }
+                body: { history: events, language: language }
             });
 
             if (error) throw error;
@@ -35,7 +40,7 @@ export default function HealthPlanView() {
 
         } catch (err) {
             console.error('Error generating plan:', err);
-            alert('Failed to generate health plan.');
+            alert(t('health_plan.alert_fail'));
         } finally {
             setLoading(false);
         }
@@ -46,44 +51,44 @@ export default function HealthPlanView() {
             <div className={styles.header}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                     <div>
-                        <h2>Your Personalized Health Plan</h2>
-                        <p>AI-driven recommendations based on your medical history.</p>
+                        <h2>{t('health_plan.title')}</h2>
+                        <p>{t('health_plan.subtitle')}</p>
                     </div>
                     <Sparkle size={48} weight="fill" style={{ opacity: 0.2 }} />
                 </div>
 
                 {!plan && (
                     <button className={styles.refreshButton} onClick={generatePlan} disabled={loading}>
-                        {loading ? 'Analyzing Health...' : 'Generate New Plan'}
+                        {loading ? t('health_plan.analyzing') : t('health_plan.generate_btn')}
                     </button>
                 )}
             </div>
 
             {plan && (
                 <>
-                <div className={styles.grid}>
-                    <div className={`${styles.section} ${styles.summaryCard}`}>
-                        <div className={styles.sectionTitle}><Sparkle size={24}/> Summary</div>
-                        <p>{plan.summary}</p>
-                    </div>
+                    <div className={styles.grid}>
+                        <div className={`${styles.section} ${styles.summaryCard}`}>
+                            <div className={styles.sectionTitle}><Sparkle size={24} /> {t('health_plan.summary')}</div>
+                            <p>{plan.summary}</p>
+                        </div>
 
-                    <div className={styles.section}>
-                        <div className={styles.sectionTitle}><ForkKnife size={24}/> Diet</div>
-                        <p>{plan.diet}</p>
-                    </div>
+                        <div className={styles.section}>
+                            <div className={styles.sectionTitle}><ForkKnife size={24} /> {t('health_plan.diet')}</div>
+                            <p>{plan.diet}</p>
+                        </div>
 
-                    <div className={styles.section}>
-                        <div className={styles.sectionTitle}><Barbell size={24}/> Exercise</div>
-                        <p>{plan.exercise}</p>
-                    </div>
+                        <div className={styles.section}>
+                            <div className={styles.sectionTitle}><Barbell size={24} /> {t('health_plan.exercise')}</div>
+                            <p>{plan.exercise}</p>
+                        </div>
 
-                    <div className={styles.section}>
-                        <div className={styles.sectionTitle}><Warning size={24} color="#EF4444"/> Precautions</div>
-                        <p>{plan.precautions}</p>
+                        <div className={styles.section}>
+                            <div className={styles.sectionTitle}><Warning size={24} color="#EF4444" /> {t('health_plan.precautions')}</div>
+                            <p>{plan.precautions}</p>
+                        </div>
                     </div>
-                </div>
                     <button style={{ marginTop: '1rem', background: 'transparent', border: '1px solid var(--primary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', color: 'var(--primary)' }} onClick={generatePlan}>
-                        Regenerate Plan
+                        {t('health_plan.regenerate_btn')}
                     </button>
                 </>
             )}

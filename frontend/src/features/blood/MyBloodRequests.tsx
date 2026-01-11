@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { Trash } from 'phosphor-react'; // Fix: Removed 'Drop'
 import { formatDistanceToNow } from 'date-fns';
@@ -14,6 +15,7 @@ interface BloodRequest {
 }
 
 export default function MyBloodRequests() {
+    const { t } = useTranslation();
     // Fix: Replaced 'any[]' with 'BloodRequest[]'
     const [requests, setRequests] = useState<BloodRequest[]>([]);
     const [loading, setLoading] = useState(true);
@@ -41,24 +43,24 @@ export default function MyBloodRequests() {
     }, []);
 
     const deleteRequest = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this request?')) return;
+        if (!confirm(t('blood.my_requests.confirm_delete'))) return;
 
         const { error } = await supabase.from('blood_requests').delete().eq('id', id);
         if (error) {
-            alert('Failed to delete request');
+            alert(t('blood.my_requests.delete_fail'));
         } else {
             setRequests(prev => prev.filter(r => r.id !== id));
         }
     };
 
-    if (loading) return <div>Loading Requests...</div>;
+    if (loading) return <div>{t('blood.my_requests.loading')}</div>;
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>My Blood Requests</h2>
+            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>{t('blood.my_requests.title')}</h2>
 
             {requests.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>You haven't posted any requests.</div>
+                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{t('blood.my_requests.no_requests')}</div>
             ) : (
                 <div style={{ display: 'grid', gap: '1rem' }}>
                     {requests.map(req => (
@@ -71,10 +73,10 @@ export default function MyBloodRequests() {
                                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '5px' }}>
                                     <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#DC2626' }}>{req.blood_group}</span>
                                     <span style={{ fontWeight: 600 }}>{req.hospital_name}</span>
-                                    {req.status === 'FULFILLED' && <span style={{ background: '#DCFCE7', color: 'green', fontSize: '0.8rem', padding: '2px 8px', borderRadius: '10px' }}>FULFILLED</span>}
+                                    {req.status === 'FULFILLED' && <span style={{ background: '#DCFCE7', color: 'green', fontSize: '0.8rem', padding: '2px 8px', borderRadius: '10px' }}>{t('blood.my_requests.fulfilled')}</span>}
                                 </div>
                                 <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                    Posted {formatDistanceToNow(new Date(req.created_at))} ago
+                                    {t('blood.my_requests.posted')} {formatDistanceToNow(new Date(req.created_at))} ago
                                 </div>
                             </div>
 
@@ -85,7 +87,7 @@ export default function MyBloodRequests() {
                                     borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px'
                                 }}
                             >
-                                <Trash size={18} /> Delete
+                                <Trash size={18} /> {t('blood.my_requests.delete_btn')}
                             </button>
                         </div>
                     ))}

@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDropzone } from 'react-dropzone';
 import { supabase } from '../../lib/supabaseClient';
 import { CloudArrowUp, X, FileImage, Spinner } from 'phosphor-react';
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function UploadModal({ onClose, onSuccess }: Props) {
+    const { t } = useTranslation();
     const [files, setFiles] = useState<File[]>([]);
     const [uploading, setUploading] = useState(false);
     const [status, setStatus] = useState('');
@@ -30,12 +32,12 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
     const handleUpload = async () => {
         if (files.length === 0) return;
         setUploading(true);
-        setStatus('Uploading file...');
+        setStatus(t('upload.status_uploading'));
 
         try {
             const file = files[0];
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error("No user found");
+            if (!user) throw new Error(t('upload.error_no_user'));
 
             // 1. Upload to Supabase Storage
             const fileExt = file.name.split('.').pop();
@@ -47,7 +49,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
             if (uploadError) throw uploadError;
 
             // 2. Call Edge Function to Analyze
-            setStatus('Analyzing report with AI...');
+            setStatus(t('upload.status_analyzing'));
             const { error: funcError } = await supabase.functions.invoke('process-medical-report', {
                 body: {
                     storage_path: fileName,
@@ -57,7 +59,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
 
             if (funcError) throw funcError;
 
-            setStatus('Success!');
+            setStatus(t('upload.status_success'));
             setTimeout(() => {
                 onSuccess();
                 onClose();
@@ -65,7 +67,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
 
         } catch (error: any) {
             console.error('Upload failed:', error);
-            setStatus(`Error: ${error.message}`);
+            setStatus(`${t('upload.error_fail')}: ${error.message}`);
         } finally {
             setUploading(false);
         }
@@ -75,7 +77,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
         <div className={styles.overlay}>
             <div className={styles.modal}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                    <h3>Upload Medical Report</h3>
+                    <h3>{t('upload.title')}</h3>
                     <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                         <X size={24} />
                     </button>
@@ -87,8 +89,8 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
                 >
                     <input {...getInputProps()} />
                     <CloudArrowUp size={48} color="var(--primary)" />
-                    <p>Drag & drop your report here, or click to select</p>
-                    <small style={{ color: 'var(--text-secondary)' }}>Supports JPG, PNG, PDF</small>
+                    <p>{t('upload.drag_drop')}</p>
+                    <small style={{ color: 'var(--text-secondary)' }}>{t('upload.supports')}</small>
                 </div>
 
                 {files.length > 0 && (
@@ -114,7 +116,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
                     onClick={handleUpload}
                     disabled={files.length === 0 || uploading}
                 >
-                    {uploading ? <span style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}><Spinner className="spin" size={20}/> Processing...</span> : 'Upload & Analyze'}
+                    {uploading ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><Spinner className="spin" size={20} /> {t('upload.processing')}</span> : t('upload.btn_analyze')}
                 </button>
             </div>
 

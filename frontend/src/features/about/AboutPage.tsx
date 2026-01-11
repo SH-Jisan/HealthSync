@@ -1,8 +1,11 @@
 // src/features/about/AboutPage.tsx
 import type { ReactNode } from 'react';
-import { Code, Database, Brain, MagnifyingGlass } from 'phosphor-react'; // Removed CheckCircle
+import { Code, Database, Brain, MagnifyingGlass } from 'phosphor-react';
+import { useTranslation } from 'react-i18next';
 
 export default function AboutPage() {
+    const { t } = useTranslation();
+
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
 
@@ -15,39 +18,39 @@ export default function AboutPage() {
                 }}>
                     H
                 </div>
-                <h1 style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: '0.5rem' }}>HealthSync Pro</h1>
-                <p style={{ color: 'var(--text-secondary)' }}>Version 1.0.0 (Web)</p>
+                <h1 style={{ fontSize: '2rem', color: 'var(--primary)', marginBottom: '0.5rem' }}>{t('about.title')}</h1>
+                <p style={{ color: 'var(--text-secondary)' }}>{t('about.version')}</p>
             </div>
 
             {/* How to use Section */}
-            <h2 style={{ color: 'var(--text-primary)', marginBottom: '1.5rem' }}>How to use</h2>
+            <h2 style={{ color: 'var(--text-primary)', marginBottom: '1.5rem' }}>{t('about.how_to_use')}</h2>
             <div style={{
                 background: 'var(--surface)', padding: '2rem', borderRadius: '20px',
                 boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)'
             }}>
-                <StepRow num="1" text="Upload medical reports or prescriptions to maintain history." />
-                <StepRow num="2" text="AI analyzes reports and creates a timeline automatically." />
-                <StepRow num="3" text="Consult AI Doctor for instant symptom checking." />
-                <StepRow num="4" text="Use Blood Bank to find donors or request blood." />
+                <StepRow num="1" text={t('about.step_1')} />
+                <StepRow num="2" text={t('about.step_2')} />
+                <StepRow num="3" text={t('about.step_3')} />
+                <StepRow num="4" text={t('about.step_4')} />
             </div>
 
             <div style={{ height: '2rem' }} />
 
             {/* Powered By Section */}
-            <h2 style={{ color: 'var(--text-primary)', marginBottom: '1.5rem' }}>Powered By</h2>
+            <h2 style={{ color: 'var(--text-primary)', marginBottom: '1.5rem' }}>{t('about.powered_by')}</h2>
             <div style={{
                 display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem'
             }}>
-                <TechCard icon={<Code size={24} />} title="React + Vite" subtitle="Web Framework" color="#3B82F6" bg="#EFF6FF" />
-                <TechCard icon={<Database size={24} />} title="Supabase" subtitle="Backend DB" color="#10B981" bg="#ECFDF5" />
-                <TechCard icon={<Brain size={24} />} title="Gemini AI" subtitle="Intelligence" color="#A855F7" bg="#F3E8FF" />
-                <TechCard icon={<MagnifyingGlass size={24} />} title="Serper API" subtitle="Doc Search" color="#F97316" bg="#FFF7ED" />
+                <TechCard icon={<Code size={24} />} title={t('about.tech.react.title')} subtitle={t('about.tech.react.subtitle')} color="#3B82F6" bg="#EFF6FF" />
+                <TechCard icon={<Database size={24} />} title={t('about.tech.supabase.title')} subtitle={t('about.tech.supabase.subtitle')} color="#10B981" bg="#ECFDF5" />
+                <TechCard icon={<Brain size={24} />} title={t('about.tech.gemini.title')} subtitle={t('about.tech.gemini.subtitle')} color="#A855F7" bg="#F3E8FF" />
+                <TechCard icon={<MagnifyingGlass size={24} />} title={t('about.tech.serper.title')} subtitle={t('about.tech.serper.subtitle')} color="#F97316" bg="#FFF7ED" />
             </div>
 
             {/* Footer */}
             <div style={{ textAlign: 'center', marginTop: '4rem', color: 'var(--text-secondary)' }}>
-                <p style={{ fontWeight: 500 }}>Made with ❤️ for Better Healthcare</p>
-                <p style={{ fontSize: '0.9rem' }}>© 2024 HealthSync Inc.</p>
+                <p style={{ fontWeight: 500 }}>{t('about.footer.made_with')}</p>
+                <p style={{ fontSize: '0.9rem' }}>{t('about.footer.copyright')}</p>
             </div>
         </div>
     );
@@ -68,7 +71,6 @@ function StepRow({ num, text }: { num: string, text: string }) {
     );
 }
 
-// Fix: Defined Interface to replace 'any'
 interface TechCardProps {
     icon: ReactNode;
     title: string;

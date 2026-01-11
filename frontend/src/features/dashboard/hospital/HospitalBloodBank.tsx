@@ -1,139 +1,151 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabaseClient';
-import { Drop, Plus, Minus, FloppyDisk } from 'phosphor-react';
+import { Drop, Activity, Plus } from 'phosphor-react';
 
-interface BloodStock {
+interface BloodInventory {
+    id: string;
     blood_group: string;
-    count: number;
+    units: number;
+    last_updated: string;
 }
 
+const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
 export default function HospitalBloodBank() {
-    const [stocks, setStocks] = useState<BloodStock[]>([]);
+    const { t } = useTranslation();
+    const [inventory, setInventory] = useState<BloodInventory[]>([]);
     const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
-    const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+    // Form
+    const [selectedGroup, setSelectedGroup] = useState(BLOOD_GROUPS[0]);
+    const [units, setUnits] = useState(0);
 
-    useEffect(() => {
-        fetchStock();
-    }, []);
-
-    const fetchStock = async () => {
+    const fetchInventory = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Fetch existing stock
         const { data } = await supabase
-            .from('hospital_blood_bank')
-            .select('blood_group, count')
+            .from('blood_inventory')
+            .select('*')
             .eq('hospital_id', user.id);
 
-        // Merge with default groups (in case some are missing in DB)
-        const currentStock = bloodGroups.map(group => {
-            const found = data?.find(d => d.blood_group === group);
-            return { blood_group: group, count: found?.count || 0 };
-        });
-
-        setStocks(currentStock);
+        if (data) setInventory(data as BloodInventory[]);
         setLoading(false);
     };
 
-    const updateCount = (group: string, delta: number) => {
-        setStocks(prev => prev.map(s =>
-            s.blood_group === group ? { ...s, count: Math.max(0, s.count + delta) } : s
-        ));
-    };
+    useEffect(() => {
+        fetchInventory();
+    }, []);
 
-    const handleSave = async () => {
-        setSaving(true);
+    const updateInventory = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Upsert stocks
-        const updates = stocks.map(s => ({
-            hospital_id: user.id,
-            blood_group: s.blood_group,
-            count: s.count,
-            updated_at: new Date().toISOString()
-        }));
+        // Check if exists
+        const { data: existing } = await supabase
+            .from('blood_inventory')
+            .select('id, units')
+            .eq('hospital_id', user.id)
+            .eq('blood_group', selectedGroup)
+            .single();
 
-        const { error } = await supabase.from('hospital_blood_bank').upsert(updates, { onConflict: 'hospital_id,blood_group' });
-
-        if (error) {
-            alert('Failed to update stock');
+        if (existing) {
+            // Update
+            await supabase.from('blood_inventory').update({
+                units: existing.units + Number(units),
+                last_updated: new Date().toISOString()
+            }).eq('id', existing.id);
         } else {
-            alert('Blood inventory updated successfully!');
+            // Insert
+            await supabase.from('blood_inventory').insert({
+                hospital_id: user.id,
+                blood_group: selectedGroup,
+                units: Number(units),
+                last_updated: new Date().toISOString()
+            });
         }
-        setSaving(false);
+
+        alert(t('common.success'));
+        setShowModal(false);
+        setUnits(0);
+        fetchInventory();
     };
 
-    if (loading) return <div>Loading Inventory...</div>;
+    if (loading) return <div>{t('dashboard.hospital.blood.loading')}</div>;
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <div>
-                    <h2 style={{ color: 'var(--primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <Drop size={32} weight="fill" color="#DC2626" /> Blood Inventory
-                    </h2>
-                    <p style={{ color: 'var(--text-secondary)', margin: '5px 0 0' }}>Manage available blood bags in your hospital.</p>
-                </div>
-
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('dashboard.hospital.blood.title')}</h2>
                 <button
-                    onClick={handleSave}
-                    disabled={saving}
+                    onClick={() => setShowModal(true)}
                     style={{
-                        display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px',
-                        background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '12px',
-                        fontWeight: 'bold', cursor: 'pointer', transition: 'opacity 0.2s'
+                        display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--primary)',
+                        color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
                     }}
                 >
-                    {saving ? 'Saving...' : <><FloppyDisk size={20} /> Save Changes</>}
+                    <Plus size={20} /> {t('dashboard.hospital.blood.update_inventory')}
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1.5rem' }}>
-                {stocks.map(stock => (
-                    <div key={stock.blood_group} style={{
-                        background: 'var(--surface)', padding: '1.5rem', borderRadius: '16px',
-                        border: '1px solid var(--border)', textAlign: 'center', boxShadow: 'var(--shadow-sm)'
-                    }}>
-                        <div style={{
-                            width: '60px', height: '60px', borderRadius: '50%', background: '#FEE2E2',
-                            color: '#DC2626', fontSize: '1.5rem', fontWeight: 'bold',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem'
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                {BLOOD_GROUPS.map(group => {
+                    const item = inventory.find(i => i.blood_group === group);
+                    return (
+                        <div key={group} style={{
+                            background: 'var(--surface)', padding: '1.5rem', borderRadius: '16px',
+                            border: '1px solid var(--border)', textAlign: 'center',
+                            opacity: item ? 1 : 0.6
                         }}>
-                            {stock.blood_group}
+                            <div style={{
+                                width: '60px', height: '60px', margin: '0 auto 10px', borderRadius: '50%',
+                                background: '#FEE2E2', color: '#DC2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold'
+                            }}>
+                                <Drop size={32} weight="fill" />
+                            </div>
+                            <h3 style={{ margin: 0, fontSize: '1.8rem' }}>{group}</h3>
+                            <p style={{ margin: '5px 0', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary)' }}>
+                                {item ? `${item.units} ${t('dashboard.hospital.blood.units')}` : `0 ${t('dashboard.hospital.blood.units')}`}
+                            </p>
+                            {item && <span style={{ fontSize: '0.8rem', color: '#64748B' }}>{t('dashboard.hospital.blood.last_updated')}: {new Date(item.last_updated).toLocaleDateString()}</span>}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {showModal && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
+                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', width: '90%', maxWidth: '400px' }}>
+                        <h3>{t('dashboard.hospital.blood.modal_title')}</h3>
+
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ display: 'block', marginBottom: '5px' }}>{t('dashboard.hospital.blood.blood_group')}</label>
+                            <select
+                                value={selectedGroup} onChange={e => setSelectedGroup(e.target.value)}
+                                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            >
+                                {BLOOD_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
+                            </select>
                         </div>
 
-                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#1E293B', marginBottom: '1rem' }}>
-                            {stock.count}
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <label style={{ display: 'block', marginBottom: '5px' }}>{t('dashboard.hospital.blood.units_to_add')}</label>
+                            <input
+                                type="number" min="1"
+                                value={units} onChange={e => setUnits(Number(e.target.value))}
+                                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                            />
                         </div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Bags Available</div>
 
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                            <button
-                                onClick={() => updateCount(stock.blood_group, -1)}
-                                style={{
-                                    width: '40px', height: '40px', borderRadius: '8px', border: '1px solid #ccc',
-                                    background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                }}
-                            >
-                                <Minus size={20} />
-                            </button>
-                            <button
-                                onClick={() => updateCount(stock.blood_group, 1)}
-                                style={{
-                                    width: '40px', height: '40px', borderRadius: '8px', border: 'none',
-                                    background: 'var(--primary)', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                }}
-                            >
-                                <Plus size={20} />
-                            </button>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '10px', background: '#eee', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.cancel')}</button>
+                            <button onClick={updateInventory} style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>{t('common.save')}</button>
                         </div>
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
         </div>
     );
 }

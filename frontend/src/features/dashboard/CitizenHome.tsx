@@ -67,7 +67,7 @@ export default function CitizenHome() {
                     style={getTabStyle(activeTab === 'timeline')}
                 >
                     <FileText size={22} weight={activeTab === 'timeline' ? 'fill' : 'regular'} />
-                    {t('timeline')}
+                    {t('dashboard.timeline')}
                 </button>
 
                 <button
@@ -75,7 +75,7 @@ export default function CitizenHome() {
                     style={getTabStyle(activeTab === 'plan')}
                 >
                     <Heartbeat size={22} weight={activeTab === 'plan' ? 'fill' : 'regular'} />
-                    {t('health_plan')}
+                    {t('dashboard.health_plan')}
                 </button>
 
                 {/* AI Doctor Tab Added */}
@@ -84,7 +84,7 @@ export default function CitizenHome() {
                     style={getTabStyle(activeTab === 'ai')}
                 >
                     <Robot size={22} weight={activeTab === 'ai' ? 'fill' : 'regular'} />
-                    {t('ai_doctor')}
+                    {t('dashboard.ai_doctor')}
                 </button>
             </div>
 

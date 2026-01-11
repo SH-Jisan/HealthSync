@@ -1,5 +1,6 @@
 // src/features/blood/BloodFeed.tsx
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 // Fixed TS1484: Added 'type' keyword
 import type { BloodRequest } from '../../types';
@@ -7,6 +8,7 @@ import { Drop, Clock, Warning } from 'phosphor-react'; // Removed unused 'MapPin
 import { formatDistanceToNow } from 'date-fns';
 
 export default function BloodFeed() {
+    const { t } = useTranslation();
     const [requests, setRequests] = useState<BloodRequest[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -26,7 +28,7 @@ export default function BloodFeed() {
     };
 
     const handleDonate = async (request: BloodRequest) => {
-        if (!confirm('Are you sure you want to donate blood for this request?')) return;
+        if (!confirm(t('blood.feed.confirm_donate'))) return;
 
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
@@ -38,11 +40,11 @@ export default function BloodFeed() {
             });
 
             if (error?.code === '23505') {
-                alert('You have already accepted this request!');
+                alert(t('blood.feed.already_accepted'));
             } else if (error) {
                 throw error;
             } else {
-                alert(`Thank you! Please contact: ${request.profiles?.phone}`);
+                alert(t('blood.feed.thank_you', { phone: request.profiles?.phone }));
                 fetchRequests();
             }
         } catch (err: unknown) {
@@ -55,17 +57,17 @@ export default function BloodFeed() {
         }
     };
 
-    if (loading) return <div style={{textAlign: 'center', marginTop: '2rem'}}>Loading Feed...</div>;
+    if (loading) return <div style={{ textAlign: 'center', marginTop: '2rem' }}>{t('blood.feed.loading')}</div>;
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <h2 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span style={{ width: '12px', height: '12px', background: 'red', borderRadius: '50%', display: 'inline-block', boxShadow: '0 0 10px red' }}></span>
-                Live Blood Requests
+                {t('blood.feed.title')}
             </h2>
 
             {requests.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No pending requests. Good job heroes!</div>
+                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{t('blood.feed.no_requests')}</div>
             ) : (
                 requests.map(req => (
                     <div key={req.id} style={{
@@ -100,8 +102,8 @@ export default function BloodFeed() {
 
                             {req.urgency === 'CRITICAL' && (
                                 <span style={{ background: '#FEE2E2', color: '#DC2626', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Warning size={16} weight="fill"/> CRITICAL
-                </span>
+                                    <Warning size={16} weight="fill" /> {t('blood.request.critical')}
+                                </span>
                             )}
                         </div>
 
@@ -109,7 +111,7 @@ export default function BloodFeed() {
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem' }}>
                             <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                Requested by: <strong>{req.profiles?.full_name || 'Unknown'}</strong>
+                                {t('blood.feed.requested_by')} <strong>{req.profiles?.full_name || 'Unknown'}</strong>
                             </div>
                             <button
                                 onClick={() => handleDonate(req)}
@@ -124,7 +126,7 @@ export default function BloodFeed() {
                                     display: 'flex', alignItems: 'center', gap: '8px'
                                 }}
                             >
-                                <Drop weight="fill"/> I CAN DONATE
+                                <Drop weight="fill" /> {t('blood.feed.donate_btn')}
                             </button>
                         </div>
                     </div>

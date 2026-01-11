@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DiagnosticSearch from './DiagnosticSearch';
 import DiagnosticPatients from './DiagnosticPatients';
 import DiagnosticPatientView from './DiagnosticPatientView';
 
 export default function DiagnosticHome() {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('assigned');
     const [selectedPatient, setSelectedPatient] = useState<any>(null);
 
@@ -25,7 +27,7 @@ export default function DiagnosticHome() {
                             textTransform: 'capitalize'
                         }}
                     >
-                        {tab === 'assigned' ? 'Assigned Patients' : 'Search & Register'}
+                        {tab === 'assigned' ? t('dashboard.diagnostic.tabs.assigned') : t('dashboard.diagnostic.tabs.search')}
                     </button>
                 ))}
             </div>

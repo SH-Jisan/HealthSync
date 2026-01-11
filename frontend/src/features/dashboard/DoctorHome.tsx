@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DoctorAppointments from './doctor/DoctorAppointments';
 import DoctorChambers from './doctor/DoctorChambers';
 import DoctorMyPatients from './doctor/DoctorMyPatients';
 
 export default function DoctorHome() {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'appointments' | 'patients' | 'chambers'>('appointments');
 
     return (
@@ -14,8 +16,8 @@ export default function DoctorHome() {
                 background: 'linear-gradient(to right, var(--primary), var(--primary-dark))',
                 padding: '2rem', borderRadius: '16px', color: 'white', marginBottom: '2rem'
             }}>
-                <h1 style={{ margin: 0 }}>Doctor's Panel</h1>
-                <p style={{ opacity: 0.9 }}>Manage appointments, patients, and chambers.</p>
+                <h1 style={{ margin: 0 }}>{t('dashboard.doctor.title')}</h1>
+                <p style={{ opacity: 0.9 }}>{t('dashboard.doctor.subtitle')}</p>
             </div>
 
             {/* Tabs */}
@@ -23,9 +25,9 @@ export default function DoctorHome() {
                 display: 'flex', gap: '2rem', borderBottom: '1px solid var(--border)', marginBottom: '2rem'
             }}>
                 {[
-                    { id: 'appointments', label: 'Appointments' },
-                    { id: 'patients', label: 'My Patients' },
-                    { id: 'chambers', label: 'My Chambers' },
+                    { id: 'appointments', label: t('dashboard.doctor.tabs.appointments') },
+                    { id: 'patients', label: t('dashboard.doctor.tabs.patients') },
+                    { id: 'chambers', label: t('dashboard.doctor.tabs.chambers') },
                 ].map((tab) => (
                     <button
                         key={tab.id}

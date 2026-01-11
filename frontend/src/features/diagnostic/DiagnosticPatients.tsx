@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { useTranslation } from 'react-i18next';
+import { supabase } from '../../lib/supabaseClient.ts';
 import { User } from 'phosphor-react';
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default function DiagnosticPatients({ onSelectPatient }: Props) {
+    const { t } = useTranslation();
     const [patients, setPatients] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -26,11 +28,11 @@ export default function DiagnosticPatients({ onSelectPatient }: Props) {
         fetchPatients();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div>{t('common.loading')}</div>;
 
     return (
         <div>
-            {patients.length === 0 ? <p>No assigned patients.</p> : (
+            {patients.length === 0 ? <p>{t('dashboard.diagnostic.patients.no_assigned')}</p> : (
                 <div style={{ display: 'grid', gap: '1rem' }}>
                     {patients.map(p => (
                         <div
