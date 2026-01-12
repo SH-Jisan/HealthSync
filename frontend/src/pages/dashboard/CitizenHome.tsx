@@ -1,53 +1,30 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next'; // <--- Import Hook
+import { useTranslation } from 'react-i18next';
 import { FileText, Heartbeat, Plus, Robot } from 'phosphor-react';
-import TimelineView from '../../features/timeline/TimelineView.tsx';
-import HealthPlanView from '../../features/health-plan/HealthPlanView.tsx';
-import AIDoctor from '../../features/ai-doctor/AIDoctor.tsx'; // <--- Import AI Doctor
-import UploadModal from '../../features/upload/UploadModal.tsx';
+import TimelineView from '../../features/timeline/TimelineView';
+import HealthPlanView from '../../features/health-plan/HealthPlanView';
+import AIDoctor from '../../features/ai-doctor/AIDoctor';
+import UploadModal from '../../features/upload/UploadModal';
+import styles from './styles/CitizenHome.module.css';
 
 export default function CitizenHome() {
-    const { t } = useTranslation(); // <--- Init Hook
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'timeline' | 'plan' | 'ai'>('timeline');
     const [showUpload, setShowUpload] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
     return (
-        <div>
+        <div className={styles.container}>
             {/* Header Section */}
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '2rem'
-            }}>
+            <div className={styles.header}>
                 <div>
-                    <h1 style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '0.5rem' }}>
-                        {t('welcome')}
-                    </h1>
-                    <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
-                        {t('overview')}
-                    </p>
+                    <h1 className={styles.title}>{t('welcome')}</h1>
+                    <p className={styles.subtitle}>{t('overview')}</p>
                 </div>
 
                 <button
                     onClick={() => setShowUpload(true)}
-                    style={{
-                        background: 'var(--primary)',
-                        color: 'white',
-                        border: 'none',
-                        padding: '0.8rem 1.5rem',
-                        borderRadius: '50px',
-                        fontWeight: 600,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        cursor: 'pointer',
-                        boxShadow: 'var(--shadow-md)',
-                        transition: 'transform 0.2s'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    className={styles.addReportBtn}
                 >
                     <Plus size={20} weight="bold" />
                     {t('add_report')}
@@ -55,16 +32,10 @@ export default function CitizenHome() {
             </div>
 
             {/* Tab Navigation */}
-            <div style={{
-                display: 'flex',
-                gap: '2rem',
-                marginBottom: '2rem',
-                borderBottom: '2px solid var(--border)',
-                paddingBottom: '0'
-            }}>
+            <div className={styles.tabs}>
                 <button
                     onClick={() => setActiveTab('timeline')}
-                    style={getTabStyle(activeTab === 'timeline')}
+                    className={`${styles.tabBtn} ${activeTab === 'timeline' ? styles.activeTab : ''}`}
                 >
                     <FileText size={22} weight={activeTab === 'timeline' ? 'fill' : 'regular'} />
                     {t('dashboard.timeline')}
@@ -72,16 +43,15 @@ export default function CitizenHome() {
 
                 <button
                     onClick={() => setActiveTab('plan')}
-                    style={getTabStyle(activeTab === 'plan')}
+                    className={`${styles.tabBtn} ${activeTab === 'plan' ? styles.activeTab : ''}`}
                 >
                     <Heartbeat size={22} weight={activeTab === 'plan' ? 'fill' : 'regular'} />
                     {t('dashboard.health_plan')}
                 </button>
 
-                {/* AI Doctor Tab Added */}
                 <button
                     onClick={() => setActiveTab('ai')}
-                    style={getTabStyle(activeTab === 'ai')}
+                    className={`${styles.tabBtn} ${activeTab === 'ai' ? styles.activeTab : ''}`}
                 >
                     <Robot size={22} weight={activeTab === 'ai' ? 'fill' : 'regular'} />
                     {t('dashboard.ai_doctor')}
@@ -89,7 +59,7 @@ export default function CitizenHome() {
             </div>
 
             {/* Tab Content Area */}
-            <div style={{ minHeight: '400px', animation: 'fadeIn 0.3s ease-in' }}>
+            <div className={styles.contentArea}>
                 {activeTab === 'timeline' && <TimelineView key={refreshKey} />}
                 {activeTab === 'plan' && <HealthPlanView />}
                 {activeTab === 'ai' && <AIDoctor />}
@@ -102,32 +72,6 @@ export default function CitizenHome() {
                     onSuccess={() => setRefreshKey(prev => prev + 1)}
                 />
             )}
-
-            <style>{`
-                @keyframes fadeIn {
-                  from { opacity: 0; transform: translateY(10px); }
-                  to { opacity: 1; transform: translateY(0); }
-                }
-            `}</style>
         </div>
     );
-}
-
-// Helper Style Function
-function getTabStyle(isActive: boolean) {
-    return {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        padding: '1rem 0',
-        background: 'none',
-        border: 'none',
-        borderBottom: isActive ? '3px solid var(--primary)' : '3px solid transparent',
-        color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
-        fontWeight: isActive ? 600 : 500,
-        cursor: 'pointer',
-        fontSize: '1rem',
-        marginBottom: '-2px',
-        transition: 'color 0.2s'
-    };
 }

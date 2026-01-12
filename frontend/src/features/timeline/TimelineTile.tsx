@@ -1,7 +1,6 @@
-/* eslint-disable */
 import { format } from 'date-fns';
 import { bn } from 'date-fns/locale';
-import { FileText, Pill, Syringe } from 'phosphor-react'; // Icons
+import { FileText, Pill, Syringe } from 'phosphor-react';
 import { useTranslation } from 'react-i18next';
 import type { MedicalEvent } from '../../types';
 import styles from './TimelineTile.module.css';
@@ -14,16 +13,14 @@ interface Props {
 export default function TimelineTile({ event, isLast }: Props) {
     const { t, i18n } = useTranslation();
 
-    // Event Type অনুযায়ী আইকন
     const getIcon = () => {
         switch (event.event_type) {
-            case 'PRESCRIPTION': return <Pill size={20} color="#9333EA" />; // Purple
+            case 'PRESCRIPTION': return <Pill size={20} color="#9333EA" />;
             case 'VACCINATION': return <Syringe size={20} color="#00796B" />;
             default: return <FileText size={20} color="#00796B" />;
         }
     };
 
-    // Severity অনুযায়ী স্টাইল
     const getBadgeClass = () => {
         switch (event.severity) {
             case 'HIGH': return styles.high;
@@ -54,16 +51,10 @@ export default function TimelineTile({ event, isLast }: Props) {
 
                 {event.summary && <p className={styles.summary}>{event.summary}</p>}
 
-                {/* Key Findings Chips (Optional) */}
                 {event.key_findings && event.key_findings.length > 0 && (
-                    <div style={{ marginTop: '10px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <div className={styles.findingsWrapper}>
                         {event.key_findings.map((finding, idx) => (
-                            <span key={idx} style={{
-                                fontSize: '0.75rem',
-                                background: '#F1F5F9',
-                                padding: '4px 8px',
-                                borderRadius: '6px'
-                            }}>
+                            <span key={idx} className={styles.findingChip}>
                                 {finding}
                             </span>
                         ))}

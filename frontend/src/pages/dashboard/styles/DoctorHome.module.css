@@ -44,7 +44,7 @@
     white-space: nowrap;
 }
 
-.tabButton.active {
+.activeTab {
     font-weight: 600;
     color: #2563EB;
     border-bottom: 3px solid #2563EB;

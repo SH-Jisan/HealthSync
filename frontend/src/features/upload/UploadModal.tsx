@@ -15,9 +15,12 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
     const [files, setFiles] = useState<File[]>([]);
     const [uploading, setUploading] = useState(false);
     const [status, setStatus] = useState('');
+    const [isError, setIsError] = useState(false);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         setFiles(acceptedFiles);
+        setIsError(false);
+        setStatus('');
     }, []);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -32,6 +35,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
     const handleUpload = async () => {
         if (files.length === 0) return;
         setUploading(true);
+        setIsError(false);
         setStatus(t('upload.status_uploading'));
 
         try {
@@ -43,7 +47,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
             const fileExt = file.name.split('.').pop();
             const fileName = `${user.id}/${Date.now()}.${fileExt}`;
             const { error: uploadError } = await supabase.storage
-                .from('medical_docs') // Ensure this bucket exists in your Supabase
+                .from('medical_docs')
                 .upload(fileName, file);
 
             if (uploadError) throw uploadError;
@@ -68,6 +72,7 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
         } catch (error: unknown) {
             console.error('Upload failed:', error);
             const message = error instanceof Error ? error.message : 'Unknown error';
+            setIsError(true);
             setStatus(`${t('upload.error_fail')}: ${message}`);
         } finally {
             setUploading(false);
@@ -77,9 +82,9 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
     return (
         <div className={styles.overlay}>
             <div className={styles.modal}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                    <h3>{t('upload.title')}</h3>
-                    <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <div className={styles.header}>
+                    <h3 className={styles.title}>{t('upload.title')}</h3>
+                    <button onClick={onClose} className={styles.closeBtn}>
                         <X size={24} />
                     </button>
                 </div>
@@ -90,19 +95,22 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
                 >
                     <input {...getInputProps()} />
                     <CloudArrowUp size={48} color="var(--primary)" />
-                    <p>{t('upload.drag_drop')}</p>
-                    <small style={{ color: 'var(--text-secondary)' }}>{t('upload.supports')}</small>
+                    <p className={styles.dropText}>{t('upload.drag_drop')}</p>
+                    <small className={styles.supportText}>{t('upload.supports')}</small>
                 </div>
 
                 {files.length > 0 && (
                     <div className={styles.fileList}>
                         {files.map((file, idx) => (
                             <div key={idx} className={styles.fileItem}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <div className={styles.fileInfo}>
                                     <FileImage size={20} />
                                     {file.name}
                                 </div>
-                                <button onClick={() => setFiles([])} style={{ color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                <button
+                                    onClick={() => setFiles([])}
+                                    className={styles.removeBtn}
+                                >
                                     <X size={16} />
                                 </button>
                             </div>
@@ -110,22 +118,27 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
                     </div>
                 )}
 
-                {status && <p style={{ marginTop: '1rem', textAlign: 'center', color: uploading ? 'var(--primary)' : 'red' }}>{status}</p>}
+                {status && (
+                    <p className={`${styles.status} ${isError ? styles.statusError : styles.statusUploading}`}>
+                        {status}
+                    </p>
+                )}
 
                 <button
                     className={styles.uploadBtn}
                     onClick={handleUpload}
                     disabled={files.length === 0 || uploading}
                 >
-                    {uploading ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><Spinner className="spin" size={20} /> {t('upload.processing')}</span> : t('upload.btn_analyze')}
+                    {uploading ? (
+                        <span className={styles.spinnerWrapper}>
+                            <Spinner className={styles.spinner} size={20} />
+                            {t('upload.processing')}
+                        </span>
+                    ) : (
+                        t('upload.btn_analyze')
+                    )}
                 </button>
             </div>
-
-            {/* CSS Animation for Spinner */}
-            <style>{`
-        .spin { animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-      `}</style>
         </div>
     );
 }

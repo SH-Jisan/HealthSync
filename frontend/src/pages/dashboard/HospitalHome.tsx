@@ -4,7 +4,7 @@ import HospitalOverview from '../../features/hospital/HospitalOverview.tsx';
 import HospitalDoctors from '../../features/hospital/HospitalDoctors.tsx';
 import HospitalPatients from '../../features/hospital/HospitalPatients.tsx';
 import HospitalBloodBank from "../../features/hospital/HospitalBloodBank.tsx";
-import styles from './HospitalHome.module.css';
+import styles from './styles/HospitalHome.module.css';
 
 export default function HospitalHome() {
     const { t } = useTranslation();

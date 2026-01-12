@@ -1,5 +1,5 @@
 import { Buildings, Handshake, FirstAidKit, Globe } from 'phosphor-react';
-import styles from './TrustedPartners.module.css';
+import styles from './styles/TrustedPartners.module.css';
 
 export default function TrustedPartners() {
     return (

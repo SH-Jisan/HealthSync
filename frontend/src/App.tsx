@@ -1,9 +1,9 @@
-// src/App.tsx
 import { BrowserRouter } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from './lib/supabaseClient';
 import AppRoutes from './routes/AppRoutes';
+import styles from './styles/App.module.css';
 
 function App() {
     const [session, setSession] = useState<Session | null>(null);
@@ -26,14 +26,7 @@ function App() {
 
     if (loading) {
         return (
-            <div style={{
-                height: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'sans-serif',
-                color: 'var(--primary)'
-            }}>
+            <div className={styles.loadingContainer}>
                 Loading HealthSync...
             </div>
         );

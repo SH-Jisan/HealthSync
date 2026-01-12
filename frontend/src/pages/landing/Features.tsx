@@ -1,5 +1,5 @@
 import { Brain, Heartbeat, ShieldCheck, Users } from 'phosphor-react';
-import styles from './Features.module.css';
+import styles from './styles/Features.module.css';
 
 const features = [
     {

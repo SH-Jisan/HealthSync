@@ -5,7 +5,7 @@ import Hero from './Hero';
 import TrustedPartners from './TrustedPartners';
 import Features from './Features';
 import Footer from './Footer';
-import styles from './LandingPage.module.css';
+import styles from './styles/LandingPage.module.css';
 
 // লোগোর শুরুর পজিশন (Center & Big)
 const initialLogoPosition = {

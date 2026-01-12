@@ -1,0 +1,12 @@
+/* src/App.module.css */
+
+.loadingContainer {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    color: var(--primary);
+    font-size: 1.2rem;
+    font-weight: 500;
+}

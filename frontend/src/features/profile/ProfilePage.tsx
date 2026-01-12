@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import {
@@ -50,6 +50,7 @@ export default function ProfilePage() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchProfile();
     }, []);
 

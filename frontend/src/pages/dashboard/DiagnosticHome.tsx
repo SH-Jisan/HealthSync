@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import DiagnosticSearch from '../../features/diagnostic/DiagnosticSearch.tsx';
 import DiagnosticPatients, { type Patient } from '../../features/diagnostic/DiagnosticPatients.tsx';
 import DiagnosticPatientView from '../../features/diagnostic/DiagnosticPatientView.tsx';
-import styles from './DiagnosticHome.module.css';
+import styles from './styles/DiagnosticHome.module.css';
 
 export default function DiagnosticHome() {
     const { t } = useTranslation();

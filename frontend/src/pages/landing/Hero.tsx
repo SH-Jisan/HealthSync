@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import styles from './Hero.module.css';
+import styles from './styles/Hero.module.css';
 
 export default function Hero() {
     const navigate = useNavigate();

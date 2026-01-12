@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import styles from './Navbar.module.css';
+import styles from './styles/Navbar.module.css';
 
 interface NavbarProps {
     showLogo?: boolean;

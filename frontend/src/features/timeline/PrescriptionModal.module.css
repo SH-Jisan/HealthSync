@@ -1,0 +1,226 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modalContainer {
+    background: white;
+    width: 100%;
+    max-width: 700px;
+    height: 90vh;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.header {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+}
+
+.titleGroup {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+}
+
+.headerActions {
+    display: flex;
+    gap: 10px;
+}
+
+.printBtn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.printBtn:hover {
+    background: var(--primary-dark);
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.closeBtn:hover {
+    background: #f1f5f9;
+    color: var(--error);
+}
+
+.scrollArea {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    background: #f9fafb;
+}
+
+.printPaper {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    min-height: 100%;
+    color: black; /* Force black for print */
+}
+
+/* Print Specific Header */
+.brandHeader {
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.brandTitle {
+    margin: 0 0 5px 0;
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+.brandSubtitle {
+    margin: 0;
+    color: gray;
+    font-size: 0.9rem;
+}
+
+.doctorInfo h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+}
+
+.doctorInfo p {
+    margin: 0;
+    color: gray;
+}
+
+/* Patient Info */
+.patientInfoCard {
+    margin-bottom: 30px;
+    padding: 15px;
+    background: #F8FAFC;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+}
+
+.patientGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* RX Section */
+.rxSection {
+    margin-bottom: 40px;
+}
+
+.rxTitle {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.rxContent {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.rxList {
+    padding-left: 20px;
+    margin: 0;
+}
+
+/* Advice */
+.adviceSection {
+    margin-top: 20px;
+}
+
+.adviceTitle {
+    margin: 0 0 10px 0;
+}
+
+.adviceBox {
+    background: #FFF7ED;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid orange;
+}
+
+/* Signature */
+.signatureArea {
+    margin-top: 80px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.signatureLine {
+    text-align: center;
+    width: 200px;
+}
+
+.line {
+    border-bottom: 1px solid black;
+    margin-bottom: 5px;
+}
+
+.printFooter {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+/* Print Media Query */
+@media print {
+    .overlay {
+        position: static;
+        background: white;
+        display: block;
+    }
+    .modalContainer {
+        width: 100%;
+        max-width: none;
+        height: auto;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    .header {
+        display: none;
+    }
+    .scrollArea {
+        padding: 0;
+        background: white;
+    }
+    .printPaper {
+        box-shadow: none;
+        padding: 0;
+    }
+}
