@@ -1,54 +1,45 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import DoctorAppointments from './doctor/DoctorAppointments';
-import DoctorChambers from './doctor/DoctorChambers';
-import DoctorMyPatients from './doctor/DoctorMyPatients';
+import DiagnosticTests from './diagnostic/DiagnosticTests';
+import DiagnosticUpload from './diagnostic/DiagnosticUpload';
+import { ClipboardText, UploadSimple } from 'phosphor-react';
 
-export default function DoctorHome() {
-    const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState<'appointments' | 'patients' | 'chambers'>('appointments');
+export default function DiagnosticHome() {
+    const [activeTab, setActiveTab] = useState<'tests' | 'upload'>('tests');
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-
-            {/* Header Panel */}
-            <div style={{
-                background: 'linear-gradient(to right, var(--primary), var(--primary-dark))',
-                padding: '2rem', borderRadius: '16px', color: 'white', marginBottom: '2rem'
-            }}>
-                <h1 style={{ margin: 0 }}>{t('dashboard.doctor.title')}</h1>
-                <p style={{ opacity: 0.9 }}>{t('dashboard.doctor.subtitle')}</p>
+        <div>
+            <div style={{ background: 'linear-gradient(to right, #7E22CE, #9333EA)', padding: '2rem', borderRadius: '16px', color: 'white', marginBottom: '2rem' }}>
+                <h1 style={{ margin: 0 }}>Diagnostic Center Panel</h1>
+                <p style={{ opacity: 0.9 }}>Manage services and upload patient reports.</p>
             </div>
 
-            {/* Tabs */}
-            <div style={{
-                display: 'flex', gap: '2rem', borderBottom: '1px solid var(--border)', marginBottom: '2rem'
-            }}>
-                {[
-                    { id: 'appointments', label: t('dashboard.doctor.tabs.appointments') },
-                    { id: 'patients', label: t('dashboard.doctor.tabs.patients') },
-                    { id: 'chambers', label: t('dashboard.doctor.tabs.chambers') },
-                ].map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
-                        style={{
-                            padding: '1rem 0', background: 'none', border: 'none', cursor: 'pointer',
-                            fontSize: '1rem', fontWeight: 600,
-                            color: activeTab === tab.id ? 'var(--primary)' : 'var(--text-secondary)',
-                            borderBottom: activeTab === tab.id ? '3px solid var(--primary)' : '3px solid transparent'
-                        }}
-                    >
-                        {tab.label}
-                    </button>
-                ))}
+            <div style={{ display: 'flex', gap: '2rem', borderBottom: '1px solid var(--border)', marginBottom: '2rem' }}>
+                <button
+                    onClick={() => setActiveTab('tests')}
+                    style={getTabStyle(activeTab === 'tests')}
+                >
+                    <ClipboardText size={20} /> Manage Tests
+                </button>
+                <button
+                    onClick={() => setActiveTab('upload')}
+                    style={getTabStyle(activeTab === 'upload')}
+                >
+                    <UploadSimple size={20} /> Upload Report
+                </button>
             </div>
 
-            {/* Content */}
-            {activeTab === 'appointments' && <DoctorAppointments />}
-            {activeTab === 'patients' && <DoctorMyPatients />}
-            {activeTab === 'chambers' && <DoctorChambers />}
-
+            {activeTab === 'tests' && <DiagnosticTests />}
+            {activeTab === 'upload' && <DiagnosticUpload />}
         </div>
     );
+}
+
+function getTabStyle(isActive: boolean) {
+    return {
+        display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '1rem 0', background: 'none', border: 'none', cursor: 'pointer',
+        fontSize: '1rem', fontWeight: 600,
+        color: isActive ? '#7E22CE' : 'var(--text-secondary)',
+        borderBottom: isActive ? '3px solid #7E22CE' : '3px solid transparent',
+    };
 }
