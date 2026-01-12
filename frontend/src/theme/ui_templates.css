@@ -1,0 +1,134 @@
+/* -------------------------------------------------------------------------- */
+/*                                 UI TEMPLATES                               */
+/* -------------------------------------------------------------------------- */
+
+/* 
+ * Usage: Apply these classes to your elements to inherit the HealthSync Premium Theme.
+ * Ensure you have imported 'design_tokens.css' before this file.
+ */
+
+/* --- 1. GLASSMORPHISM --- */
+
+/* Premium Glass Card (Light) - Used in Features */
+.t-card-glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-xl);
+    transition: all 0.4s var(--ease-smooth);
+}
+
+.t-card-glass:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-light);
+}
+
+/* Navbar Glass - Frosty header effect */
+.t-glass-nav {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Overlay Glass - For modals or dark overlays */
+.t-glass-overlay {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* --- 2. GRADIENTS & BACKGROUNDS --- */
+
+/* The Signature Hero Mesh */
+.t-bg-hero {
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Adds a subtle noise/shine texture (requires a psuedo element usually, here as a utility mixin concept) */
+.t-bg-hero-texture {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+}
+
+.t-text-gradient {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* --- 3. BUTTONS & INTERACTIVE --- */
+
+/* Primary Action Button (Pill shape, shadow, lift) */
+.t-btn-primary {
+    background: var(--surface);
+    color: var(--gradient-start);
+    padding: 16px 36px;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0, 86, 210, 0.2);
+    transition: all 0.4s var(--ease-spring);
+}
+
+.t-btn-primary:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 86, 210, 0.3);
+}
+
+/* Secondary Ghost Button */
+.t-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    color: var(--text-inverse);
+    padding: 16px 36px;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.t-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+/* --- 4. LAYOUT & TYPOGRAPHY --- */
+
+.t-section-padding {
+    padding: 100px 5%;
+}
+
+.t-section-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+/* Centered underline for titles */
+.t-title-underline {
+    width: 60px;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.t-grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+}

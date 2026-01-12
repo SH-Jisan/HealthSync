@@ -1,66 +1,189 @@
 /* auth/LoginPage.module.css */
 
 .container {
-    min-height: 100vh;
+    height: 100vh;
+    /* Fixed height for split screen */
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* Fix horizontal scrollbar */
+    overflow: hidden;
+    /* Prevent page scroll */
+}
+
+/* --- Left Side: Medical Brand Panel --- */
+.brandPanel {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    /* Full height */
+}
+
+.brandPanel::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+    top: -50%;
+    left: -50%;
+    animation: pulseBg 4s infinite ease-in-out;
+}
+
+.brandContent {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 450px;
+}
+
+.brandLogo {
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--background);
-    padding: 1rem;
+    font-size: 3rem;
+    margin: 0 auto 30px;
+    box-shadow: 0 0 30px rgba(174, 234, 0, 0.2);
+    animation: heartbeat 3s infinite;
+}
+
+.brandTitle {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+.brandSubtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+/* --- Right Side: Clinical Form Panel --- */
+.formPanel {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    /* Scroll here instead of inside box */
+    display: flex;
+    flex-direction: column;
+    /* Ensure vertical stacking for margin:auto */
+    align-items: center;
+    justify-content: flex-start;
+    /* Let margin:auto handle centering */
+    background: #FFFFFF;
+    padding: 40px;
+    position: relative;
+    /* For absolute positioning of Back button */
+}
+
+.backBtn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.backBtn:hover {
+    color: var(--primary);
+    transform: translateX(-4px);
+    /* Subtle slide interaction */
 }
 
 .formBox {
     width: 100%;
-    max-width: 400px;
-    padding: 2.5rem;
-    background: var(--surface);
-    border-radius: 16px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border);
+    max-width: 440px;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* হেডার এবং ফর্মের মাঝে গ্যাপ */
+    gap: 2rem;
+    margin: auto;
+    /* Robust centering */
 }
 
 .header {
-    text-align: center;
+    text-align: left;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .title {
-    color: var(--primary);
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    margin-top: 0;
+    color: var(--text-primary);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .subtitle {
     color: var(--text-secondary);
-    margin: 0;
+    font-size: 1rem;
 }
 
 .inputsContainer {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* ইনপুটগুলোর মাঝে গ্যাপ */
+    gap: 1.5rem;
 }
 
+/* Clinical Inputs */
 .inputGroup {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 12px;
-    background: var(--background);
-    border: 1px solid transparent;
-    transition: border-color 0.2s;
+    gap: 15px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: #F9FAFB;
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.inputGroup:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.inputGroup:nth-child(2) {
+    animation-delay: 0.2s;
 }
 
 .inputGroup:focus-within {
+    background: #FFFFFF;
     border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 121, 107, 0.15);
+    transform: translateY(-2px);
 }
 
 .icon {
     color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.inputGroup:focus-within .icon {
+    color: var(--primary);
 }
 
 .input {
@@ -70,39 +193,139 @@
     width: 100%;
     font-size: 1rem;
     color: var(--text-primary);
+    font-weight: 500;
 }
 
 .submitBtn {
     width: 100%;
-    padding: 14px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+    transition: transform 0.2s, background 0.2s;
 }
 
-.submitBtn:hover {
-    background: var(--primary-dark);
+.submitBtn:active {
+    transform: scale(0.98);
 }
 
-.submitBtn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.signupText {
+.footer {
     text-align: center;
+    margin-top: 20px;
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin: 0;
+    font-size: 0.95rem;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s;
 }
 
 .link {
     color: var(--primary);
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+/* --- Animations --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+
+    5% {
+        transform: scale(1.1);
+        box-shadow: 0 0 40px rgba(174, 234, 0, 0.4);
+    }
+
+    10% {
+        transform: scale(1);
+    }
+
+    15% {
+        transform: scale(1.1);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulseBg {
+    0% {
+        transform: scale(1);
+        opacity: 0.1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.2;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.1;
+    }
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        /* Allow natural scroll */
+        overflow-y: auto;
+    }
+
+    .brandPanel {
+        flex: 0 0 auto;
+        padding: 40px 20px;
+        min-height: 30vh;
+        height: auto;
+    }
+
+    .brandLogo {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .brandTitle {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .formPanel {
+        flex: 1;
+        height: auto;
+        overflow-y: visible;
+        padding: 40px 20px;
+        align-items: flex-start;
+    }
+
+    .header,
+    .formBox {
+        text-align: center;
+    }
+
+    .formBox {
+        margin: 0 auto;
+    }
 }

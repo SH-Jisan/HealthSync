@@ -26,7 +26,7 @@ export default function Navbar({ showLogo = true }: NavbarProps) {
             >
                 {/* Invisible Placeholder Image */}
                 <img
-                    src="/logo.png"
+                    src="/logo2.png"
                     alt="HealthSync Logo"
                     className={styles.logoImage}
                     style={{ opacity: 0 }}
@@ -47,7 +47,7 @@ export default function Navbar({ showLogo = true }: NavbarProps) {
                     <span style={{ color: '#0056D2' }}>Health</span>
 
                     {/* Sync: উজ্জ্বল সবুজ */}
-                    <span style={{ color: '#4CAF50' }}>Sync</span>
+                    <span style={{ color: '#00796B' }}>Sync</span>
                 </span>
             </div>
 

@@ -23,7 +23,7 @@ const getTargetPosition = (animate: boolean) => {
     if (!animate) return {};
     const isMobile = window.innerWidth < 768;
     return {
-        top: isMobile ? '7px' : '10px',     // Navbar এর উচ্চতা অনুযায়ী ফাইনাল পজিশন
+        top: isMobile ? '7px' : '15px',     // Navbar এর উচ্চতা অনুযায়ী ফাইনাল পজিশন
         left: isMobile ? '15px' : '5%',      // Navbar এর প্যাডিং অনুযায়ী
         x: '0%',
         y: isMobile ? '-10%' : '-15%',
@@ -38,7 +38,7 @@ export default function LandingPage() {
         // ৫ সেকেন্ড পর অ্যানিমেশন শুরু হবে
         const timer = setTimeout(() => {
             setAnimate(true);
-        }, 500);
+        }, 1000);
 
         return () => clearTimeout(timer);
     }, []);

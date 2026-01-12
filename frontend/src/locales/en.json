@@ -10,6 +10,7 @@
       "edit": "Edit",
       "view": "View",
       "back": "Back",
+      "back_home": "Back to Home",
       "search": "Search",
       "filter": "Filter",
       "status": "Status",
@@ -93,7 +94,15 @@
         "DIAGNOSTIC": "Diagnostic Center"
       },
       "success_msg": "Account created successfully! Please check your email to verify.",
-      "error_msg": "Signup failed"
+      "error_msg": "Signup failed",
+      "join_healthsync": "Join HealthSync",
+      "brand_subtitle": "One Life, One Record, Total Care",
+      "brand_list": {
+        "l1": "Unified Medical History Timeline",
+        "l2": "Instant Doctor Appointments",
+        "l3": "AI-Powered Health Analytics",
+        "l4": "Secure & Private Data Encryption"
+      }
     },
     "menu": {
       "dashboard": "Dashboard",

@@ -11,7 +11,7 @@
     overflow: hidden;
     padding: 100px 20px 60px;
     text-align: center;
-    background: linear-gradient(135deg, #0056D2 0%, #009688 100%);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
 }
 
 .gradient_box::before {
@@ -44,7 +44,7 @@
 }
 
 .highlight {
-    color: #AEEA00;
+    color: var(--highlight);
     text-shadow: 0 0 15px rgba(174, 234, 0, 0.2);
 }
 
@@ -76,13 +76,13 @@
 
 .primaryBtn {
     background: white;
-    color: #0056D2;
-    box-shadow: 0 10px 25px rgba(0, 86, 210, 0.2);
+    color: var(--primary);
+    box-shadow: 0 10px 25px rgba(0, 121, 107, 0.2);
 }
 
 .primaryBtn:hover {
     transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0, 86, 210, 0.3);
+    box-shadow: 0 15px 30px rgba(0, 121, 107, 0.3);
     background: #f8f9fa;
 }
 
@@ -131,6 +131,8 @@
 
     .heroDesc {
         font-size: 1.1rem;
+        animation: none;
+        /* Disable animation on mobile if needed, or keep it */
     }
 
     .ctaButtons {
