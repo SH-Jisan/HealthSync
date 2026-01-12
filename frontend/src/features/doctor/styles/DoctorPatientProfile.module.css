@@ -46,53 +46,56 @@
     font-weight: bold;
 }
 
-.patientName {
+.patientInfo h1 {
     margin: 0;
     color: var(--text-primary);
 }
 
-.patientContact {
+.contactText {
     margin: 0;
     color: var(--text-secondary);
 }
 
-.badgeGroup {
+.badges {
     display: flex;
     gap: 10px;
     margin-top: 10px;
 }
 
 .bloodBadge {
-    background: var(--primary-light);
+    background: #E0F2F1;
     color: var(--primary);
-    padding: 4px 12px;
+    padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.9rem;
-    font-weight: 500;
 }
 
-.locBadge {
+.locationBadge {
     background: #F3E8FF;
     color: #7E22CE;
-    padding: 4px 12px;
+    padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.9rem;
-    font-weight: 500;
 }
 
-.mainGrid {
+.layoutGrid {
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: 2rem;
 }
 
 @media (max-width: 850px) {
-    .mainGrid {
+    .layoutGrid {
         grid-template-columns: 1fr;
     }
 }
 
-.prescriptionCard {
+/* Prescription Form */
+.formContainer {
+    height: fit-content;
+}
+
+.formCard {
     background: var(--surface);
     padding: 1.5rem;
     border-radius: 16px;
@@ -100,10 +103,9 @@
     box-shadow: var(--shadow-sm);
     position: sticky;
     top: 20px;
-    height: fit-content;
 }
 
-.cardTitle {
+.formTitle {
     margin-top: 0;
     color: var(--primary);
     display: flex;
@@ -112,7 +114,7 @@
 }
 
 .formGroup {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
 }
 
 .label {
@@ -135,30 +137,16 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px;
-    border-radius: 4px;
-    transition: background 0.2s;
-}
-
-.testItem:hover {
-    background: rgba(0, 0, 0, 0.02);
+    padding: 5px;
 }
 
 .textarea {
     width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--background);
-    color: var(--text-primary);
-    resize: vertical;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
     font-family: inherit;
-    transition: border-color 0.2s;
-}
-
-.textarea:focus {
-    outline: none;
-    border-color: var(--primary);
+    resize: vertical;
 }
 
 .submitBtn {
@@ -167,23 +155,21 @@
     background: var(--primary);
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: opacity 0.2s;
+    transition: background 0.2s;
+}
+
+.submitBtn:hover {
+    background: var(--primary-dark);
 }
 
 .submitBtn:disabled {
-    opacity: 0.6;
+    opacity: 0.7;
     cursor: not-allowed;
-}
-
-.loading {
-    text-align: center;
-    padding: 4rem;
-    color: var(--text-secondary);
 }

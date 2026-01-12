@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
-import TimelineView from '../timeline/TimelineView.tsx';
+import { supabase } from '../../lib/supabaseClient';
+import TimelineView from '../timeline/TimelineView';
 import { ArrowLeft, Plus, CheckCircle } from 'phosphor-react';
+import styles from './styles/DoctorPatientProfile.module.css';
 
 interface PatientProfile {
     id: string;
@@ -26,12 +27,10 @@ export default function DoctorPatientProfile() {
 
     const [patient, setPatient] = useState<PatientProfile | null>(null);
     const [availableTests, setAvailableTests] = useState<Test[]>([]);
-
     const [selectedTests, setSelectedTests] = useState<string[]>([]);
     const [notes, setNotes] = useState('');
     const [saving, setSaving] = useState(false);
 
-    // Moved functions ABOVE useEffect
     const fetchPatient = async () => {
         if (!id) return;
         const { data } = await supabase.from('profiles').select('*').eq('id', id).single();
@@ -48,7 +47,6 @@ export default function DoctorPatientProfile() {
             fetchPatient();
             fetchTests();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     const handlePrescribe = async () => {
@@ -89,58 +87,48 @@ export default function DoctorPatientProfile() {
     if (!patient) return <div>{t('dashboard.doctor.profile.loading')}</div>;
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+        <div className={styles.container}>
+            <button onClick={() => navigate(-1)} className={styles.backBtn}>
                 <ArrowLeft size={20} /> {t('dashboard.doctor.profile.back')}
             </button>
 
             {/* Header */}
-            <div style={{
-                background: 'var(--surface)', padding: '2rem', borderRadius: '16px',
-                marginBottom: '2rem', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '1.5rem'
-            }}>
-                <div style={{
-                    width: '80px', height: '80px', borderRadius: '50%', background: 'var(--primary)',
-                    color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 'bold'
-                }}>
+            <div className={styles.headerCard}>
+                <div className={styles.avatar}>
                     {patient.full_name[0]}
                 </div>
-                <div>
-                    <h1 style={{ margin: 0 }}>{patient.full_name}</h1>
-                    <p style={{ margin: 0, color: 'var(--text-secondary)' }}>{patient.phone || patient.email}</p>
-                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                        <span style={{ background: '#E0F2F1', color: 'var(--primary)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.9rem' }}>
+                <div className={styles.patientInfo}>
+                    <h1>{patient.full_name}</h1>
+                    <p className={styles.contactText}>{patient.phone || patient.email}</p>
+                    <div className={styles.badges}>
+                        <span className={styles.bloodBadge}>
                             Blood: {patient.blood_group || 'N/A'}
                         </span>
-                        <span style={{ background: '#F3E8FF', color: '#7E22CE', padding: '4px 10px', borderRadius: '20px', fontSize: '0.9rem' }}>
+                        <span className={styles.locationBadge}>
                             {patient.district || 'Unknown Location'}
                         </span>
                     </div>
                 </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem' }}>
-
+            <div className={styles.layoutGrid}>
                 {/* Left: Timeline */}
                 <div>
-                    <TimelineView userId={id} />
+                    <TimelineView userId={id!} />
                 </div>
 
                 {/* Right: Prescription Form */}
-                <div style={{ height: 'fit-content' }}>
-                    <div style={{
-                        background: 'var(--surface)', padding: '1.5rem', borderRadius: '16px',
-                        border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', position: 'sticky', top: '20px'
-                    }}>
-                        <h3 style={{ marginTop: 0, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div className={styles.formContainer}>
+                    <div className={styles.formCard}>
+                        <h3 className={styles.formTitle}>
                             <Plus size={20} /> {t('dashboard.doctor.profile.new_prescription')}
                         </h3>
 
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label style={{ fontWeight: 600, display: 'block', marginBottom: '8px' }}>{t('dashboard.doctor.profile.select_tests')}</label>
-                            <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #eee', borderRadius: '8px', padding: '8px' }}>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>{t('dashboard.doctor.profile.select_tests')}</label>
+                            <div className={styles.testList}>
                                 {availableTests.map(test => (
-                                    <div key={test.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px' }}>
+                                    <div key={test.id} className={styles.testItem}>
                                         <input
                                             type="checkbox"
                                             checked={selectedTests.includes(test.name)}
@@ -155,31 +143,26 @@ export default function DoctorPatientProfile() {
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label style={{ fontWeight: 600, display: 'block', marginBottom: '8px' }}>{t('dashboard.doctor.profile.notes_label')}</label>
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>{t('dashboard.doctor.profile.notes_label')}</label>
                             <textarea
                                 rows={4}
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
                                 placeholder={t('dashboard.doctor.profile.notes_placeholder')}
-                                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }}
+                                className={styles.textarea}
                             />
                         </div>
 
                         <button
                             onClick={handlePrescribe}
                             disabled={saving}
-                            style={{
-                                width: '100%', padding: '12px', background: 'var(--primary)', color: 'white',
-                                border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
-                            }}
+                            className={styles.submitBtn}
                         >
                             {saving ? t('dashboard.doctor.profile.sending') : <><CheckCircle size={20} /> {t('dashboard.doctor.profile.confirm_send')}</>}
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { Bell, CheckCircle, Info, Warning, Trash } from 'phosphor-react';
 import { formatDistanceToNow } from 'date-fns';
+import styles from './NotificationsPage.module.css';
 
 interface Notification {
     id: string;
@@ -44,7 +45,7 @@ export default function NotificationsPage() {
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchNotifications();
-        markAllAsRead(); // পেজে আসলে সব রিড হয়ে যাবে
+        markAllAsRead();
     }, []);
 
     const deleteNotification = async (id: string) => {
@@ -60,45 +61,42 @@ export default function NotificationsPage() {
         }
     };
 
-    if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>{t('notifications.loading')}</div>;
+    if (loading) return <div className={styles.loading}>{t('notifications.loading')}</div>;
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+        <div className={styles.container}>
+            <div className={styles.header}>
                 <Bell size={32} color="var(--primary)" weight="fill" />
-                <h2 style={{ color: 'var(--primary)', margin: 0 }}>{t('notifications.title')}</h2>
+                <h2 className={styles.title}>{t('notifications.title')}</h2>
             </div>
 
             {notifications.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '3rem', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)' }}>
-                    <Bell size={48} color="var(--text-secondary)" style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                    <p style={{ color: 'var(--text-secondary)' }}>{t('notifications.no_notifications')}</p>
+                <div className={styles.emptyState}>
+                    <Bell size={48} className={styles.emptyIcon} />
+                    <p className={styles.emptyText}>{t('notifications.no_notifications')}</p>
                 </div>
             ) : (
-                <div style={{ display: 'grid', gap: '1rem' }}>
+                <div className={styles.list}>
                     {notifications.map((notif) => (
-                        <div key={notif.id} style={{
-                            background: notif.is_read ? 'var(--surface)' : '#EFF6FF',
-                            padding: '1.5rem', borderRadius: '12px',
-                            border: '1px solid var(--border)',
-                            display: 'flex', gap: '1rem', alignItems: 'start',
-                            transition: 'background 0.3s'
-                        }}>
-                            <div style={{ marginTop: '2px' }}>{getIcon(notif.type)}</div>
+                        <div
+                            key={notif.id}
+                            className={`${styles.card} ${!notif.is_read ? styles.unread : ''}`}
+                        >
+                            <div className={styles.iconWrapper}>{getIcon(notif.type)}</div>
 
-                            <div style={{ flex: 1 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                                    <h4 style={{ margin: 0, fontSize: '1.05rem' }}>{notif.title}</h4>
-                                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            <div className={styles.content}>
+                                <div className={styles.cardHeader}>
+                                    <h4 className={styles.cardTitle}>{notif.title}</h4>
+                                    <span className={styles.time}>
                                         {formatDistanceToNow(new Date(notif.created_at))} ago
                                     </span>
                                 </div>
-                                <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.5' }}>{notif.message}</p>
+                                <p className={styles.message}>{notif.message}</p>
                             </div>
 
                             <button
                                 onClick={() => deleteNotification(notif.id)}
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}
+                                className={styles.deleteBtn}
                                 title={t('notifications.delete_tooltip')}
                             >
                                 <Trash size={18} />

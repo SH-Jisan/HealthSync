@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabaseClient.ts';
+import { supabase } from '../../lib/supabaseClient';
 import { X, CalendarCheck } from 'phosphor-react';
 import type { Doctor } from '../../types';
+import styles from './styles/BookAppointmentModal.module.css';
 
 interface Props {
     doctor: Doctor;
@@ -24,7 +25,6 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error(t('book_appointment.login_error'));
 
-            // Combine Date & Time
             const appointmentDateTime = new Date(`${date}T${time}`).toISOString();
 
             const { error } = await supabase.from('appointments').insert({
@@ -50,62 +50,45 @@ export default function BookAppointmentModal({ doctor, onClose }: Props) {
     };
 
     return (
-        <div style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
-            display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000
-        }}>
-            <div style={{
-                background: 'white', padding: '2rem', borderRadius: '16px',
-                width: '90%', maxWidth: '400px', position: 'relative'
-            }}>
-                <button
-                    onClick={onClose}
-                    style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', cursor: 'pointer' }}
-                >
+        <div className={styles.overlay}>
+            <div className={styles.content}>
+                <button onClick={onClose} className={styles.closeBtn}>
                     <X size={24} />
                 </button>
 
-                <h3 style={{ marginTop: 0, color: 'var(--primary)' }}>{t('book_appointment.title')}</h3>
-                <p style={{ color: 'var(--text-secondary)' }}>{t('book_appointment.with')} <strong>Dr. {doctor.full_name}</strong></p>
+                <h3 className={styles.title}>{t('book_appointment.title')}</h3>
+                <p className={styles.subtitle}>{t('book_appointment.with')} <strong>Dr. {doctor.full_name}</strong></p>
 
-                <form onSubmit={handleBook} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>{t('book_appointment.date')}</label>
+                <form onSubmit={handleBook} className={styles.form}>
+                    <div className={styles.formGroup}>
+                        <label>{t('book_appointment.date')}</label>
                         <input
                             type="date" required
                             value={date} onChange={e => setDate(e.target.value)}
-                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                            className={styles.input}
                         />
                     </div>
 
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>{t('book_appointment.time')}</label>
+                    <div className={styles.formGroup}>
+                        <label>{t('book_appointment.time')}</label>
                         <input
                             type="time" required
                             value={time} onChange={e => setTime(e.target.value)}
-                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                            className={styles.input}
                         />
                     </div>
 
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>{t('book_appointment.reason')}</label>
+                    <div className={styles.formGroup}>
+                        <label>{t('book_appointment.reason')}</label>
                         <textarea
                             rows={3} required
                             value={reason} onChange={e => setReason(e.target.value)}
                             placeholder={t('book_appointment.reason_placeholder')}
-                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                            className={styles.textarea}
                         />
                     </div>
 
-                    <button
-                        type="submit" disabled={loading}
-                        style={{
-                            background: 'var(--primary)', color: 'white', padding: '12px',
-                            border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer',
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
-                        }}
-                    >
+                    <button type="submit" disabled={loading} className={styles.confirmBtn}>
                         <CalendarCheck size={20} />
                         {loading ? t('book_appointment.booking') : t('book_appointment.confirm_btn')}
                     </button>

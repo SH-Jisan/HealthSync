@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { Buildings, Plus, Trash, Clock } from 'phosphor-react';
-import styles from './DoctorChambers.module.css';
+import styles from './styles/DoctorChambers.module.css';
 
 interface Hospital {
     id: string;

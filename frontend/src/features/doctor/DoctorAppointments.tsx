@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabaseClient.ts';
 import type { Appointment } from '../../types';
 import { CheckCircle, XCircle, Clock, User, Calendar } from 'phosphor-react';
 import { format } from 'date-fns';
-import styles from './DoctorAppointments.module.css';
+import styles from './styles/DoctorAppointments.module.css';
 
 interface AppointmentWithPatient extends Appointment {
     profiles?: {

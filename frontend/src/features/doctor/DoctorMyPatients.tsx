@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { User, UserPlus, ArrowRight } from 'phosphor-react';
-import styles from './DoctorMyPatients.module.css';
+import styles from './styles/DoctorMyPatients.module.css';
 
 interface Patient {
     id: string;

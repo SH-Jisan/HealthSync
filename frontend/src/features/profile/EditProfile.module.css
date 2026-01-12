@@ -1,0 +1,129 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.title {
+    color: var(--primary);
+    margin-bottom: 2rem;
+}
+
+.formCard {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.sectionHeader {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.doctorSection {
+    margin: 2rem 0 1.5rem;
+}
+
+.formGroup {
+    margin-bottom: 1.2rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    transition: border-color 0.2s;
+}
+
+.inputWrapper:focus-within {
+    border-color: var(--primary);
+}
+
+.input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.cancelBtn {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--text-primary);
+    transition: background 0.2s;
+}
+
+.cancelBtn:hover {
+    background: #f1f5f9;
+}
+
+.saveBtn {
+    flex: 1;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.saveBtn:hover {
+    background: var(--primary-dark);
+}
+
+.saveBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.loading {
+    text-align: center;
+    margin-top: 3rem;
+    color: var(--text-secondary);
+}

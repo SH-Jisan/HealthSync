@@ -59,7 +59,7 @@ export default function HospitalPatients() {
             alert(t('common.success'));
             setShowModal(false);
             setSearchEmail('');
-            fetchPatients();
+            await fetchPatients();
         } catch (error) {
             console.error(error);
             alert(t('common.error'));
