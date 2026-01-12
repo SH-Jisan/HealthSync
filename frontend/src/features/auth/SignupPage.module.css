@@ -1,3 +1,5 @@
+/* auth/SignupPage.module.css */
+
 .container {
     min-height: 100vh;
     display: flex;
@@ -13,23 +15,27 @@
     border-radius: 16px;
     box-shadow: var(--shadow-lg);
     width: 100%;
-    max-width: 450px;
+    max-width: 480px;
     border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .header {
     text-align: center;
-    margin-bottom: 2rem;
 }
 
 .title {
     color: var(--primary);
     font-size: 2rem;
     margin-bottom: 0.5rem;
+    margin-top: 0;
 }
 
 .subtitle {
     color: var(--text-secondary);
+    margin: 0;
 }
 
 .form {
@@ -38,40 +44,48 @@
     gap: 1rem;
 }
 
+/* Role Selection */
 .roleLabel {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight: 500;
+    color: var(--text-primary);
 }
 
 .roleGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
 }
 
 .roleCard {
-    padding: 10px;
-    border-radius: 8px;
+    padding: 12px;
+    border-radius: 12px;
     cursor: pointer;
     border: 1px solid var(--border);
-    background: transparent;
+    background: var(--background);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     text-align: center;
-    font-size: 0.85rem;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+}
+
+.roleCard:hover {
+    border-color: var(--primary-light);
 }
 
 .roleCard.active {
-    border: 2px solid var(--primary);
-    background: var(--primary-light);
+    border-color: var(--primary);
+    background-color: var(--primary-light);
 }
 
 .roleIcon {
     color: var(--text-secondary);
+    transition: color 0.2s;
+    /* Icon size styling inside wrapper */
+    font-size: 0; /* Removing text space issues */
 }
 
 .roleCard.active .roleIcon {
@@ -79,21 +93,34 @@
 }
 
 .roleText {
-    font-weight: normal;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
 }
 
 .roleCard.active .roleText {
-    font-weight: bold;
+    color: var(--primary);
+    font-weight: 600;
 }
 
+/* Inputs */
 .inputGroup {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     padding: 12px;
     border-radius: 12px;
     background: var(--background);
     border: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.inputGroup:focus-within {
+    border-color: var(--primary);
+}
+
+.icon {
+    color: var(--text-secondary);
 }
 
 .input {
@@ -106,7 +133,7 @@
 }
 
 .submitBtn {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     padding: 14px;
     background: var(--primary);
     color: white;
@@ -118,10 +145,20 @@
     transition: background 0.2s;
 }
 
+.submitBtn:hover {
+    background: var(--primary-dark);
+}
+
+.submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 .loginText {
     text-align: center;
-    margin-top: 1.5rem;
     color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
 }
 
 .link {

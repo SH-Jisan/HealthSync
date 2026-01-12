@@ -1,0 +1,81 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.title {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.list {
+    display: grid;
+    gap: 1rem;
+}
+
+.card {
+    background: var(--surface);
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.cardCritical {
+    border-left-color: red;
+}
+
+.requestInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.headerRow {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.bloodGroup {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #DC2626;
+}
+
+.hospital {
+    font-weight: 600;
+}
+
+.statusBadge {
+    background: #DCFCE7;
+    color: green;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.timeText {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.deleteBtn {
+    background: #FEE2E2;
+    color: #DC2626;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.deleteBtn:hover {
+    background: #fca5a5;
+}

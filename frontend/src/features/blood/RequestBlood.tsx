@@ -1,9 +1,9 @@
-// src/features/blood/RequestBlood.tsx
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { Sparkle } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
+import styles from './styles/RequestBlood.module.css';
 
 export default function RequestBlood() {
     const navigate = useNavigate();
@@ -18,7 +18,6 @@ export default function RequestBlood() {
     const [urgency, setUrgency] = useState<'NORMAL' | 'CRITICAL'>('NORMAL');
     const [note, setNote] = useState('');
 
-    // AI Autofill Function
     const handleAIAnalyze = async () => {
         if (!aiPrompt) return;
         setAnalyzing(true);
@@ -36,7 +35,6 @@ export default function RequestBlood() {
                 alert(t('blood.request.ai_success'));
             }
         } catch {
-            // Unused 'err' removed to fix lint error
             alert(t('blood.request.ai_fail'));
         } finally {
             setAnalyzing(false);
@@ -51,7 +49,6 @@ export default function RequestBlood() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error("Not logged in");
 
-            // 1. Save Request
             await supabase.from('blood_requests').insert({
                 requester_id: user.id,
                 blood_group: bloodGroup,
@@ -61,7 +58,6 @@ export default function RequestBlood() {
                 status: 'OPEN'
             });
 
-            // 2. Notify Donors (Edge Function)
             await supabase.functions.invoke('notify-donors', {
                 body: { blood_group: bloodGroup, hospital, urgency }
             });
@@ -70,7 +66,6 @@ export default function RequestBlood() {
             navigate('/blood/feed');
 
         } catch (error) {
-            // Fixed 'any' type error by checking instanceof Error
             const message = error instanceof Error ? error.message : 'An unknown error occurred';
             alert(message);
         } finally {
@@ -79,15 +74,12 @@ export default function RequestBlood() {
     };
 
     return (
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>{t('blood.request.title')}</h2>
+        <div className={styles.container}>
+            <h2 className={styles.title}>{t('blood.request.title')}</h2>
 
             {/* AI Section */}
-            <div style={{
-                background: 'linear-gradient(135deg, #F3E8FF 0%, #FFFFFF 100%)',
-                padding: '1.5rem', borderRadius: '16px', border: '1px solid #D8B4FE', marginBottom: '2rem'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#7E22CE', fontWeight: 'bold', marginBottom: '1rem' }}>
+            <div className={styles.aiContainer}>
+                <div className={styles.aiHeader}>
                     <Sparkle size={24} weight="fill" />
                     <span>{t('blood.request.ai_fill')}</span>
                 </div>
@@ -96,66 +88,56 @@ export default function RequestBlood() {
                     value={aiPrompt}
                     onChange={(e) => setAiPrompt(e.target.value)}
                     rows={3}
-                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D8B4FE', marginBottom: '10px' }}
+                    className={styles.aiInput}
                 />
-                <button
-                    onClick={handleAIAnalyze}
-                    disabled={analyzing}
-                    style={{ background: '#9333EA', color: 'white', padding: '8px 16px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
-                >
+                <button onClick={handleAIAnalyze} disabled={analyzing} className={styles.aiButton}>
                     {analyzing ? t('blood.request.analyzing') : t('blood.request.autofill')}
                 </button>
             </div>
 
             {/* Manual Form */}
-            <form onSubmit={handleSubmit} style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.request.group_label')}</label>
+            <form onSubmit={handleSubmit} className={styles.formBox}>
+                <div className={styles.inputGroup}>
+                    <label className={styles.label}>{t('blood.request.group_label')}</label>
                     <select
                         value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}
-                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                        className={styles.select}
                     >
                         {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
                 </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.request.location_label')}</label>
+                <div className={styles.inputGroup}>
+                    <label className={styles.label}>{t('blood.request.location_label')}</label>
                     <input
                         type="text" required value={hospital} onChange={(e) => setHospital(e.target.value)}
-                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                        className={styles.input}
                     />
                 </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.request.urgency_label')}</label>
+                <div className={styles.inputGroup}>
+                    <label className={styles.label}>{t('blood.request.urgency_label')}</label>
                     <select
                         value={urgency}
-                        // Fixed 'any' type error by casting to specific union type
                         onChange={(e) => setUrgency(e.target.value as 'NORMAL' | 'CRITICAL')}
-                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)', color: urgency === 'CRITICAL' ? 'red' : 'inherit', fontWeight: 'bold' }}
+                        className={`${styles.select} ${urgency === 'CRITICAL' ? styles.urgentSelect : ''}`}
                     >
                         <option value="NORMAL">{t('blood.request.normal')}</option>
                         <option value="CRITICAL">{t('blood.request.critical')}</option>
                     </select>
                 </div>
 
-                <div style={{ marginBottom: '2rem' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.request.note_label')}</label>
+                <div className={styles.inputGroup}>
+                    <label className={styles.label}>{t('blood.request.note_label')}</label>
                     <textarea
                         value={note} onChange={(e) => setNote(e.target.value)} rows={3}
-                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                        className={styles.textarea}
                     />
                 </div>
 
-                <button
-                    type="submit" disabled={loading}
-                    style={{ width: '100%', padding: '14px', background: 'var(--error)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer' }}
-                >
+                <button type="submit" disabled={loading} className={styles.submitBtn}>
                     {loading ? t('blood.request.posting') : t('blood.request.post_btn')}
                 </button>
-
             </form>
         </div>
     );

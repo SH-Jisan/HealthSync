@@ -1,0 +1,59 @@
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.title {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.form {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+}
+
+.formGroup {
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input, .select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.checkboxGroup {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+.submitBtn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submitBtn:disabled {
+    opacity: 0.7;
+}

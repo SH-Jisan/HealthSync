@@ -1,15 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-    User,
-    Envelope,
-    Phone,
-    Lock,
-    Buildings,
-    FirstAid,
-    Heartbeat
+    User, Envelope, Phone, Lock, Buildings, FirstAid, Heartbeat
 } from 'phosphor-react';
 import styles from './SignupPage.module.css';
 
@@ -25,11 +19,12 @@ export default function SignupPage() {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('CITIZEN');
 
+    // Store Icon Component Reference instead of JSX Element
     const roles = [
-        { value: 'CITIZEN', label: t('auth.roles.CITIZEN'), icon: <User size={20} /> },
-        { value: 'DOCTOR', label: t('auth.roles.DOCTOR'), icon: <Heartbeat size={20} /> },
-        { value: 'HOSPITAL', label: t('auth.roles.HOSPITAL'), icon: <Buildings size={20} /> },
-        { value: 'DIAGNOSTIC', label: t('auth.roles.DIAGNOSTIC'), icon: <FirstAid size={20} /> },
+        { value: 'CITIZEN', label: t('auth.roles.CITIZEN'), Icon: User },
+        { value: 'DOCTOR', label: t('auth.roles.DOCTOR'), Icon: Heartbeat },
+        { value: 'HOSPITAL', label: t('auth.roles.HOSPITAL'), Icon: Buildings },
+        { value: 'DIAGNOSTIC', label: t('auth.roles.DIAGNOSTIC'), Icon: FirstAid },
     ];
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -37,7 +32,6 @@ export default function SignupPage() {
         setLoading(true);
 
         try {
-            // 1. Supabase Sign Up with Metadata
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
@@ -88,7 +82,8 @@ export default function SignupPage() {
                                     className={`${styles.roleCard} ${role === r.value ? styles.active : ''}`}
                                 >
                                     <div className={styles.roleIcon}>
-                                        {r.icon}
+                                        {/* CSS will handle color via inheritance */}
+                                        <r.Icon size={24} />
                                     </div>
                                     <span className={styles.roleText}>{r.label}</span>
                                 </div>
@@ -98,7 +93,7 @@ export default function SignupPage() {
 
                     {/* Full Name */}
                     <div className={styles.inputGroup}>
-                        <User size={20} color="var(--text-secondary)" />
+                        <User size={20} className={styles.icon} />
                         <input
                             required type="text" placeholder={t('auth.full_name_label')}
                             value={fullName} onChange={e => setFullName(e.target.value)}
@@ -108,7 +103,7 @@ export default function SignupPage() {
 
                     {/* Phone */}
                     <div className={styles.inputGroup}>
-                        <Phone size={20} color="var(--text-secondary)" />
+                        <Phone size={20} className={styles.icon} />
                         <input
                             required type="tel" placeholder={t('auth.phone_label')}
                             value={phone} onChange={e => setPhone(e.target.value)}
@@ -118,7 +113,7 @@ export default function SignupPage() {
 
                     {/* Email */}
                     <div className={styles.inputGroup}>
-                        <Envelope size={20} color="var(--text-secondary)" />
+                        <Envelope size={20} className={styles.icon} />
                         <input
                             required type="email" placeholder={t('auth.email_label')}
                             value={email} onChange={e => setEmail(e.target.value)}
@@ -128,7 +123,7 @@ export default function SignupPage() {
 
                     {/* Password */}
                     <div className={styles.inputGroup}>
-                        <Lock size={20} color="var(--text-secondary)" />
+                        <Lock size={20} className={styles.icon} />
                         <input
                             required type="password" placeholder={t('auth.password_hint')}
                             value={password} onChange={e => setPassword(e.target.value)}

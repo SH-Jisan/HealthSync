@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CircleNotch } from 'phosphor-react';
+import styles from './LanguageContext.module.css';
 
 interface LanguageContextType {
     changeLanguage: (lang: string) => void;
@@ -26,24 +27,16 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
         <LanguageContext.Provider value={{ changeLanguage, isLoading }}>
             {/* Global Loader Overlay */}
             {isLoading && (
-                <div style={{
-                    position: 'fixed', inset: 0, background: 'rgba(255,255,255,0.9)',
-                    zIndex: 9999, display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', justifyContent: 'center'
-                }}>
-                    <CircleNotch size={64} color="var(--primary)" className="spin-animation" />
-                    <h3 style={{ marginTop: '20px', color: 'var(--primary)' }}>
+                <div className={styles.overlay}>
+                    <CircleNotch size={64} className={styles.spinner} />
+                    <h3 className={styles.loadingText}>
                         {i18n.language === 'en' ? 'ভাষা পরিবর্তন হচ্ছে...' : 'Switching Language...'}
                     </h3>
-                    <style>{`
-            .spin-animation { animation: spin 1s linear infinite; }
-            @keyframes spin { 100% { transform: rotate(360deg); } }
-          `}</style>
                 </div>
             )}
 
             {/* Main Content */}
-            <div style={{ opacity: isLoading ? 0 : 1, transition: 'opacity 0.3s' }}>
+            <div className={`${styles.content} ${isLoading ? styles.contentHidden : ''}`}>
                 {children}
             </div>
         </LanguageContext.Provider>

@@ -1,0 +1,39 @@
+/* context/LanguageContext.module.css */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    color: var(--primary);
+}
+
+.loadingText {
+    margin-top: 20px;
+    color: var(--primary);
+    font-size: 1.17em; /* h3 ডিফল্ট সাইজ বা তোমার পছন্দমত */
+    font-weight: bold;
+}
+
+.content {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.contentHidden {
+    opacity: 0;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}

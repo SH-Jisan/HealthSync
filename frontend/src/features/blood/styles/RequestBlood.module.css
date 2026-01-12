@@ -1,0 +1,98 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.title {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+/* AI Section */
+.aiContainer {
+    background: linear-gradient(135deg, #F3E8FF 0%, #FFFFFF 100%);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid #D8B4FE;
+    margin-bottom: 2rem;
+}
+
+.aiHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #7E22CE;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.aiInput {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #D8B4FE;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+
+.aiButton {
+    background: #9333EA;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.aiButton:disabled {
+    opacity: 0.7;
+}
+
+/* Manual Form */
+.formBox {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.inputGroup {
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.input, .select, .textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 1rem;
+}
+
+.urgentSelect {
+    color: red;
+    font-weight: bold;
+}
+
+.submitBtn {
+    width: 100%;
+    padding: 14px;
+    background: var(--error);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.submitBtn:hover {
+    opacity: 0.9;
+}

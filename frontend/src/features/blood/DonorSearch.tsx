@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
-import { MagnifyingGlass, Phone, MapPin } from 'phosphor-react'; // Fix: Removed 'User'
+import { MagnifyingGlass, Phone, MapPin } from 'phosphor-react';
+import styles from './styles/DonorSearch.module.css';
 
 interface Donor {
     id: string;
@@ -41,105 +42,70 @@ export default function DonorSearch() {
             }
 
             const { data, error } = await query;
-
             if (error) throw error;
             if (data) setDonors(data as unknown as Donor[]);
 
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : 'Search failed';
-            alert(message);
+            alert(err instanceof Error ? err.message : 'Search failed');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className={styles.container}>
+            <h2 className={styles.title}>
                 <MagnifyingGlass size={32} /> {t('blood.search.title')}
             </h2>
 
-            {/* Search Bar */}
-            <form
-                onSubmit={handleSearch}
-                style={{
-                    background: 'var(--surface)', padding: '1.5rem', borderRadius: '16px',
-                    boxShadow: 'var(--shadow-sm)', marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap'
-                }}
-            >
-                <div style={{ flex: 1, minWidth: '120px' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.request.group_label')}</label>
+            <form onSubmit={handleSearch} className={styles.searchForm}>
+                <div className={styles.inputWrapper}>
+                    <label className={styles.label}>{t('blood.request.group_label')}</label>
                     <select
                         value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}
-                        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                        className={styles.select}
                     >
                         {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
                 </div>
 
-                <div style={{ flex: 2, minWidth: '200px' }}>
-                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 500 }}>{t('blood.search.district_label')}</label>
+                <div className={styles.inputWrapper}>
+                    <label className={styles.label}>{t('blood.search.district_label')}</label>
                     <input
                         type="text"
                         placeholder={t('blood.search.district_placeholder')}
                         value={district} onChange={(e) => setDistrict(e.target.value)}
-                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                        className={styles.input}
                     />
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'end' }}>
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        style={{
-                            padding: '12px 24px', background: 'var(--primary)', color: 'white',
-                            border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', height: '42px'
-                        }}
-                    >
+                <div>
+                    <button type="submit" disabled={loading} className={styles.searchBtn}>
                         {loading ? t('blood.search.searching') : t('blood.search.search_btn')}
                     </button>
                 </div>
             </form>
 
-            {/* Results */}
             {hasSearched && donors.length === 0 && !loading ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
                     {t('blood.search.no_donors')}
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
+                <div className={styles.resultsGrid}>
                     {donors.map(donor => (
-                        <div key={donor.id} style={{
-                            background: 'white', padding: '1.5rem', borderRadius: '12px',
-                            border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
-                            display: 'flex', flexDirection: 'column', gap: '10px'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                    <div style={{
-                                        width: '45px', height: '45px', borderRadius: '50%', background: '#FEE2E2',
-                                        color: '#DC2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'
-                                    }}>
-                                        {donor.profiles.blood_group}
-                                    </div>
-                                    <div>
-                                        <h3 style={{ margin: 0 }}>{donor.profiles.full_name}</h3>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                            <MapPin size={16} /> {donor.profiles.district || 'Unknown'}
-                                        </div>
+                        <div key={donor.id} className={styles.donorCard}>
+                            <div className={styles.donorHeader}>
+                                <div className={styles.bloodCircle}>{donor.profiles.blood_group}</div>
+                                <div className={styles.donorInfo}>
+                                    <h3>{donor.profiles.full_name}</h3>
+                                    <div className={styles.location}>
+                                        <MapPin size={16} /> {donor.profiles.district || 'Unknown'}
                                     </div>
                                 </div>
                             </div>
 
-                            <div style={{ borderTop: '1px solid #eee', paddingTop: '10px', marginTop: '5px' }}>
-                                <a
-                                    href={`tel:${donor.profiles.phone}`}
-                                    style={{
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                                        textDecoration: 'none', background: '#DCFCE7', color: '#166534',
-                                        padding: '10px', borderRadius: '8px', fontWeight: 'bold'
-                                    }}
-                                >
+                            <div className={styles.cardFooter}>
+                                <a href={`tel:${donor.profiles.phone}`} className={styles.callBtn}>
                                     <Phone size={20} weight="fill" /> {t('blood.search.call')}
                                 </a>
                             </div>

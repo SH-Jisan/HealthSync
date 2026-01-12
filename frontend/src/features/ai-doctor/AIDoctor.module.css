@@ -1,0 +1,226 @@
+/* AIDoctor.module.css */
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.iconWrapper {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.title {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+}
+
+/* Input Section */
+.inputSection {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.textarea {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.consultButton {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.2s;
+}
+
+.consultButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Result Card */
+.resultCard {
+    margin-top: 2rem;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    animation: slideUp 0.4s ease-out;
+}
+
+.resultHeader {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+}
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.conditionName {
+    margin: 0;
+    font-size: 1.5rem; /* h2 equivalent */
+}
+
+.urgencyBadge {
+    background: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Urgency Variants */
+.urgencyHigh {
+    background-color: #FEE2E2;
+    border-color: #FCA5A5;
+    color: #DC2626;
+}
+
+.urgencyMedium {
+    background-color: #FEF3C7;
+    border-color: #FCD34D;
+    color: #D97706;
+}
+
+.urgencyLow {
+    background-color: #D1FAE5;
+    border-color: #6EE7B7;
+    color: #059669;
+}
+
+/* Result Body */
+.resultBody {
+    padding: 2rem;
+}
+
+.causesSection {
+    margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-size: 1rem; /* h4 equivalent */
+}
+
+.causesList {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.causeItem {
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.adviceBox {
+    margin-bottom: 2rem;
+    background: #F8FAFC;
+    padding: 1rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+}
+
+.adviceHeader {
+    color: var(--primary);
+    margin: 0 0 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+}
+
+.adviceText {
+    margin: 0;
+    font-style: italic;
+    color: #475569;
+}
+
+.actionSection {
+    text-align: center;
+}
+
+.specialistText {
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+}
+
+.findButton {
+    padding: 12px 30px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.findButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

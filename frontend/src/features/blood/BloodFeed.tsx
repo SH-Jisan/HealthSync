@@ -1,12 +1,11 @@
-// src/features/blood/BloodFeed.tsx
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { formatDistanceToNow } from 'date-fns';
-// Fixed TS1484: Added 'type' keyword
 import type { BloodRequest } from '../../types';
-import { Drop, Clock, Warning } from 'phosphor-react'; // Removed unused 'MapPin'
+import { Drop, Clock, Warning } from 'phosphor-react';
 import { bn } from 'date-fns/locale';
+import styles from './styles/BloodFeed.module.css';
 
 export default function BloodFeed() {
     const { t, i18n } = useTranslation();
@@ -30,7 +29,6 @@ export default function BloodFeed() {
 
     const handleDonate = async (request: BloodRequest) => {
         if (!confirm(t('blood.feed.confirm_donate'))) return;
-
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
@@ -46,95 +44,66 @@ export default function BloodFeed() {
                 throw error;
             } else {
                 alert(t('blood.feed.thank_you', { phone: request.profiles?.phone }));
-                fetchRequests();
+                await fetchRequests();
             }
         } catch (err: unknown) {
-            // Fixed 'any' type error
-            if (err instanceof Error) {
-                alert(err.message);
-            } else {
-                alert('An unknown error occurred');
-            }
+            alert(err instanceof Error ? err.message : 'An error occurred');
         }
     };
 
-    if (loading) return <div style={{ textAlign: 'center', marginTop: '2rem' }}>{t('blood.feed.loading')}</div>;
+    if (loading) return <div className="text-center mt-8">{t('blood.feed.loading')}</div>;
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ width: '12px', height: '12px', background: 'red', borderRadius: '50%', display: 'inline-block', boxShadow: '0 0 10px red' }}></span>
+        <div className={styles.container}>
+            <h2 className={styles.header}>
+                <span className={styles.liveDot}></span>
                 {t('blood.feed.title')}
             </h2>
 
             {requests.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{t('blood.feed.no_requests')}</div>
+                <div className="text-center text-gray-500">{t('blood.feed.no_requests')}</div>
             ) : (
-                requests.map(req => (
-                    <div key={req.id} style={{
-                        background: 'var(--surface)',
-                        padding: '1.5rem',
-                        borderRadius: '16px',
-                        marginBottom: '1rem',
-                        borderLeft: req.urgency === 'CRITICAL' ? '5px solid red' : '5px solid var(--border)',
-                        boxShadow: 'var(--shadow-sm)'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                <div style={{
-                                    background: req.urgency === 'CRITICAL' ? '#EF4444' : '#FCA5A5',
-                                    color: 'white',
-                                    padding: '10px 15px',
-                                    borderRadius: '12px',
-                                    fontWeight: 'bold',
-                                    fontSize: '1.2rem'
-                                }}>
-                                    {req.blood_group}
-                                </div>
-                                <div>
-                                    <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{req.hospital_name}</h3>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                                        <Clock size={16} />
-                                        {/* Ensure valid date for date-fns */}
-                                        {req.created_at && formatDistanceToNow(new Date(req.created_at), {
-                                            addSuffix: true,
-                                            locale: i18n.language === 'bn' ? bn : undefined
-                                        })}
+                requests.map(req => {
+                    const isCritical = req.urgency === 'CRITICAL';
+                    return (
+                        <div key={req.id} className={`${styles.card} ${isCritical ? styles.cardCritical : ''}`}>
+                            <div className={styles.cardHeader}>
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <div className={`${styles.bloodGroup} ${isCritical ? styles.bgCritical : ''}`}>
+                                        {req.blood_group}
+                                    </div>
+                                    <div>
+                                        <h3 className={styles.hospitalName}>{req.hospital_name}</h3>
+                                        <div className={styles.timeInfo}>
+                                            <Clock size={16} />
+                                            {req.created_at && formatDistanceToNow(new Date(req.created_at), {
+                                                addSuffix: true,
+                                                locale: i18n.language === 'bn' ? bn : undefined
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
+
+                                {isCritical && (
+                                    <span className={styles.criticalBadge}>
+                                        <Warning size={16} weight="fill" /> {t('blood.request.critical')}
+                                    </span>
+                                )}
                             </div>
 
-                            {req.urgency === 'CRITICAL' && (
-                                <span style={{ background: '#FEE2E2', color: '#DC2626', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <Warning size={16} weight="fill" /> {t('blood.request.critical')}
-                                </span>
-                            )}
-                        </div>
+                            {req.reason && <p className={styles.reasonBox}>"{req.reason}"</p>}
 
-                        {req.reason && <p style={{ background: 'var(--background)', padding: '10px', borderRadius: '8px', fontSize: '0.95rem' }}>"{req.reason}"</p>}
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem' }}>
-                            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                {t('blood.feed.requested_by')} <strong>{req.profiles?.full_name || t('common.unknown')}</strong>
+                            <div className={styles.cardFooter}>
+                                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                    {t('blood.feed.requested_by')} <strong>{req.profiles?.full_name || t('common.unknown')}</strong>
+                                </div>
+                                <button onClick={() => handleDonate(req)} className={styles.donateBtn}>
+                                    <Drop weight="fill" /> {t('blood.feed.donate_btn')}
+                                </button>
                             </div>
-                            <button
-                                onClick={() => handleDonate(req)}
-                                style={{
-                                    background: 'var(--primary)',
-                                    color: 'white',
-                                    border: 'none',
-                                    padding: '10px 20px',
-                                    borderRadius: '8px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    display: 'flex', alignItems: 'center', gap: '8px'
-                                }}
-                            >
-                                <Drop weight="fill" /> {t('blood.feed.donate_btn')}
-                            </button>
                         </div>
-                    </div>
-                ))
+                    );
+                })
             )}
         </div>
     );

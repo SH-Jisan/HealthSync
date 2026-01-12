@@ -1,3 +1,5 @@
+/* layout/Sidebar.module.css */
+
 .sidebar {
     width: var(--sidebar-width);
     height: 100vh;
@@ -5,7 +7,7 @@
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    position: fixed;
+    position: fixed; /* এখানে fixed রাখা হয়েছে যা DashboardLayout এর লজিকের সাথে মিলবে */
     left: 0;
     top: 0;
     z-index: 50;
@@ -15,11 +17,11 @@
 /* Mobile: Hide Sidebar by default */
 @media (max-width: 768px) {
     .sidebar {
-        transform: translateX(-100%); /* Screen এর বাইরে */
+        transform: translateX(-100%);
     }
 
     .sidebar.open {
-        transform: translateX(0); /* Screen এর ভেতরে */
+        transform: translateX(0);
         box-shadow: var(--shadow-lg);
     }
 }
@@ -62,7 +64,7 @@
     font-weight: 600;
 }
 
-/* Mobile Overlay (Background dimmed) */
+/* Mobile Overlay */
 .overlay {
     position: fixed;
     inset: 0;
@@ -73,4 +75,25 @@
 
 .overlay.show {
     display: block;
+}
+
+.logout {
+    cursor: pointer;
+    color: var(--error);
+}
+.logout:hover {
+    background-color: var(--error-light);
+    color: var(--error);
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--border);
+    margin: 1rem 0;
+}
+
+/* New Class for Language Switcher Wrapper */
+.languageWrapper {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
 }

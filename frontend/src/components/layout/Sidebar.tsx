@@ -38,8 +38,6 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         document.body.classList.toggle('dark-theme', next);
     };
 
-
-
     const handleLogout = async () => {
         await supabase.auth.signOut();
         navigate('/');
@@ -72,7 +70,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                     <div
                         key={item.key}
                         className={`${styles.navItem} ${location.pathname === item.path ? styles.active : ''
-                            }`}
+                        }`}
                         onClick={() => {
                             navigate(item.path);
                             if (onClose) onClose();
@@ -104,7 +102,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             </nav>
 
             {/* 🌐 Language Switcher */}
-            <div style={{ padding: '1rem', borderTop: '1px solid var(--border)' }}>
+            <div className={styles.languageWrapper}>
                 <LanguageSwitcher style={{ width: '100%' }} />
             </div>
 

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Translate } from 'phosphor-react';
 import { useLanguage } from '../../context/LanguageContext';
+import styles from './LanguageSwitcher.module.css';
 
 interface LanguageSwitcherProps {
     variant?: 'text' | 'button' | 'icon';
@@ -24,17 +25,8 @@ export default function LanguageSwitcher({ variant = 'button', className = '', s
         return (
             <button
                 onClick={toggleLanguage}
-                className={className}
-                style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: 'var(--primary)',
-                    fontWeight: 600,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem'
-                }}
+                className={`${styles.textVariant} ${className}`}
+                style={style}
             >
                 <Translate size={20} />
                 {isEnglish ? 'বাংলা' : 'English'}
@@ -46,18 +38,9 @@ export default function LanguageSwitcher({ variant = 'button', className = '', s
         return (
             <button
                 onClick={toggleLanguage}
-                className={className}
+                className={`${styles.iconVariant} ${className}`}
                 title={t('common.switch_lang')}
-                style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: 'var(--text-primary)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '8px',
-                    borderRadius: '50%',
-                }}
+                style={style}
             >
                 <Translate size={24} />
             </button>
@@ -68,24 +51,12 @@ export default function LanguageSwitcher({ variant = 'button', className = '', s
     return (
         <button
             onClick={toggleLanguage}
-            className={className}
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '8px 16px',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                color: 'var(--text-primary)',
-                transition: 'all 0.2s',
-                ...style,
-            }}
+            className={`${styles.buttonVariant} ${className}`}
+            style={style}
         >
             <Translate size={20} color="var(--primary)" />
             {showLabel && (
-                <span style={{ fontWeight: 600 }}>
+                <span className={styles.label}>
                     {isEnglish ? 'বাংলা' : 'English'}
                 </span>
             )}

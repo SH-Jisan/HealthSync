@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import {
     Calendar, Clock, MapPin, CheckCircle, XCircle, Hourglass,
-    Prescription, TestTube, Buildings, FileText
+    Prescription as PrescriptionIcon, TestTube, Buildings, FileText
 } from 'phosphor-react';
 import { format } from 'date-fns';
+import styles from './PatientAppointments.module.css';
 
 // Types
 interface Appointment {
@@ -15,7 +16,7 @@ interface Appointment {
     status: string;
     reason: string;
     doctor: { full_name: string; specialty: string };
-    hospital?: { full_name: string; address: string }; // Added Hospital
+    hospital?: { full_name: string; address: string };
 }
 
 interface Prescription {
@@ -37,7 +38,6 @@ export default function PatientAppointments() {
     const [activeTab, setActiveTab] = useState<'appointments' | 'prescriptions' | 'diagnostic' | 'hospitals'>('appointments');
     const [loading, setLoading] = useState(true);
 
-    // Data States
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
     const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
@@ -81,36 +81,30 @@ export default function PatientAppointments() {
         fetchData();
     }, [fetchData]);
 
-    const getStatusColor = (status: string) => {
+    const getStatusInfo = (status: string) => {
         switch (status) {
-            case 'CONFIRMED': return { bg: '#DCFCE7', text: '#166534', icon: <CheckCircle weight="fill" /> };
-            case 'CANCELLED': return { bg: '#FEE2E2', text: '#991B1B', icon: <XCircle weight="fill" /> };
-            default: return { bg: '#FEF3C7', text: '#92400E', icon: <Hourglass weight="fill" /> };
+            case 'CONFIRMED': return { className: styles.statusConfirmed, icon: <CheckCircle weight="fill" /> };
+            case 'CANCELLED': return { className: styles.statusCancelled, icon: <XCircle weight="fill" /> };
+            default: return { className: styles.statusPending, icon: <Hourglass weight="fill" /> };
         }
     };
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '1rem' }}>
-            <h2 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>{t('appointments.title')}</h2>
+        <div className={styles.container}>
+            <h2 className={styles.pageTitle}>{t('appointments.title')}</h2>
 
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', borderBottom: '1px solid var(--border)', marginBottom: '2rem' }}>
+            <div className={styles.tabsContainer}>
                 {[
                     { id: 'appointments', label: t('appointments.tabs.appointments'), icon: <Calendar /> },
-                    { id: 'prescriptions', label: t('appointments.tabs.prescriptions'), icon: <Prescription /> },
+                    { id: 'prescriptions', label: t('appointments.tabs.prescriptions'), icon: <PrescriptionIcon /> },
                     { id: 'diagnostic', label: t('appointments.tabs.diagnostic'), icon: <TestTube /> },
                     { id: 'hospitals', label: t('appointments.tabs.hospitals'), icon: <Buildings /> },
                 ].map(tab => (
                     <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id as 'appointments' | 'prescriptions' | 'diagnostic' | 'hospitals')}
-                        style={{
-                            display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 0.5rem',
-                            background: 'none', border: 'none', cursor: 'pointer',
-                            borderBottom: activeTab === tab.id ? '3px solid var(--primary)' : '3px solid transparent',
-                            color: activeTab === tab.id ? 'var(--primary)' : 'var(--text-secondary)',
-                            fontWeight: activeTab === tab.id ? 600 : 500, whiteSpace: 'nowrap'
-                        }}
+                        onClick={() => setActiveTab(tab.id as any)}
+                        className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
                     >
                         {tab.icon} {tab.label}
                     </button>
@@ -118,47 +112,41 @@ export default function PatientAppointments() {
             </div>
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>{t('appointments.loading')}</div>
+                <div className={styles.loading}>{t('appointments.loading')}</div>
             ) : (
                 <>
                     {/* Appointments Tab */}
                     {activeTab === 'appointments' && (
-                        <div style={{ display: 'grid', gap: '1rem' }}>
+                        <div className={styles.gridList}>
                             {appointments.length === 0 ? <EmptyState text={t('appointments.no_appointments')} /> : appointments.map(app => {
-                                const statusStyle = getStatusColor(app.status);
+                                const { className } = getStatusInfo(app.status);
                                 const dateObj = new Date(app.appointment_date);
                                 return (
-                                    <div key={app.id} style={cardStyle}>
-                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'start' }}>
+                                    <div key={app.id} className={styles.card}>
+                                        <div className={styles.cardContent}>
                                             {/* Date Block */}
-                                            <div style={{
-                                                background: 'var(--primary-light)', color: 'var(--primary)',
-                                                padding: '10px', borderRadius: '8px', textAlign: 'center', minWidth: '60px'
-                                            }}>
-                                                <div style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>{format(dateObj, 'MMM').toUpperCase()}</div>
-                                                <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{format(dateObj, 'dd')}</div>
+                                            <div className={styles.dateBlock}>
+                                                <div className={styles.dateMonth}>{format(dateObj, 'MMM').toUpperCase()}</div>
+                                                <div className={styles.dateDay}>{format(dateObj, 'dd')}</div>
                                             </div>
 
-                                            <div style={{ flex: 1 }}>
-                                                <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Dr. {app.doctor.full_name}</div>
-                                                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{app.doctor.specialty}</div>
+                                            <div className={styles.infoSection}>
+                                                <div className={styles.mainTitle}>Dr. {app.doctor.full_name}</div>
+                                                <div className={styles.subTitle}>{app.doctor.specialty}</div>
 
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '8px', fontSize: '0.9rem', color: '#64748B' }}>
-                                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                <div className={styles.metaInfo}>
+                                                    <span className={styles.metaItem}>
                                                         <Clock size={16} /> {format(dateObj, 'hh:mm a')}
                                                     </span>
                                                     {app.hospital && (
-                                                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                        <span className={styles.metaItem}>
                                                             <MapPin size={16} /> {app.hospital.full_name}
                                                         </span>
                                                     )}
                                                 </div>
                                             </div>
 
-                                            <span style={{
-                                                background: statusStyle.bg, color: statusStyle.text, padding: '4px 10px',
-                                                borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold'
-                                            }}>
+                                            <span className={`${styles.statusBadge} ${className}`}>
                                                 {app.status}
                                             </span>
                                         </div>
@@ -170,19 +158,21 @@ export default function PatientAppointments() {
 
                     {/* Prescriptions Tab */}
                     {activeTab === 'prescriptions' && (
-                        <div style={{ display: 'grid', gap: '1rem' }}>
+                        <div className={styles.gridList}>
                             {prescriptions.length === 0 ? <EmptyState text={t('appointments.no_prescriptions')} /> : prescriptions.map(rx => (
-                                <div key={rx.id} style={cardStyle}>
-                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                        <div style={{ padding: '12px', borderRadius: '50%', background: '#F3E8FF', color: '#7E22CE' }}>
+                                <div key={rx.id} className={styles.card}>
+                                    <div className={`${styles.cardContent} ${styles.cardContentCenter}`}>
+                                        <div className={`${styles.iconWrapper} ${styles.prescriptionIcon}`}>
                                             <FileText size={24} />
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 'bold' }}>{rx.uploader.full_name}</div>
-                                            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                            <div className={styles.mainTitle}>{rx.uploader.full_name}</div>
+                                            <div className={styles.subTitle}>
                                                 {t('appointments.date_label')} {format(new Date(rx.event_date), 'MMM dd, yyyy')}
                                             </div>
-                                            <div style={{ marginTop: '4px', fontWeight: 500 }}>{t('appointments.rx_label')} {rx.title}</div>
+                                            <div style={{ marginTop: '4px', fontWeight: 500 }}>
+                                                {t('appointments.rx_label')} {rx.title}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -192,20 +182,20 @@ export default function PatientAppointments() {
 
                     {/* Diagnostic Tab */}
                     {activeTab === 'diagnostic' && (
-                        <div style={{ display: 'grid', gap: '1rem' }}>
+                        <div className={styles.gridList}>
                             {diagnostics.length === 0 ? <EmptyState text={t('appointments.no_diagnostics')} /> : diagnostics.map(diag => (
-                                <div key={diag.id} style={cardStyle}>
-                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                        <div style={{ padding: '12px', borderRadius: '50%', background: '#E0F2F1', color: 'var(--primary)' }}>
+                                <div key={diag.id} className={styles.card}>
+                                    <div className={`${styles.cardContent} ${styles.cardContentCenter}`}>
+                                        <div className={`${styles.iconWrapper} ${styles.diagnosticIcon}`}>
                                             <TestTube size={24} />
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 'bold' }}>{diag.provider.full_name}</div>
-                                            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                            <div className={styles.mainTitle}>{diag.provider.full_name}</div>
+                                            <div className={styles.subTitle}>
                                                 {t('appointments.date_label')} {format(new Date(diag.created_at), 'MMM dd, yyyy')}
                                             </div>
                                             <div style={{ marginTop: '4px' }}>{t('appointments.status_label')}
-                                                <span style={{ marginLeft: '5px', fontWeight: 'bold', color: diag.report_status === 'COMPLETED' ? 'green' : 'orange' }}>
+                                                <span className={`${styles.statusText} ${diag.report_status === 'COMPLETED' ? styles.statusCompleted : styles.statusPendingText}`}>
                                                     {diag.report_status}
                                                 </span>
                                             </div>
@@ -216,7 +206,7 @@ export default function PatientAppointments() {
                         </div>
                     )}
 
-                    {/* Hospitals Tab (Empty as per App) */}
+                    {/* Hospitals Tab */}
                     {activeTab === 'hospitals' && <EmptyState text={t('appointments.no_hospitals')} />}
                 </>
             )}
@@ -227,14 +217,9 @@ export default function PatientAppointments() {
 // Helper Components
 function EmptyState({ text }: { text: string }) {
     return (
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
-            <Hourglass size={48} style={{ opacity: 0.3, marginBottom: '1rem' }} />
+        <div className={styles.emptyState}>
+            <Hourglass size={48} className={styles.emptyIcon} />
             <p>{text}</p>
         </div>
     );
 }
-
-const cardStyle: React.CSSProperties = {
-    background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px',
-    border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)'
-};
