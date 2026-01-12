@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
+import { formatDistanceToNow } from 'date-fns';
 // Fixed TS1484: Added 'type' keyword
 import type { BloodRequest } from '../../types';
 import { Drop, Clock, Warning } from 'phosphor-react'; // Removed unused 'MapPin'
