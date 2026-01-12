@@ -15,9 +15,10 @@ export default function Hero() {
                         color: 'var(--primary-light)',
                         marginBottom: '10px',
                         textTransform: 'uppercase',
-                        letterSpacing: '2px' }}
+                        letterSpacing: '2px'
+                    }}
                     >
-                        HealthSync
+                        {t('landing.hero_tagline')}
                     </div>
                     <div style={{
                         fontSize: '1.1rem',
@@ -26,16 +27,14 @@ export default function Hero() {
                         fontWeight: '500',
                         letterSpacing: '1px'
                     }}>
-                        One Life, One Record, Total Care
+                        {t('landing.hero_motto')}
                     </div>
-
-                    Complete Healthcare <br />
-                    <span className={styles.highlight}>At Your Fingertips</span>
+                    {t('landing.hero_title')} <br />
+                    <span className={styles.highlight}>{t('landing.hero_highlight')}</span>
                 </h1>
 
                 <p className={styles.heroDesc}>
-                    Seamlessly connect with doctors, manage your medical history, find blood donors, and track your health vitals.
-                    Safe, secure, and smart AI-powered analytics.
+                    {t('landing.hero_desc')}
                 </p>
 
                 <div className={styles.ctaButtons}>
@@ -43,13 +42,13 @@ export default function Hero() {
                         className={styles.primaryBtn}
                         onClick={() => navigate('/login')}
                     >
-                        {t('landing.get_started', 'Get Started Now')}
+                        {t('landing.get_started')}
                     </button>
                     <button
                         className={styles.secondaryBtn}
                         onClick={() => navigate('/about')}
                     >
-                        {t('landing.learn_more', 'Learn More')}
+                        {t('landing.learn_more')}
                     </button>
                 </div>
             </div>

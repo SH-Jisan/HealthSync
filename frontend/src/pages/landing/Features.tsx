@@ -1,43 +1,57 @@
-import { Brain, Heartbeat, ShieldCheck, Users } from 'phosphor-react';
+import { useTranslation } from 'react-i18next';
+import {
+    Robot, FileText, Sparkle, Drop,
+    SquaresFour, Translate
+} from 'phosphor-react';
 import styles from './styles/Features.module.css';
 
-const features = [
-    {
-        icon: <Brain size={32} weight="fill" />,
-        title: "AI Doctor",
-        desc: "Get instant symptom analysis and triage recommendations using advanced AI algorithms."
-    },
-    {
-        icon: <Heartbeat size={32} weight="fill" />,
-        title: "Vitals Tracking",
-        desc: "Monitor your health vitals over time and get alerts for any irregularities."
-    },
-    {
-        icon: <ShieldCheck size={32} weight="fill" />,
-        title: "Secure Records",
-        desc: "Your medical history is encrypted and stored securely, accessible only by you and your doctors."
-    },
-    {
-        icon: <Users size={32} weight="fill" />,
-        title: "Doctor Connect",
-        desc: "Find specialist doctors near you and book appointments seamlessly."
-    }
-];
-
 export default function Features() {
+    const { t } = useTranslation();
+
+    const features = [
+        {
+            icon: <Robot size={32} weight="fill" />,
+            title: t('landing.f1_title'),
+            desc: t('landing.f1_desc')
+        },
+        {
+            icon: <FileText size={32} weight="fill" />,
+            title: t('landing.f2_title'),
+            desc: t('landing.f2_desc')
+        },
+        {
+            icon: <Sparkle size={32} weight="fill" />,
+            title: t('landing.f3_title'),
+            desc: t('landing.f3_desc')
+        },
+        {
+            icon: <Drop size={32} weight="fill" />,
+            title: t('landing.f4_title'),
+            desc: t('landing.f4_desc')
+        },
+        {
+            icon: <SquaresFour size={32} weight="fill" />,
+            title: t('landing.f5_title'),
+            desc: t('landing.f5_desc')
+        },
+        {
+            icon: <Translate size={32} weight="fill" />,
+            title: t('landing.f6_title'),
+            desc: t('landing.f6_desc')
+        }
+    ];
+
     return (
-        <section id="features" className={styles.section}>
+        <section className={styles.section} id="features">
             <div className={styles.titleContainer}>
-                <h2 className={styles.title}>Why Choose HealthSync?</h2>
+                <h2 className={styles.title}>{t('landing.features_title')}</h2>
                 <div className={styles.underline}></div>
             </div>
 
             <div className={styles.grid}>
-                {features.map((feature, idx) => (
-                    <div key={idx} className={styles.card}>
-                        <div className={styles.iconBox}>
-                            {feature.icon}
-                        </div>
+                {features.map((feature, index) => (
+                    <div className={styles.card} key={index}>
+                        <div className={styles.iconBox}>{feature.icon}</div>
                         <h3 className={styles.cardTitle}>{feature.title}</h3>
                         <p className={styles.cardDesc}>{feature.desc}</p>
                     </div>

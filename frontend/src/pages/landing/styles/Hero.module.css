@@ -1,5 +1,5 @@
 .gradient_box {
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
     color: white;
     display: flex;
@@ -9,7 +9,8 @@
     position: relative;
     z-index: 0;
     overflow: hidden;
-    padding-top: 60px; /* Navbar height */
+    padding-top: 60px;
+    /* Navbar height */
     text-align: center;
 }
 
@@ -58,7 +59,8 @@
     margin-bottom: 40px;
     max-width: 700px;
     line-height: 1.6;
-    color: #E0F2F1; /* খুব হালকা টিল কালার */
+    color: #E0F2F1;
+    /* খুব হালকা টিল কালার */
     animation: fadeInUp 1s ease-out 0.3s backwards;
 }
 
@@ -71,7 +73,8 @@
 .ctaButtons button {
     padding: 14px 32px;
     border: none;
-    border-radius: 50px; /* Rounded pill shape looks more modern */
+    border-radius: 50px;
+    /* Rounded pill shape looks more modern */
     font-weight: bold;
     cursor: pointer;
     font-size: 1.1rem;
@@ -80,7 +83,8 @@
 
 .primaryBtn {
     background-color: white;
-    color: #0056D2; /* Text matches the primary blue */
+    color: #0056D2;
+    /* Text matches the primary blue */
     box-shadow: 0 4px 15px rgba(0, 86, 210, 0.3);
 }
 
@@ -107,6 +111,7 @@
         opacity: 0;
         transform: translateY(-30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -118,6 +123,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -126,13 +132,29 @@
 
 @media(max-width: 768px) {
     .heroTitle {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        margin-bottom: 15px;
     }
+
+    .heroDesc {
+        font-size: 1rem;
+        margin-bottom: 30px;
+        padding: 0 10px;
+    }
+
     .ctaButtons {
         flex-direction: column;
         width: 100%;
+        gap: 12px;
     }
+
     .ctaButtons button {
         width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .gradient_box {
+        padding-top: 50px;
     }
 }

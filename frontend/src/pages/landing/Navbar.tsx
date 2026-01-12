@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../components/common/LanguageSwitcher';
 import styles from './styles/Navbar.module.css';
 
 interface NavbarProps {
@@ -56,10 +57,13 @@ export default function Navbar({ showLogo = true }: NavbarProps) {
                 <li><a onClick={() => scrollToSection('contact')}>{t('landing.nav_contact', 'Contact')}</a></li>
             </ul>
 
-            <div className={styles.loginBtn}>
-                <button onClick={() => navigate('/login')}>
-                    {t('common.login', 'Login')}
-                </button>
+            <div className={styles.navActions}>
+                <LanguageSwitcher variant="text" className={styles.langToggle} />
+                <div className={styles.loginBtn}>
+                    <button onClick={() => navigate('/login')}>
+                        {t('common.login', 'Login')}
+                    </button>
+                </div>
             </div>
         </nav>
     );

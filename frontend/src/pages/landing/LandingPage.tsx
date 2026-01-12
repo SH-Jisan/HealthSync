@@ -14,19 +14,20 @@ const initialLogoPosition = {
     x: '-50%',
     y: '-50%',
     position: 'fixed' as const,
-    height: '350px', // শুরুতে লোগো বড় থাকবে
+    height: window.innerWidth < 768 ? '180px' : '350px', // শুরুতে লোগো বড় থাকবে (মোবাইলে কিছুটা ছোট)
     zIndex: 2000,
 };
 
 // লোগোর শেষের পজিশন (Top-Left & Small)
 const getTargetPosition = (animate: boolean) => {
     if (!animate) return {};
+    const isMobile = window.innerWidth < 768;
     return {
-        top: '10px',     // Navbar এর উচ্চতা অনুযায়ী ফাইনাল পজিশন
-        left: '5%',      // Navbar এর প্যাডিং অনুযায়ী
+        top: isMobile ? '7px' : '10px',     // Navbar এর উচ্চতা অনুযায়ী ফাইনাল পজিশন
+        left: isMobile ? '15px' : '5%',      // Navbar এর প্যাডিং অনুযায়ী
         x: '0%',
-        y: '-15%',
-        height: '60px',  // Navbar এর লোগো সাইজ
+        y: isMobile ? '-10%' : '-15%',
+        height: isMobile ? '35px' : '60px',  // Navbar এর লোগো সাইজ
     };
 };
 

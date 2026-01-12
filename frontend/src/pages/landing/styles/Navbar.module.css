@@ -3,11 +3,16 @@
     height: 60px;
 
     /* --- Glassmorphism Effect Start --- */
-    background: rgba(255, 255, 255, 0.8); /* হালকা সাদা স্বচ্ছ লেয়ার */
-    backdrop-filter: blur(5px);           /* পেছনের কন্টেন্ট ঝাপসা করবে */
-    -webkit-backdrop-filter: blur(12px);   /* সাফারির জন্য সাপোর্ট */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.6); /* নিচে হালকা বর্ডার */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); /* খুব সফট শ্যাডো */
+    background: rgba(255, 255, 255, 0.8);
+    /* হালকা সাদা স্বচ্ছ লেয়ার */
+    backdrop-filter: blur(5px);
+    /* পেছনের কন্টেন্ট ঝাপসা করবে */
+    -webkit-backdrop-filter: blur(12px);
+    /* সাফারির জন্য সাপোর্ট */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+    /* নিচে হালকা বর্ডার */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    /* খুব সফট শ্যাডো */
     /* --- Glassmorphism Effect End --- */
 
     display: flex;
@@ -45,16 +50,37 @@
 .navItems li a {
     text-decoration: none;
     cursor: pointer;
-    font-weight: 600; /* একটু মোটা ফন্ট যাতে গ্লাসের ওপর স্পষ্ট দেখা যায় */
+    font-weight: 600;
+    /* একটু মোটা ফন্ট যাতে গ্লাসের ওপর স্পষ্ট দেখা যায় */
     transition: all 0.3s ease;
 
     /* [FIXED] গাঢ় রঙ দেওয়া হয়েছে যাতে গ্লাস ব্যাকগ্রাউন্ডে পড়া যায় */
-    color: #334155; /* Slate-700 type dark grey */
+    color: #334155;
+    /* Slate-700 type dark grey */
     font-size: 1rem;
 }
 
 .navItems li a:hover {
-    color: #0056D2; /* হোভার করলে লোগোর ব্লু কালার আসবে */
+    color: #0056D2;
+    /* হোভার করলে লোগোর ব্লু কালার আসবে */
+    transform: translateY(-1px);
+}
+
+.navActions {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    height: 100%;
+}
+
+.langToggle {
+    color: #334155 !important;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.langToggle:hover {
+    color: #0056D2 !important;
     transform: translateY(-1px);
 }
 
@@ -71,7 +97,8 @@
     /* [FIXED] বাটনের বর্ডার এবং টেক্সট ব্লু করা হয়েছে */
     border: 2px solid #0056D2;
     padding: 7px 24px;
-    border-radius: 50px; /* রাউন্ড শেপ */
+    border-radius: 50px;
+    /* রাউন্ড শেপ */
     color: #0056D2;
     font-weight: 700;
     cursor: pointer;
@@ -81,16 +108,36 @@
 
 .loginBtn button:hover {
     background-color: #0056D2;
-    color: white; /* হোভার করলে ব্যাকগ্রাউন্ড ব্লু এবং টেক্সট সাদা হবে */
-    box-shadow: 0 4px 12px rgba(0, 86, 210, 0.3); /* গ্লো ইফেক্ট */
+    color: white;
+    /* হোভার করলে ব্যাকগ্রাউন্ড ব্লু এবং টেক্সট সাদা হবে */
+    box-shadow: 0 4px 12px rgba(0, 86, 210, 0.3);
+    /* গ্লো ইফেক্ট */
 }
 
 @media(max-width: 768px) {
     .navbar {
-        padding: 0 20px;
+        padding: 0 15px;
+        height: 50px;
     }
 
     .navItems {
         display: none;
+    }
+
+    .navActions {
+        gap: 10px;
+    }
+
+    .langToggle {
+        font-size: 0.85rem;
+    }
+
+    .loginBtn button {
+        padding: 5px 15px;
+        font-size: 0.85rem;
+    }
+
+    .logo span {
+        font-size: 1.2rem !important;
     }
 }
