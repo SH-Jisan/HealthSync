@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { Drop, Plus } from 'phosphor-react';
-import styles from './HospitalBloodBank.module.css';
+import styles from './styles/HospitalBloodBank.module.css';
 
 interface BloodInventory {
     id: string;
@@ -72,7 +72,7 @@ export default function HospitalBloodBank() {
         alert(t('common.success'));
         setShowModal(false);
         setUnits(0);
-        fetchInventory();
+        await fetchInventory();
     };
 
     if (loading) return <div>{t('dashboard.hospital.blood.loading')}</div>;

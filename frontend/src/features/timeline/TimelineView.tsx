@@ -4,7 +4,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { FileText, Calendar, CaretRight } from 'phosphor-react';
 import { format } from 'date-fns';
 import EventDetailsModal from './EventDetailsModal';
-import styles from './TimelineView.module.css';
+import styles from './styles/TimelineView.module.css';
 
 interface TimelineEvent {
     id: string;

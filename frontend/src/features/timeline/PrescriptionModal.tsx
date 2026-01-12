@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { X, Printer, FileText } from 'phosphor-react';
 import { format } from 'date-fns';
-import styles from './PrescriptionModal.module.css';
+import styles from './styles/PrescriptionModal.module.css';
 
 interface PrescriptionData {
     id: string;

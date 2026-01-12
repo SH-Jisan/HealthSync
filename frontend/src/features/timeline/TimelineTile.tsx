@@ -3,7 +3,7 @@ import { bn } from 'date-fns/locale';
 import { FileText, Pill, Syringe } from 'phosphor-react';
 import { useTranslation } from 'react-i18next';
 import type { MedicalEvent } from '../../types';
-import styles from './TimelineTile.module.css';
+import styles from './styles/TimelineTile.module.css';
 
 interface Props {
     event: MedicalEvent;

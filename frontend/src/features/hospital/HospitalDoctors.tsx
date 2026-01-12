@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { User, Plus, Trash } from 'phosphor-react';
-import styles from './HospitalDoctors.module.css';
+import styles from './styles/HospitalDoctors.module.css';
 
 interface DoctorRow {
     id: string; // The relationship ID
@@ -56,7 +56,7 @@ export default function HospitalDoctors() {
             alert(t('common.success'));
             setShowModal(false);
             setSearchEmail('');
-            fetchDoctors();
+            await fetchDoctors();
         } catch (error) {
             console.error(error);
             alert(t('common.error'));

@@ -5,7 +5,7 @@ import {
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
-import styles from './EventDetailsModal.module.css';
+import styles from './styles/EventDetailsModal.module.css';
 
 interface Medicine {
     name: string;

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient.ts';
 import { User, Plus, Trash } from 'phosphor-react';
-import styles from './HospitalPatients.module.css';
+import styles from './styles/HospitalPatients.module.css';
 
 interface PatientRow {
     id: string; // The relationship ID

@@ -56,7 +56,7 @@ export default function DoctorChambers() {
             setShowModal(false);
             setName('');
             setHours('');
-            fetchHospitals();
+            await fetchHospitals();
         }
     };
 

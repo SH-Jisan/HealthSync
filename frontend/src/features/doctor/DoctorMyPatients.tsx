@@ -78,7 +78,7 @@ export default function DoctorMyPatients() {
                 alert('Patient Added Successfully!');
                 setShowAddModal(false);
                 setSearchEmail('');
-                fetchPatients();
+                await fetchPatients();
             }
 
         } catch (err: unknown) {

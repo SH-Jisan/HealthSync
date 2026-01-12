@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Users, CalendarCheck, FileText, ArrowRight } from 'phosphor-react';
-import styles from './HospitalOverview.module.css';
+import styles from './styles/HospitalOverview.module.css';
 
 export default function HospitalOverview() {
     const { t } = useTranslation();

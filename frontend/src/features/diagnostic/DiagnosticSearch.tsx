@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { MagnifyingGlass, Person } from 'phosphor-react';
@@ -99,7 +99,7 @@ export default function DiagnosticSearch() {
             alert(t('dashboard.diagnostic.search.success_reg'));
             setShowRegister(false);
             setEmail(newEmail);
-            handleSearch();
+            await handleSearch();
         } catch (err: unknown) {
             const message = err instanceof Error ? err.message : 'Registration failed';
             alert(t('common.error') + ': ' + message);
