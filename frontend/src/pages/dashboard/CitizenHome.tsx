@@ -27,31 +27,6 @@ export default function CitizenHome() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
         >
-            {/* Header Section */}
-            <div className={styles.header}>
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                >
-                    <h1 className={styles.title}>{t('welcome')}</h1>
-                    <p className={styles.subtitle}>{t('overview')}</p>
-                </motion.div>
-
-                <motion.button
-                    onClick={() => setShowUpload(true)}
-                    className={styles.addReportBtn}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                >
-                    <Plus size={20} weight="bold" />
-                    {t('add_report')}
-                </motion.button>
-            </div>
-
             {/* Tab Navigation with Sliding Pill */}
             <div className={styles.tabsContainer}>
                 <div className={styles.tabs}>
@@ -93,6 +68,24 @@ export default function CitizenHome() {
                     </motion.div>
                 </AnimatePresence>
             </div>
+
+            {/* Floating Action Button - Only on Timeline Tab */}
+            <AnimatePresence>
+                {activeTab === 'timeline' && (
+                    <motion.button
+                        onClick={() => setShowUpload(true)}
+                        className={styles.addReportBtn}
+                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <Plus size={20} weight="bold" />
+                        {t('add_report')}
+                    </motion.button>
+                )}
+            </AnimatePresence>
 
             {/* Upload Modal */}
             <AnimatePresence>
