@@ -63,10 +63,10 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
     };
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchOrders();
         fetchAvailableTests();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [patient.id]); // Added patient.id as dependency for safety
 
     const handleCreateOrder = async () => {
         if (selectedTests.length === 0) return alert(t('dashboard.diagnostic.view.alert_select_test'));
@@ -212,6 +212,7 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
                         markCompleted(uploadOrderId);
                         setUploadOrderId(null);
                     }}
+                    patientId={patient.id} // <--- এই লাইনটি যোগ করা হয়েছে
                 />
             )}
         </div>

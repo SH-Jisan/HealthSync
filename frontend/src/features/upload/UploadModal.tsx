@@ -8,15 +8,16 @@ import styles from './UploadModal.module.css';
 interface Props {
     onClose: () => void;
     onSuccess: () => void;
+    patientId?: string; // <--- NEW PROP ADDED
 }
 
-export default function UploadModal({ onClose, onSuccess }: Props) {
+export default function UploadModal({ onClose, onSuccess, patientId }: Props) {
     const { t } = useTranslation();
     const [files, setFiles] = useState<File[]>([]);
     const [uploading, setUploading] = useState(false);
     const [status, setStatus] = useState('');
     const [isError, setIsError] = useState(false);
-    const [isDuplicate, setIsDuplicate] = useState(false); // New state for duplicate check
+    const [isDuplicate, setIsDuplicate] = useState(false);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         setFiles(acceptedFiles);
@@ -34,7 +35,6 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
         maxFiles: 1
     });
 
-    // Helper: Convert File to Base64
     const convertToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -48,7 +48,6 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
         });
     };
 
-    // Helper: Calculate SHA-256 Hash (Unique Fingerprint)
     const calculateFileHash = async (file: File): Promise<string> => {
         const buffer = await file.arrayBuffer();
         const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
@@ -68,10 +67,14 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error(t('upload.error_no_user'));
 
-            // 1. Calculate Hash FIRST (to send to backend)
+            // Determin Target Patient (If prop is passed use it, otherwise use current user)
+            const targetPatientId = patientId || user.id; // <--- FIX IS HERE
+
+            // 1. Calculate Hash
             const fileHash = await calculateFileHash(file);
 
             // 2. Upload to Supabase Storage
+            // Note: Use uploader's ID for folder path to ensure RLS permission allows it
             const fileExt = file.name.split('.').pop();
             const fileName = `${user.id}/${Date.now()}.${fileExt}`;
 
@@ -89,24 +92,20 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
             setStatus(t('upload.status_analyzing'));
             const base64String = await convertToBase64(file);
 
-            // 4. Call Edge Function with Hash
+            // 4. Call Edge Function
             const { error: funcError } = await supabase.functions.invoke('process-medical-report', {
                 body: {
-                    patient_id: user.id,
+                    patient_id: targetPatientId, // <--- SENDING CORRECT ID
                     uploader_id: user.id,
                     imageBase64: base64String,
                     mimeType: file.type,
                     file_url: publicUrl,
                     file_path: fileName,
-                    file_hash: fileHash // <--- CRITICAL: Sending Hash for Duplicate Check
+                    file_hash: fileHash
                 }
             });
 
             if (funcError) {
-                // Check if it is a specific duplicate error (409 Conflict)
-                // Note: supabase-js functions invoke error handling can be tricky.
-                // Sometimes the error body contains the status or message.
-                // Assuming standard error throwing or context checking:
                 if (funcError.context?.response?.status === 409 || funcError.message?.includes('Duplicate')) {
                     setIsDuplicate(true);
                     throw new Error("This report has already been uploaded.");
@@ -122,11 +121,9 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
 
         } catch (error: any) {
             console.error('Upload failed:', error);
-
-            // Check for duplicate error specifically
             if (error.context?.response?.status === 409 || error.message?.includes('Duplicate')) {
                 setIsDuplicate(true);
-                setStatus("Duplicate File: This report already exists in your timeline.");
+                setStatus("Duplicate File: This report already exists.");
             } else {
                 setIsError(true);
                 setStatus(`${t('upload.error_fail')}: ${error.message}`);
@@ -140,7 +137,9 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
         <div className={styles.overlay}>
             <div className={styles.modal}>
                 <div className={styles.header}>
-                    <h3 className={styles.title}>{t('upload.title')}</h3>
+                    <h3 className={styles.title}>
+                        {patientId ? t('upload.title_for_patient') : t('upload.title')}
+                    </h3>
                     <button onClick={onClose} className={styles.closeBtn}>
                         <X size={24} />
                     </button>
