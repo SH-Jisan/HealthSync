@@ -45,10 +45,7 @@ export default function LoginPage() {
                 <div className={styles.brandContent}>
                     <div className={styles.brandLogo}>
                         {/* HealthSync Pulse Icon */}
-                        <svg width="60" height="60" viewBox="0 0 256 256" fill="white">
-                            <path d="M232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-104,80H128V128H48.06a88.13,88.13,0,0,0,159.88,0H128ZM48,128h64v-80A88.11,88.11,0,0,0,48,128Z" opacity="0.2"></path>
-                            <path d="M232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128ZM114.77,74.55l-21.49,43-16.16-16.16a8,8,0,0,0-11.31,0L32,135.25A8,8,0,0,0,43.31,146.57l22.63-22.63L83.23,141.2a8,8,0,0,0,14.22.1l21.32-42.63L134.77,135.2l-21.49,43A8,8,0,0,0,120.44,189l.88,0a8,8,0,0,0,7.11-4.44l21.57-43.14L166.16,157.65a8,8,0,0,0,11.31,0L224,111.43a8,8,0,0,0-11.31-11.31l-40.63,40.63L150.77,119.55a8,8,0,0,0-14.22-.1l-21.32,42.63Z" fill="white"></path>
-                        </svg>
+                        <img src="/logo3.png" alt="HealthSync Logo" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
                     </div>
                     <h1 className={styles.brandTitle}>HealthSync</h1>
                     <p className={styles.brandSubtitle}>

@@ -76,10 +76,7 @@ export default function SignupPage() {
                 </div>
                 <div className={styles.brandContent}>
                     <div className={styles.brandLogo}>
-                        <svg width="60" height="60" viewBox="0 0 256 256" fill="white">
-                            <path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM128,152a24,24,0,1,1,24-24A24,24,0,0,1,128,152Zm40-88H88a8,8,0,0,1,0-16h80a8,8,0,0,1,0,16Z" opacity="0.2"></path>
-                            <path d="M208,24H48A24,24,0,0,0,24,48V208a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V48A24,24,0,0,0,208,24Zm8,184a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8ZM88,56h80a8,8,0,0,1,0-16H88a8,8,0,0,1,0-16Zm40,48a24,24,0,1,0,24,24A24,24,0,0,0,128,104Zm0,32a8,8,0,1,1,8-8A8,8,0,0,1,128,136Zm40,32H88a8,8,0,0,1,0-16h80a8,8,0,0,1,0,16Z" fill="white"></path>
-                        </svg>
+                        <img src="/logo3.png" alt="HealthSync Logo" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
                     </div>
                     <h1 className={styles.brandTitle}>{t('auth.join_healthsync')}</h1>
                     <ul className={styles.brandList}>
