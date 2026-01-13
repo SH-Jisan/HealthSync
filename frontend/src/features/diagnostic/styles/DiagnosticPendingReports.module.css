@@ -1,0 +1,77 @@
+/* File: src/features/diagnostic/styles/DiagnosticPatients.module.css */
+
+/* Grid layout for cards */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+/* Individual card */
+.card {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Avatar / icon container */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Info section */
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.info h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.info p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.info small {
+    margin-top: 2px;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 0.75rem;
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+    }
+}
