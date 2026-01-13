@@ -1,7 +1,7 @@
 /* CitizenHome.module.css - Premium Dashboard Styling */
 
 .container {
-    padding: 2rem 0;
+    padding: 0.5rem 0 2rem;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -14,7 +14,7 @@
     display: flex;
     justify-content: center;
     margin-bottom: 2rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .tabs {
