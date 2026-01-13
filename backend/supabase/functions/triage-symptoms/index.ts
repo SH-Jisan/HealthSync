@@ -1,4 +1,6 @@
+// @ts-ignore
 import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai"
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
@@ -13,7 +15,9 @@ serve(async (req) => {
     const { symptoms, location } = await req.json()
     const userLocation = location || "Dhaka, Bangladesh"
 
+    // @ts-ignore
     const apiKey = Deno.env.get('GEMINI_API_KEY')
+    // @ts-ignore
     const serperKey = Deno.env.get('SERPER_API_KEY')
 
     if (!apiKey || !serperKey) throw new Error('Missing API keys!')

@@ -32,6 +32,21 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
         maxFiles: 1
     });
 
+    // Helper: Convert File to Base64 String
+    const convertToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const result = reader.result as string;
+                // Remove the data URL prefix (e.g., "data:image/jpeg;base64,") to get raw base64
+                const base64 = result.split(',')[1];
+                resolve(base64);
+            };
+            reader.onerror = error => reject(error);
+        });
+    };
+
     const handleUpload = async () => {
         if (files.length === 0) return;
         setUploading(true);
@@ -46,18 +61,34 @@ export default function UploadModal({ onClose, onSuccess }: Props) {
             // 1. Upload to Supabase Storage
             const fileExt = file.name.split('.').pop();
             const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+            // Note: Using 'reports' bucket as per your instruction
             const { error: uploadError } = await supabase.storage
-                .from('medical_docs')
+                .from('reports')
                 .upload(fileName, file);
 
             if (uploadError) throw uploadError;
 
-            // 2. Call Edge Function to Analyze
+            // Get Public URL for the database
+            const { data: { publicUrl } } = supabase.storage
+                .from('reports')
+                .getPublicUrl(fileName);
+
+            // 2. Prepare Data for AI Analysis
             setStatus(t('upload.status_analyzing'));
+
+            // Convert file to Base64 for Gemini AI
+            const base64String = await convertToBase64(file);
+
+            // 3. Call Edge Function (Updated Payload to match Backend)
             const { error: funcError } = await supabase.functions.invoke('process-medical-report', {
                 body: {
-                    storage_path: fileName,
-                    patient_id: user.id
+                    patient_id: user.id,
+                    uploader_id: user.id,
+                    imageBase64: base64String, // <--- This was missing before
+                    mimeType: file.type,
+                    file_url: publicUrl,
+                    file_path: fileName,
                 }
             });
 

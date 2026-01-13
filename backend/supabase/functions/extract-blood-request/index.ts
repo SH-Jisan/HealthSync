@@ -1,4 +1,6 @@
+// @ts-ignore
 import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai"
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
@@ -12,11 +14,12 @@ serve(async (req) => {
   try {
     const { text } = await req.json()
 
+    // @ts-ignore
     const apiKey = Deno.env.get('GEMINI_API_KEY')
     if (!apiKey) throw new Error('GEMINI_API_KEY not set')
 
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" })
 
     // 🤖 AI Prompt
     const prompt = `

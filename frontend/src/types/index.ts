@@ -1,4 +1,15 @@
-// src/types/index.ts
+// File: HealthSync/web/src/types/index.ts
+
+export interface AIAnalysisDetails {
+    simple_explanation_en?: string;
+    simple_explanation_bn?: string;
+    detailed_analysis_en?: string;
+    detailed_analysis_bn?: string;
+    medicine_safety_check?: string;
+    key_findings?: string[];
+    // ব্যাকএন্ডের JSON স্ট্রাকচার অনুযায়ী অন্যান্য ফিল্ড
+}
+
 export interface MedicalEvent {
     id: string;
     title: string;
@@ -9,6 +20,10 @@ export interface MedicalEvent {
     key_findings?: string[];
     attachment_urls?: string[];
     extracted_text?: string;
+
+    // [NEW] AI Details from Backend
+    ai_details?: AIAnalysisDetails;
+
     vitals?: {
         bp?: string;
         hr?: string;
@@ -31,16 +46,8 @@ export interface MedicalEvent {
         phone: string;
     };
     created_at: string;
-    ai_details?: {
-        summary_en?: string;
-        summary_bn?: string;
-        detailed_analysis_en?: string;
-        detailed_analysis_bn?: string;
-        key_findings_en?: string[];
-        key_findings_bn?: string[];
-        [key: string]: any;
-    };
 }
+
 export interface BloodRequest {
     id: string;
     requester_id: string;
@@ -51,7 +58,7 @@ export interface BloodRequest {
     status: 'OPEN' | 'FULFILLED';
     accepted_count: number;
     created_at: string;
-    profiles?: { // requester details
+    profiles?: {
         full_name: string;
         phone: string;
     };

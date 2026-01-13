@@ -1,4 +1,6 @@
+// @ts-ignore
 import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai"
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
@@ -14,6 +16,7 @@ serve(async (req) => {
     // 1. ইনপুট ডাটা গ্রহণ
     const { history, language } = await req.json()
 
+    // @ts-ignore
     const apiKey = Deno.env.get('GEMINI_API_KEY')
     if (!apiKey) {
       throw new Error('Missing GEMINI_API_KEY')
@@ -23,7 +26,7 @@ serve(async (req) => {
     const genAI = new GoogleGenerativeAI(apiKey)
 
     // 🔥 Model Selection: 'gemini-1.5-flash' is faster and more reliable.
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" })
 
     // 3. Language Selection
     const isBangla = language === 'bangla'

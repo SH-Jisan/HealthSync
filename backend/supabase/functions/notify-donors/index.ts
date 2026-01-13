@@ -1,5 +1,8 @@
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+// @ts-ignore
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+// @ts-ignore
 import { GoogleAuth } from "npm:google-auth-library@9.0.0"
 // নোট: Deno তে google-auth-library ব্যবহারের জন্য 'npm:' প্রিফিক্স ব্যবহার করা ভালো
 
@@ -15,6 +18,7 @@ serve(async (req) => {
 
   try {
     // ১. Service Account লোড করা
+    // @ts-ignore
     const serviceAccountStr = Deno.env.get('FIREBASE_SERVICE_ACCOUNT')
     if (!serviceAccountStr) {
       throw new Error('Missing FIREBASE_SERVICE_ACCOUNT in secrets')
@@ -45,7 +49,9 @@ serve(async (req) => {
     const { blood_group, hospital, urgency } = await req.json()
 
     // ৪. Supabase থেকে ডোনার খোঁজা
+    // @ts-ignore
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    // @ts-ignore
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseKey)
 
@@ -72,6 +78,7 @@ serve(async (req) => {
       .map((d: any) => d.profiles?.fcm_token)
       .filter((token: any) => token && typeof token === 'string' && token.length > 10)
 
+    // @ts-ignore
     const uniqueTokens = [...new Set(tokens)] as string[]
 
     if (uniqueTokens.length === 0) {
@@ -114,6 +121,7 @@ serve(async (req) => {
     })
 
     // সব রিকোয়েস্ট একসাথে পাঠানো
+    // @ts-ignore
     const results = await Promise.all(sendPromises)
     const successCount = results.filter(r => r === true).length
     const failureCount = results.length - successCount

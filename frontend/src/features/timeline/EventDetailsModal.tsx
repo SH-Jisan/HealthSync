@@ -1,9 +1,13 @@
+// File: HealthSync/web/src/features/timeline/EventDetailsModal.tsx
+
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import {
     X, Printer, Calendar, User, FileText, Image as ImageIcon,
-    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle, MagnifyingGlass
+    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle,
+    Robot, CheckCircle, Warning, ShieldCheck
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
@@ -19,24 +23,29 @@ export default React.forwardRef(function EventDetailsModal(
     { event, onClose }: EventDetailsProps,
     ref: React.Ref<HTMLDivElement>
 ) {
+    // 1. Language Setup
     const { t, i18n } = useTranslation();
+    const isBangla = i18n.language === 'bn';
+
+    // 2. Tab Setup
     const [activeTab, setActiveTab] = useState<'overview' | 'medicines' | 'analysis' | 'file' | 'prescription'>(
         event.event_type === 'PRESCRIPTION' ? 'prescription' : 'overview'
     );
     const printRef = useRef<HTMLDivElement>(null);
 
-    const isBangla = i18n.language === 'bn';
-    const summary = isBangla
-        ? (event.ai_details?.summary_bn || event.summary)
-        : (event.ai_details?.summary_en || event.summary);
+    // 3. AI Data Extraction
+    const aiData = event.ai_details;
+
+    // Dynamic Content based on Language
+    const simpleExplanation = isBangla
+        ? aiData?.simple_explanation_bn
+        : aiData?.simple_explanation_en;
 
     const detailedAnalysis = isBangla
-        ? event.ai_details?.detailed_analysis_bn
-        : event.ai_details?.detailed_analysis_en;
+        ? aiData?.detailed_analysis_bn
+        : aiData?.detailed_analysis_en;
 
-    const keyFindings = isBangla
-        ? (event.ai_details?.key_findings_bn || event.key_findings)
-        : (event.ai_details?.key_findings_en || event.key_findings);
+    const safetyStatus = aiData?.medicine_safety_check || 'N/A';
 
     const getImageUrl = (path: string) => {
         if (!path) return null;
@@ -64,10 +73,19 @@ export default React.forwardRef(function EventDetailsModal(
         }
     };
 
+    // Tab Logic
     const tabs = ['overview', 'medicines', 'analysis', 'file'];
     if (event.event_type === 'PRESCRIPTION') {
         tabs.unshift('prescription');
     }
+
+    // Helper for Safety Badge
+    const getSafetyBadge = (status: string) => {
+        if (status === 'Safe') return <span className={`${styles.safetyBadge} ${styles.safe}`}><ShieldCheck size={16} weight="fill"/> Safe</span>;
+        if (status === 'Caution') return <span className={`${styles.safetyBadge} ${styles.caution}`}><Warning size={16} weight="fill"/> Caution</span>;
+        if (status === 'Danger') return <span className={`${styles.safetyBadge} ${styles.danger}`}><WarningCircle size={16} weight="fill"/> Danger</span>;
+        return null;
+    };
 
     return (
         <motion.div
@@ -115,7 +133,8 @@ export default React.forwardRef(function EventDetailsModal(
                             onClick={() => setActiveTab(tab as any)}
                             className={`${styles.tabBtn} ${activeTab === tab ? styles.tabActive : ''}`}
                         >
-                            {tab}
+                            {/* Tab Labels Translation can be added here */}
+                            {tab === 'analysis' ? (isBangla ? 'বিশ্লেষণ (AI)' : 'AI Analysis') : tab.charAt(0).toUpperCase() + tab.slice(1)}
                         </button>
                     ))}
                 </div>
@@ -123,7 +142,7 @@ export default React.forwardRef(function EventDetailsModal(
                 {/* Content Area */}
                 <div className={styles.content}>
 
-                    {/* TAB: PRESCRIPTION (Digital View) */}
+                    {/* TAB: PRESCRIPTION */}
                     {activeTab === 'prescription' && (
                         <div className={styles.prescriptionView}>
                             <div className={styles.prescriptionHeader}>
@@ -144,7 +163,12 @@ export default React.forwardRef(function EventDetailsModal(
                             </div>
 
                             <div className={styles.rxSection}>
-                                <h2>Rx</h2>
+                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                    <h2>Rx</h2>
+                                    {/* Show Safety Badge if Available */}
+                                    {getSafetyBadge(safetyStatus)}
+                                </div>
+
                                 <div className={styles.rxList}>
                                     {event.medicines && event.medicines.length > 0 ? (
                                         event.medicines.map((med, i) => (
@@ -162,7 +186,7 @@ export default React.forwardRef(function EventDetailsModal(
                             {event.summary && activeTab === 'prescription' && (
                                 <div className={styles.adviceBox}>
                                     <h4>Advice:</h4>
-                                    <p>{event.summary}</p>
+                                    <p>{simpleExplanation || event.summary}</p>
                                 </div>
                             )}
 
@@ -176,48 +200,49 @@ export default React.forwardRef(function EventDetailsModal(
                     {/* TAB: OVERVIEW */}
                     {activeTab === 'overview' && (
                         <div className={styles.innerContent}>
-                            <div className={styles.vitalsGrid}>
-                                <VitalCard icon={<Drop size={24} weight="fill" />} label="Blood Pressure" value={event.vitals?.bp || 'N/A'} unit={event.vitals?.bp ? 'mmHg' : ''} color="#EF4444" bg="#FEE2E2" />
-                                <VitalCard icon={<Heartbeat size={24} weight="fill" />} label="Heart Rate" value={event.vitals?.hr || 'N/A'} unit={event.vitals?.hr ? 'bpm' : ''} color="#EC4899" bg="#FCE7F3" />
-                                <VitalCard icon={<Thermometer size={24} weight="fill" />} label="Temperature" value={event.vitals?.temp || 'N/A'} unit={event.vitals?.temp ? '°F' : ''} color="#F59E0B" bg="#FEF3C7" />
-                                <VitalCard icon={<Eye size={24} weight="fill" />} label="Weight" value={event.vitals?.weight || 'N/A'} unit={event.vitals?.weight ? 'kg' : ''} color="#10B981" bg="#D1FAE5" />
-                            </div>
+                            {/* Only show Vitals if available */}
+                            {(event.vitals?.bp || event.vitals?.hr || event.vitals?.temp || event.vitals?.weight) && (
+                                <div className={styles.vitalsGrid}>
+                                    <VitalCard icon={<Drop size={24} weight="fill" />} label="Blood Pressure" value={event.vitals?.bp || 'N/A'} unit={event.vitals?.bp ? 'mmHg' : ''} color="#EF4444" bg="#FEE2E2" />
+                                    <VitalCard icon={<Heartbeat size={24} weight="fill" />} label="Heart Rate" value={event.vitals?.hr || 'N/A'} unit={event.vitals?.hr ? 'bpm' : ''} color="#EC4899" bg="#FCE7F3" />
+                                    <VitalCard icon={<Thermometer size={24} weight="fill" />} label="Temperature" value={event.vitals?.temp || 'N/A'} unit={event.vitals?.temp ? '°F' : ''} color="#F59E0B" bg="#FEF3C7" />
+                                    <VitalCard icon={<Eye size={24} weight="fill" />} label="Weight" value={event.vitals?.weight || 'N/A'} unit={event.vitals?.weight ? 'kg' : ''} color="#10B981" bg="#D1FAE5" />
+                                </div>
+                            )}
 
-                            <div className={styles.summarySection}>
-                                <h3 className={styles.sectionTitle}>
-                                    <FileText size={24} color="var(--primary)" />
-                                    {isBangla ? 'সহজ সারাংশ (AI)' : 'Simple Summary (AI)'}
-                                </h3>
-
-                                <div className={styles.aiSummaryBox}>
-                                    <div className={styles.aiBadge}>
-                                        ✨ Child-Friendly Explanation
+                            {/* --- AI SIMPLE EXPLANATION (New) --- */}
+                            {aiData ? (
+                                <div className={styles.simpleCard}>
+                                    <div className={styles.simpleCardHeader}>
+                                        <Robot size={32} color="#059669" weight="fill" />
+                                        <div>
+                                            <h3 className={styles.simpleCardTitle}>{isBangla ? 'সহজ ব্যাখ্যা' : 'Simple Explanation'}</h3>
+                                            <p className={styles.simpleCardSubtitle}>{isBangla ? 'বাচ্চাদের মতো সহজ করে বুঝুন' : 'Easy to understand summary'}</p>
+                                        </div>
                                     </div>
+                                    <div className={styles.simpleText}>
+                                        "{simpleExplanation}"
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className={styles.summarySection}>
+                                    <h3 className={styles.sectionTitle}>
+                                        <FileText size={24} color="var(--primary)" /> Medical Summary
+                                    </h3>
                                     <p className={styles.summaryText}>
-                                        {summary || (isBangla ? 'কোন সারাংশ পাওয়া যায়নি।' : 'No summary available provided by the doctor or AI.')}
+                                        {event.summary || 'No summary available provided by the doctor or AI.'}
                                     </p>
                                 </div>
+                            )}
 
-                                {detailedAnalysis && (
-                                    <div className={styles.detailedAnalysis}>
-                                        <h4 style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <MagnifyingGlass size={20} />
-                                            {isBangla ? 'বিস্তারিত বিশ্লেষণ' : 'Detailed Analysis'}
-                                        </h4>
-                                        <p className={styles.detailedText}>{detailedAnalysis}</p>
-                                    </div>
-                                )}
-
-                                {keyFindings && keyFindings.length > 0 && (
-                                    <div className={styles.findingTags}>
-                                        {keyFindings.map((tag: string, i: number) => (
-                                            <span key={i} className={styles.tag}>
-                                                #{tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                            {/* Key Findings Tags */}
+                            {event.key_findings && event.key_findings.length > 0 && (
+                                <div className={styles.findingTags} style={{marginTop: '1rem', justifyContent: 'center'}}>
+                                    {event.key_findings.map((tag: string, i: number) => (
+                                        <span key={i} className={styles.tag}>#{tag}</span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -227,58 +252,76 @@ export default React.forwardRef(function EventDetailsModal(
                             {event.medicines && event.medicines.length > 0 ? (
                                 <table className={styles.medTable}>
                                     <thead>
-                                        <tr>
-                                            <th>Medicine Name</th>
-                                            <th>Dosage</th>
-                                            <th>Duration</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Medicine Name</th>
+                                        <th>Dosage</th>
+                                        <th>Duration</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {event.medicines.map((med, idx) => (
-                                            <tr key={idx}>
-                                                <td><div className={styles.medName}><Pill color="var(--primary)" /> {med.name}</div></td>
-                                                <td>{med.dosage || '-'}</td>
-                                                <td>{med.duration || '-'}</td>
-                                            </tr>
-                                        ))}
+                                    {event.medicines.map((med, idx) => (
+                                        <tr key={idx}>
+                                            <td><div className={styles.medName}><Pill color="var(--primary)" /> {med.name}</div></td>
+                                            <td>{med.dosage || '-'}</td>
+                                            <td>{med.duration || '-'}</td>
+                                        </tr>
+                                    ))}
                                     </tbody>
                                 </table>
                             ) : (
                                 <div className={styles.emptyState}>
-                                    {event.key_findings && event.key_findings.length > 0 ? (
-                                        <div style={{ textAlign: 'left' }}>
-                                            <h4 style={{ margin: '0 0 10px 0', color: 'var(--text-secondary)' }}>Extracted Medicines / Items:</h4>
-                                            <ul style={{ paddingLeft: '20px', lineHeight: '1.8' }}>
-                                                {event.key_findings.map((item: string, i: number) => (
-                                                    <li key={i}>{item}</li>
-                                                ))}
-                                            </ul>
-                                            <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '1rem' }}>* Data extracted from OCR. Please verify with the original image.</p>
-                                        </div>
-                                    ) : (
-                                        <div style={{ color: '#94A3B8' }}>
-                                            <WarningCircle size={48} style={{ opacity: 0.5, marginBottom: '10px' }} />
-                                            <p>No structured medicine data found.</p>
-                                        </div>
-                                    )}
+                                    <div style={{ color: '#94A3B8' }}>
+                                        <WarningCircle size={48} style={{ opacity: 0.5, marginBottom: '10px' }} />
+                                        <p>No structured medicine data found.</p>
+                                    </div>
                                 </div>
                             )}
                         </div>
                     )}
 
-                    {/* TAB: ANALYSIS */}
+                    {/* TAB: ANALYSIS (Enhanced) */}
                     {activeTab === 'analysis' && (
                         <div className={styles.innerContent}>
-                            <div className={styles.analysisCard}>
-                                <h3 style={{ marginTop: 0 }}>Raw Text Extraction (OCR)</h3>
-                                <div className={styles.infoNote}>
-                                    <WarningCircle size={16} style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                                    Note: This text is automatically extracted from the image. It may contain multi-language text or errors.
+                            {aiData ? (
+                                <>
+                                    {/* 1. Simple Summary (Again for context) */}
+                                    <div className={styles.simpleCard} style={{background: '#F0F9FF', borderColor: '#BAE6FD'}}>
+                                        <div className={styles.simpleCardHeader}>
+                                            <CheckCircle size={24} color="#0284C7" weight="fill" />
+                                            <h3 className={styles.simpleCardTitle} style={{color:'#0369A1'}}>
+                                                {isBangla ? 'এক নজরে' : 'Overview'}
+                                            </h3>
+                                        </div>
+                                        <p style={{margin:0, color:'#075985'}}>{simpleExplanation}</p>
+                                    </div>
+
+                                    {/* 2. Detailed Markdown Analysis */}
+                                    <div className={styles.detailedSection}>
+                                        <div className={styles.detailHeader}>
+                                            <FileText size={24} color="var(--primary)" />
+                                            <h3 className={styles.detailTitle}>
+                                                {isBangla ? 'বিস্তারিত রিপোর্ট বিশ্লেষণ' : 'Detailed Report Analysis'}
+                                            </h3>
+                                        </div>
+                                        <div className={styles.markdownContent}>
+                                            <ReactMarkdown>
+                                                {detailedAnalysis || ''}
+                                            </ReactMarkdown>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className={styles.analysisCard}>
+                                    <h3 style={{ marginTop: 0 }}>Raw Text Extraction (OCR)</h3>
+                                    <div className={styles.infoNote}>
+                                        <WarningCircle size={16} style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+                                        Note: This text is automatically extracted from the image. It may contain multi-language text or errors.
+                                    </div>
+                                    <div className={styles.rawText}>
+                                        {event.extracted_text || 'No text extracted from the document.'}
+                                    </div>
                                 </div>
-                                <div className={styles.rawText}>
-                                    {event.extracted_text || 'No text extracted from the document.'}
-                                </div>
-                            </div>
+                            )}
                         </div>
                     )}
 
@@ -304,6 +347,7 @@ export default React.forwardRef(function EventDetailsModal(
 
             {/* PRINT-ONLY ELEMENT */}
             <div className={styles.printOnly} ref={printRef}>
+                {/* Print layout code remains same */}
                 <div className={styles.prescriptionView}>
                     <div className={styles.prescriptionHeader}>
                         <div className={styles.brand}>
@@ -319,27 +363,10 @@ export default React.forwardRef(function EventDetailsModal(
                         <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
                         <span><strong>Phone:</strong> {event.profiles?.phone}</span>
                     </div>
-                    <div className={styles.rxSection}>
-                        <h2>Rx</h2>
-                        <div className={styles.rxList}>
-                            {event.medicines && event.medicines.length > 0 ? (
-                                event.medicines.map((med, i) => (
-                                    <div key={i} className={styles.medItem}>
-                                        <strong>{med.name}</strong> — {med.dosage} ({med.duration})
-                                    </div>
-                                ))
-                            ) : (
-                                <p>{event.summary}</p>
-                            )}
-                        </div>
-                    </div>
+
                     <div className={styles.adviceBox}>
-                        <h4>Notes:</h4>
-                        <p>{event.summary}</p>
-                    </div>
-                    <div className={styles.signatureArea}>
-                        <div className={styles.sigLine}></div>
-                        <p>Doctor's Signature</p>
+                        <h4>AI Summary:</h4>
+                        <p>{simpleExplanation || event.summary}</p>
                     </div>
                 </div>
             </div>
