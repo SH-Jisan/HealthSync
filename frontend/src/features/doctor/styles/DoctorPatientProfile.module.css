@@ -1,7 +1,10 @@
+/* File: HealthSync/web/src/features/doctor/styles/DoctorPatientProfile.module.css */
+
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 1.5rem;
+    font-family: 'Inter', sans-serif;
 }
 
 .backBtn {
@@ -10,166 +13,270 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
-    margin-bottom: 1rem;
+    gap: 8px;
+    margin-bottom: 1.5rem;
     color: var(--text-secondary);
     font-weight: 500;
-    transition: color 0.2s;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    padding: 8px 12px;
+    border-radius: 8px;
 }
 
 .backBtn:hover {
     color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.05);
+    transform: translateX(-4px);
 }
 
+/* --- Header Card (Premium & Gradient) --- */
 .headerCard {
-    background: var(--surface);
-    padding: 2rem;
-    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 2.5rem;
+    border-radius: 24px;
     margin-bottom: 2rem;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(226, 232, 240, 0.8);
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    box-shadow: var(--shadow-sm);
+    gap: 2rem;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle decorative circle behind avatar */
+.headerCard::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 60%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.03) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
 }
 
 .avatar {
-    width: 80px;
-    height: 80px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 2.5rem;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.25);
+    border: 4px solid white;
+    position: relative;
+    z-index: 1;
+}
+
+.patientInfo {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 0;
+    /* Prevents text overflow */
 }
 
 .patientInfo h1 {
     margin: 0;
     color: var(--text-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .contactText {
-    margin: 0;
+    margin: 6px 0 0 0;
     color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
 }
 
 .badges {
     display: flex;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
 }
 
 .bloodBadge {
-    background: #E0F2F1;
-    color: var(--primary);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    background: #ecfdf5;
+    color: #047857;
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1fae5;
 }
 
 .locationBadge {
-    background: #F3E8FF;
-    color: #7E22CE;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    background: #fdf4ff;
+    color: #9333ea;
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    border: 1px solid #f0abfc55;
 }
 
+/* --- Layout Grid --- */
 .layoutGrid {
     display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 2rem;
+    grid-template-columns: 1fr 360px;
+    /* Slightly wider sidebar */
+    gap: 24px;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 1024px) {
     .layoutGrid {
         grid-template-columns: 1fr;
     }
+
+    .sidebar {
+        position: static;
+        margin-top: 2rem;
+    }
 }
 
-/* Prescription Form */
-.formContainer {
+@media (max-width: 600px) {
+    .headerCard {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .contactText {
+        justify-content: center;
+    }
+
+    .badges {
+        justify-content: center;
+    }
+}
+
+/* --- New Sidebar & Action Buttons --- */
+.sidebar {
+    position: sticky;
+    top: 24px;
     height: fit-content;
 }
 
-.formCard {
-    background: var(--surface);
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-    position: sticky;
-    top: 20px;
+.actionCard {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 1.75rem;
+    border-radius: 20px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
 }
 
-.formTitle {
+.actionCard h3 {
     margin-top: 0;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.formGroup {
-    margin-bottom: 1rem;
-}
-
-.label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 8px;
+    margin-bottom: 1.5rem;
     color: var(--text-primary);
+    font-size: 1.15rem;
+    font-weight: 600;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+    letter-spacing: -0.01em;
 }
 
-.testList {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px;
-    background: var(--background);
-}
-
-.testItem {
+.actionBtn {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 5px;
-}
-
-.textarea {
+    gap: 16px;
     width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-family: inherit;
-    resize: vertical;
-}
-
-.submitBtn {
-    width: 100%;
-    padding: 12px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1px solid transparent;
+    border-radius: 16px;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.actionBtn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.actionBtn:hover::after {
+    transform: translateX(100%);
+}
+
+.actionBtn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.actionBtn:active {
+    transform: translateY(-1px);
+}
+
+.actionBtn div {
+    display: flex;
+    flex-direction: column;
+}
+
+.actionBtn strong {
+    font-size: 1.05rem;
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.actionBtn span {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-weight: 400;
+}
+
+/* Info Block */
+.infoBlock {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.infoBlock h4 {
+    margin: 0 0 1.25rem 0;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.statRow {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: background 0.2s;
-}
-
-.submitBtn:hover {
-    background: var(--primary-dark);
-}
-
-.submitBtn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+    gap: 14px;
+    margin-bottom: 14px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: #f8fafc;
+    padding: 10px 14px;
+    border-radius: 10px;
 }

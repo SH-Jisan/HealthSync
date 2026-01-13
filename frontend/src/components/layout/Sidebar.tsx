@@ -13,6 +13,7 @@ import {
     SignOut,
     FirstAid,
     SquaresFour,
+    Prescription // Import Prescription icon
 } from 'phosphor-react';
 import styles from './Sidebar.module.css';
 import LanguageSwitcher from '../common/LanguageSwitcher';
@@ -51,6 +52,11 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
 
     const menuItems = [
         { key: 'dashboard', icon: <SquaresFour size={24} />, path: '/dashboard' },
+        ...((user?.user_metadata?.role === 'CITIZEN' || user?.user_metadata?.role === 'DOCTOR') ? [{
+            key: 'prescriptions',
+            icon: <Prescription size={24} />,
+            path: '/prescriptions'
+        }] : []),
         { key: 'blood', icon: <Drop size={24} color="#EF4444" />, path: '/blood' },
         { key: 'about', icon: <Info size={24} color="#60A5FA" />, path: '/about' },
         { key: 'profile', icon: <User size={24} />, path: '/profile' },
@@ -59,7 +65,6 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
 
     return (
         <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
-            {/* Header */}
             {/* Header */}
             <div className={styles.header}>
                 <span className={styles.welcomeLabel}>{t('common.welcome')}</span>

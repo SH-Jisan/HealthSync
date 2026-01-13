@@ -13,11 +13,17 @@ export interface AIAnalysisDetails {
     medicine_safety_check?: string;
     key_findings?: string[];
 }
+export interface Medicine {
+    name: string;
+    dosage: string;      // e.g., "1+0+1"
+    duration: string;    // e.g., "7 Days"
+    instruction?: string; // e.g., "After meal"
+}
 
 export interface MedicalEvent {
     id: string;
     title: string;
-    event_type: 'REPORT' | 'PRESCRIPTION' | 'VACCINATION';
+    event_type: 'REPORT' | 'PRESCRIPTION' | 'VACCINATION' | 'TEST_ORDER';
     event_date: string;
     severity: 'HIGH' | 'MEDIUM' | 'LOW';
     summary?: string;
@@ -27,6 +33,7 @@ export interface MedicalEvent {
 
     // [NEW] AI Details from Backend
     ai_details?: AIAnalysisDetails;
+    medicines?: Medicine[]; // [NEW] Medicines Array
 
     vitals?: {
         bp?: string;
@@ -34,11 +41,6 @@ export interface MedicalEvent {
         temp?: string;
         weight?: string;
     };
-    medicines?: {
-        name: string;
-        dosage?: string;
-        duration?: string;
-    }[];
     uploader?: {
         id: string;
         full_name: string;
@@ -95,4 +97,10 @@ export interface Appointment {
     appointment_date: string;
     status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
     reason?: string;
+}
+export interface AvailableTest {
+    id: string;
+    name: string;
+    category?: string;
+    base_price: number;
 }

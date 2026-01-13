@@ -21,6 +21,7 @@ import ProfilePage from '../features/profile/ProfilePage';
 import EditProfile from '../features/profile/EditProfile';
 import PatientAppointments from '../features/appointments/PatientAppointments';
 import NotificationsPage from '../features/notifications/NotificationsPage';
+import PatientPrescriptions from '../features/patient/PatientPrescriptions';
 
 // Blood Bank
 import BloodHome from '../features/blood/BloodHome';
@@ -59,6 +60,7 @@ const AppRoutes = ({ session }: AppRoutesProps) => {
                     <Route path={PATHS.PROFILE} element={<ProfilePage />} />
                     <Route path={PATHS.PROFILE_EDIT} element={<EditProfile />} />
                     <Route path={PATHS.APPOINTMENTS} element={<PatientAppointments />} />
+                    <Route path={PATHS.PRESCRIPTIONS} element={<PatientPrescriptions />} />
                     <Route path={PATHS.NOTIFICATIONS} element={<NotificationsPage />} />
 
                     {/* Blood Bank */}

@@ -108,12 +108,21 @@
     "menu": {
       "dashboard": "Dashboard",
       "profile": "My Profile",
+      "prescriptions": "Prescriptions & Tests",
       "blood": "Blood Bank",
       "blood_bank": "Blood Bank",
       "about": "About App",
-      "doctors": "Find Doctors",
+      "doctors": "Doctors",
       "notifications": "Updates",
       "settings": "Settings"
+    },
+    "patient": {
+      "prescriptions": {
+        "title": "My Medical Records",
+        "subtitle": "Manage your prescriptions and test orders",
+        "tab_rx": "Prescriptions",
+        "tab_tests": "Tests"
+      }
     },
     "status": {
       "PENDING": "Pending",
@@ -175,18 +184,18 @@
           "loading": "Loading Chambers..."
         },
         "profile": {
-          "prescribed_title": "Prescribed: {{count}} Tests",
-          "doctor_advice": "Doctor Advice",
-          "success_alert": "Prescription Sent Successfully!",
-          "validation_alert": "Add tests or notes first.",
-          "back": "Back to My Patients",
+          "actions_title": "Doctor Actions",
+          "assign_test": "Assign Tests",
+          "write_rx": "Write Prescription",
           "new_prescription": "New Prescription",
           "select_tests": "Select Tests:",
           "notes_label": "Notes / Advice:",
           "notes_placeholder": "e.g. Take rest for 3 days...",
           "sending": "Sending...",
           "confirm_send": "Confirm & Send",
-          "loading": "Loading Profile..."
+          "validation_alert": "Add medicine/test names first.",
+          "success_alert": "Submitted Successfully!",
+          "prescribed_title": "Prescribed: {{count}} Tests"
         }
       }
     },
