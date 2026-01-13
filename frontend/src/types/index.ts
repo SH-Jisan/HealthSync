@@ -5,9 +5,13 @@ export interface AIAnalysisDetails {
     simple_explanation_bn?: string;
     detailed_analysis_en?: string;
     detailed_analysis_bn?: string;
+
+    // [NEW] Disease Insight Fields
+    disease_insight_en?: string;
+    disease_insight_bn?: string;
+
     medicine_safety_check?: string;
     key_findings?: string[];
-    // ব্যাকএন্ডের JSON স্ট্রাকচার অনুযায়ী অন্যান্য ফিল্ড
 }
 
 export interface MedicalEvent {

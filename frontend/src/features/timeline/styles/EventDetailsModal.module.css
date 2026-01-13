@@ -701,17 +701,17 @@
 }
 /* File: HealthSync/web/src/features/timeline/styles/EventDetailsModal.module.css */
 
-/* ... আগের কোডগুলো অপরিবর্তিত রাখুন ... */
+/* ... আগের সব কোড ঠিক থাকবে ... */
 
 /* --- AI Analysis New Styles --- */
 
-/* সহজ ব্যাখ্যা কার্ড (Child Friendly) */
+/* 1. Simple Explanation Card (Green Theme) */
 .simpleCard {
     background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
     border: 1px solid #d1fae5;
     border-radius: 16px;
     padding: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
@@ -745,7 +745,39 @@
     font-weight: 500;
 }
 
-/* Detailed Markdown Analysis */
+/* 2. [NEW] Disease Insight Card (Indigo/Purple Theme) */
+.diseaseCard {
+    background: linear-gradient(135deg, #e0e7ff 0%, #eef2ff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.diseaseCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.diseaseCardTitle {
+    margin: 0;
+    color: #4338ca; /* Indigo 700 */
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.diseaseText {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #3730a3; /* Indigo 800 */
+    white-space: pre-line; /* To respect new lines */
+}
+
+
+/* 3. Detailed Markdown Analysis (Gray/White Theme) */
 .detailedSection {
     background: white;
     border: 1px solid #e2e8f0;

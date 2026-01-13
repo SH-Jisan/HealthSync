@@ -7,7 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import {
     X, Printer, Calendar, User, FileText, Image as ImageIcon,
     DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle,
-    Robot, CheckCircle, Warning, ShieldCheck
+    Robot, CheckCircle, Warning, ShieldCheck, FirstAid
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
@@ -44,6 +44,11 @@ export default React.forwardRef(function EventDetailsModal(
     const detailedAnalysis = isBangla
         ? aiData?.detailed_analysis_bn
         : aiData?.detailed_analysis_en;
+
+    // [NEW] Disease Insight Data
+    const diseaseInsight = isBangla
+        ? aiData?.disease_insight_bn
+        : aiData?.disease_insight_en;
 
     const safetyStatus = aiData?.medicine_safety_check || 'N/A';
 
@@ -133,8 +138,13 @@ export default React.forwardRef(function EventDetailsModal(
                             onClick={() => setActiveTab(tab as any)}
                             className={`${styles.tabBtn} ${activeTab === tab ? styles.tabActive : ''}`}
                         >
-                            {/* Tab Labels Translation can be added here */}
-                            {tab === 'analysis' ? (isBangla ? 'বিশ্লেষণ (AI)' : 'AI Analysis') : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                            {/* Simple Tab Localization */}
+                            {tab === 'analysis' ? (isBangla ? 'বিশ্লেষণ (AI)' : 'AI Analysis') :
+                                tab === 'overview' ? (isBangla ? 'ওভারভিউ' : 'Overview') :
+                                    tab === 'medicines' ? (isBangla ? 'ঔষধ' : 'Medicines') :
+                                        tab === 'file' ? (isBangla ? 'ফাইল' : 'File') :
+                                            tab === 'prescription' ? (isBangla ? 'প্রেসক্রিপশন' : 'Prescription') :
+                                                tab.charAt(0).toUpperCase() + tab.slice(1)}
                         </button>
                     ))}
                 </div>
@@ -165,7 +175,6 @@ export default React.forwardRef(function EventDetailsModal(
                             <div className={styles.rxSection}>
                                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                     <h2>Rx</h2>
-                                    {/* Show Safety Badge if Available */}
                                     {getSafetyBadge(safetyStatus)}
                                 </div>
 
@@ -183,10 +192,11 @@ export default React.forwardRef(function EventDetailsModal(
                                 </div>
                             </div>
 
-                            {event.summary && activeTab === 'prescription' && (
+                            {/* Show AI Summary on Prescription if available */}
+                            {simpleExplanation && activeTab === 'prescription' && (
                                 <div className={styles.adviceBox}>
-                                    <h4>Advice:</h4>
-                                    <p>{simpleExplanation || event.summary}</p>
+                                    <h4>AI Explanation:</h4>
+                                    <p>{simpleExplanation}</p>
                                 </div>
                             )}
 
@@ -200,7 +210,7 @@ export default React.forwardRef(function EventDetailsModal(
                     {/* TAB: OVERVIEW */}
                     {activeTab === 'overview' && (
                         <div className={styles.innerContent}>
-                            {/* Only show Vitals if available */}
+                            {/* Vitals */}
                             {(event.vitals?.bp || event.vitals?.hr || event.vitals?.temp || event.vitals?.weight) && (
                                 <div className={styles.vitalsGrid}>
                                     <VitalCard icon={<Drop size={24} weight="fill" />} label="Blood Pressure" value={event.vitals?.bp || 'N/A'} unit={event.vitals?.bp ? 'mmHg' : ''} color="#EF4444" bg="#FEE2E2" />
@@ -210,7 +220,7 @@ export default React.forwardRef(function EventDetailsModal(
                                 </div>
                             )}
 
-                            {/* --- AI SIMPLE EXPLANATION (New) --- */}
+                            {/* --- AI SIMPLE EXPLANATION --- */}
                             {aiData ? (
                                 <div className={styles.simpleCard}>
                                     <div className={styles.simpleCardHeader}>
@@ -279,12 +289,12 @@ export default React.forwardRef(function EventDetailsModal(
                         </div>
                     )}
 
-                    {/* TAB: ANALYSIS (Enhanced) */}
+                    {/* TAB: ANALYSIS (Enhanced with Disease Insight) */}
                     {activeTab === 'analysis' && (
                         <div className={styles.innerContent}>
                             {aiData ? (
                                 <>
-                                    {/* 1. Simple Summary (Again for context) */}
+                                    {/* 1. Simple Summary Refresher */}
                                     <div className={styles.simpleCard} style={{background: '#F0F9FF', borderColor: '#BAE6FD'}}>
                                         <div className={styles.simpleCardHeader}>
                                             <CheckCircle size={24} color="#0284C7" weight="fill" />
@@ -295,7 +305,22 @@ export default React.forwardRef(function EventDetailsModal(
                                         <p style={{margin:0, color:'#075985'}}>{simpleExplanation}</p>
                                     </div>
 
-                                    {/* 2. Detailed Markdown Analysis */}
+                                    {/* 2. [NEW] Disease / Condition Insight Card */}
+                                    {diseaseInsight && (
+                                        <div className={styles.diseaseCard}>
+                                            <div className={styles.diseaseCardHeader}>
+                                                <FirstAid size={24} color="#4338ca" weight="fill" />
+                                                <h3 className={styles.diseaseCardTitle}>
+                                                    {isBangla ? 'সম্ভাব্য রোগ ও অবস্থা' : 'Condition Insight'}
+                                                </h3>
+                                            </div>
+                                            <div className={styles.diseaseText}>
+                                                {diseaseInsight}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* 3. Detailed Markdown Analysis */}
                                     <div className={styles.detailedSection}>
                                         <div className={styles.detailHeader}>
                                             <FileText size={24} color="var(--primary)" />
@@ -347,7 +372,6 @@ export default React.forwardRef(function EventDetailsModal(
 
             {/* PRINT-ONLY ELEMENT */}
             <div className={styles.printOnly} ref={printRef}>
-                {/* Print layout code remains same */}
                 <div className={styles.prescriptionView}>
                     <div className={styles.prescriptionHeader}>
                         <div className={styles.brand}>
@@ -368,13 +392,21 @@ export default React.forwardRef(function EventDetailsModal(
                         <h4>AI Summary:</h4>
                         <p>{simpleExplanation || event.summary}</p>
                     </div>
+
+                    {/* Print Disease Insight if available */}
+                    {diseaseInsight && (
+                        <div className={styles.adviceBox} style={{marginTop: '20px', background: '#eef2ff', borderLeftColor: '#4338ca'}}>
+                            <h4>Possible Condition:</h4>
+                            <p>{diseaseInsight}</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </motion.div>
     );
 });
 
-// Helper Components
+// Helper Components (VitalCard) remain unchanged...
 interface VitalCardProps {
     icon: React.ReactNode;
     label: string;
