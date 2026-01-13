@@ -14,7 +14,7 @@ const initialLogoPosition = {
     x: '-50%',
     y: '-50%',
     position: 'fixed' as const,
-    height: window.innerWidth < 768 ? '180px' : '350px', // শুরুতে লোগো বড় থাকবে (মোবাইলে কিছুটা ছোট)
+    height: window.innerWidth < 768 ? '280px' : '550px', // শুরুতে লোগো বড় থাকবে (মোবাইলে কিছুটা ছোট)
     zIndex: 2000,
 };
 
