@@ -230,11 +230,19 @@
 }
 
 .submitBtn {
+    background: linear-gradient(135deg, #3B82F6 0%, #10B981 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
     width: 100%;
     margin-top: 10px;
     opacity: 0;
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
-    transition: transform 0.2s, background 0.2s;
+    transition: transform 0.2s;
 }
 
 .submitBtn:active {
