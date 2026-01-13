@@ -23,6 +23,7 @@
     .sidebar {
         transform: translateX(-100%);
         width: 280px;
+        max-width: 85vw;
         /* Slightly wider on mobile for comfort */
     }
 

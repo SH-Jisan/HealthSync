@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import {
     X, Printer, Calendar, User, FileText, Image as ImageIcon,
-    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle,
-    IdentificationCard
+    DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
@@ -14,7 +14,10 @@ interface EventDetailsProps {
     onClose: () => void;
 }
 
-export default function EventDetailsModal({ event, onClose }: EventDetailsProps) {
+export default React.forwardRef(function EventDetailsModal(
+    { event, onClose }: EventDetailsProps,
+    ref: React.Ref<HTMLDivElement>
+) {
     const [activeTab, setActiveTab] = useState<'overview' | 'medicines' | 'analysis' | 'file' | 'prescription'>(
         event.event_type === 'PRESCRIPTION' ? 'prescription' : 'overview'
     );
@@ -52,8 +55,21 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
     }
 
     return (
-        <div className={styles.overlay}>
-            <div className={styles.modal}>
+        <motion.div
+            ref={ref}
+            className={styles.overlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+        >
+            <motion.div
+                className={styles.modal}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
+            >
                 {/* Header */}
                 <div className={styles.header}>
                     <div className={styles.headerInfo}>
@@ -252,7 +268,7 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                         </div>
                     )}
                 </div>
-            </div>
+            </motion.div>
 
             {/* PRINT-ONLY ELEMENT */}
             <div className={styles.printOnly} ref={printRef}>
@@ -295,9 +311,9 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsProps)
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
-}
+});
 
 // Helper Components
 interface VitalCardProps {

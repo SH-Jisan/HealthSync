@@ -1,19 +1,21 @@
+/* TimelineTile.module.css - Premium Design */
+
 .container {
     display: flex;
     gap: 1.5rem;
     position: relative;
-    padding-bottom: 2rem;
+    padding-bottom: 2.5rem;
 }
 
-/* Vertical Line */
+/* Vertical Line with Gradient */
 .container::before {
     content: '';
     position: absolute;
-    left: 20px;
+    left: 21px;
     top: 0;
     bottom: 0;
     width: 2px;
-    background-color: var(--border);
+    background: linear-gradient(to bottom, var(--border) 0%, rgba(0, 0, 0, 0.05) 100%);
     z-index: 0;
 }
 
@@ -22,34 +24,55 @@
 }
 
 .iconWrapper {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: var(--surface);
-    border: 2px solid var(--primary);
+    background: white;
+    border: 2px solid white;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
+    margin-top: 4px;
 }
 
 .card {
     flex: 1;
-    background: var(--surface);
+    background: white;
     padding: 1.5rem;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
 }
 
+/* Hover Effect */
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-light);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+    border-color: rgba(var(--primary-hsl), 0.2);
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+/* Subtle gradient overlay on hover */
+.card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
 }
 
 .header {
@@ -60,60 +83,71 @@
 }
 
 .date {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
 }
 
 .badge {
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .high {
-    background: #fee2e2;
-    color: #dc2626;
+    background: #FEF2F2;
+    color: #EF4444;
+    border: 1px solid #FCA5A5;
 }
 
 .medium {
-    background: #fef3c7;
-    color: #d97706;
+    background: #FFFBEB;
+    color: #F59E0B;
+    border: 1px solid #FCD34D;
 }
 
 .low {
-    background: #f0fdf4;
-    color: #16a34a;
+    background: #F0FDF4;
+    color: #10B981;
+    border: 1px solid #86EFAC;
 }
 
 .titleRow {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 0.75rem;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 1rem;
 }
 
 .title {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     color: var(--text-primary);
+    font-weight: 700;
+    line-height: 1.3;
 }
 
 .uploader {
     font-size: 0.85rem;
     color: var(--text-secondary);
-    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .summary {
     color: var(--text-secondary);
     font-size: 0.95rem;
-    line-height: 1.5;
-    margin: 0 0 1rem 0;
+    line-height: 1.6;
+    margin: 0 0 1.25rem 0;
+    opacity: 0.9;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -129,23 +163,54 @@
 .findingChip {
     background: var(--background);
     color: var(--text-secondary);
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
     border: 1px solid var(--border);
+    transition: all 0.2s;
+}
+
+.card:hover .findingChip {
+    background: white;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 /* Responsive fixes */
 @media (max-width: 640px) {
     .container {
         gap: 1rem;
+        padding-bottom: 2rem;
+    }
+
+    .container::before {
+        left: 17px;
+        /* Re-align line with icon center */
+    }
+
+    .iconWrapper {
+        width: 36px;
+        height: 36px;
+        margin-top: 2px;
     }
 
     .card {
-        padding: 1rem;
+        padding: 1.25rem;
     }
 
     .header {
-        flex-direction: column;
+        flex-direction: row;
+        /* Keep side-by-side on mobile */
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .title {
+        font-size: 1.1rem;
+    }
+
+    .summary {
+        font-size: 0.9rem;
     }
 }

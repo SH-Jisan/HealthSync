@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import type { MedicalEvent } from '../../types';
@@ -77,12 +78,15 @@ export default function TimelineView({ userId }: { userId?: string }) {
             </div>
 
             {/* Details Modal */}
-            {selectedEvent && (
-                <EventDetailsModal
-                    event={selectedEvent}
-                    onClose={() => setSelectedEvent(null)}
-                />
-            )}
+            <AnimatePresence>
+                {selectedEvent && (
+                    <EventDetailsModal
+                        key="event-modal"
+                        event={selectedEvent}
+                        onClose={() => setSelectedEvent(null)}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }

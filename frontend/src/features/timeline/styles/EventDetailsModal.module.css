@@ -1,70 +1,83 @@
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 20px;
 }
 
 .modal {
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.95);
     width: 100%;
-    max-width: 950px;
-    height: 90vh;
-    border-radius: 20px;
+    max-width: 900px;
+    height: 85vh;
+    border-radius: 24px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: var(--shadow-xl);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    /* Ensure positioning context for absolute actions */
 }
 
 .header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding-right: 160px;
+    /* Space for absolute actions */
 }
 
 .headerInfo {
     display: flex;
-    gap: 15px;
+    gap: 16px;
     align-items: center;
 }
 
 .iconBox {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .prescriptionIcon {
-    background: var(--primary-light);
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
     color: var(--primary);
 }
 
 .reportIcon {
-    background: #F0FDF4;
+    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
     color: #15803D;
 }
 
 .title {
     margin: 0;
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     color: var(--text-primary);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    padding-right: 120px;
+    /* Space for mobile actions */
 }
 
 .meta {
     display: flex;
-    gap: 10px;
-    font-size: 0.9rem;
+    gap: 16px;
+    font-size: 0.85rem;
     color: var(--text-secondary);
     margin-top: 4px;
 }
@@ -72,12 +85,17 @@
 .metaItem {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    font-weight: 500;
 }
 
 .actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
 }
 
 .iconBtn {
@@ -86,36 +104,41 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
     cursor: pointer;
     color: var(--text-secondary);
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .iconBtn:hover {
-    background: var(--background);
-    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     border-color: var(--primary);
+    color: var(--primary);
 }
 
 .closeBtn {
     background: #FEE2E2;
     color: #DC2626;
-    border: none;
+    border: 1px solid #FECACA;
 }
 
 .closeBtn:hover {
-    background: #FECACA;
-    color: #B91C1C;
+    background: #EF4444;
+    color: white;
+    border-color: #EF4444;
 }
 
 .tabs {
     display: flex;
-    padding: 0 1.5rem;
-    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     gap: 2rem;
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .tabBtn {
@@ -123,24 +146,31 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     text-transform: capitalize;
     color: var(--text-secondary);
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
     transition: all 0.2s;
+    opacity: 0.7;
+}
+
+.tabBtn:hover {
+    color: var(--primary);
+    opacity: 1;
 }
 
 .tabActive {
     color: var(--primary);
     border-bottom-color: var(--primary);
+    opacity: 1;
 }
 
 .content {
     flex: 1;
     overflow-y: auto;
     padding: 2rem;
-    background: var(--background);
+    background: #F8FAFC;
 }
 
 .innerContent {
@@ -150,55 +180,65 @@
 
 .vitalsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1.25rem;
     margin-bottom: 2rem;
 }
 
 .vitalCard {
-    background: var(--surface);
+    background: white;
     padding: 1.5rem;
     border-radius: 16px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     text-align: center;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s;
+}
+
+.vitalCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
 .vitalIcon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 10px;
+    margin: 0 auto 12px;
+    font-size: 1.2rem;
 }
 
 .vitalValue {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.6rem;
+    font-weight: 800;
     color: var(--text-primary);
+    letter-spacing: -0.02em;
 }
 
 .vitalUnit {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    font-weight: normal;
+    font-weight: 500;
+    margin-left: 2px;
 }
 
 .vitalLabel {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    margin-top: 5px;
+    margin-top: 6px;
+    font-weight: 500;
 }
 
 .summarySection {
-    background: var(--surface);
-    padding: 1.5rem;
+    background: white;
+    padding: 2rem;
     border-radius: 16px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     margin-bottom: 2rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
 }
 
 .sectionTitle {
@@ -206,38 +246,40 @@
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    font-size: 1.2rem;
 }
 
 .summaryText {
-    line-height: 1.7;
-    color: var(--text-secondary);
-    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #475569;
+    font-size: 1rem;
     white-space: pre-line;
 }
 
 .findingTags {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .tag {
-    background: var(--primary-light);
+    background: rgba(var(--primary-hsl), 0.08);
     color: var(--primary);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(var(--primary-hsl), 0.1);
 }
 
 .medicineTableWrapper {
-    background: var(--surface);
+    background: white;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
 }
 
 .medTable {
@@ -246,59 +288,63 @@
 }
 
 .medTable th {
-    background: var(--background);
-    padding: 15px;
+    background: #F8FAFC;
+    padding: 1.25rem;
     text-align: left;
-    color: var(--text-secondary);
+    color: #64748B;
     font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .medTable td {
-    padding: 15px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-primary);
+    padding: 1.25rem;
+    border-bottom: 1px solid #F1F5F9;
+    color: #334155;
+    font-size: 0.95rem;
+}
+
+.medTable tr:last-child td {
+    border-bottom: none;
 }
 
 .medName {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    font-weight: 600;
 }
 
 .emptyState {
-    padding: 2rem;
+    padding: 3rem;
     text-align: center;
     color: var(--text-secondary);
 }
 
-.analysisCard {
-    background: var(--surface);
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-}
-
 .infoNote {
-    background: #FFF7ED;
+    background: #FFEDD5;
     border-left: 4px solid #F97316;
-    padding: 12px;
-    font-size: 0.9rem;
-    color: #C2410C;
-    margin-bottom: 15px;
-    border-radius: 0 4px 4px 0;
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: #9A3412;
+    margin-bottom: 20px;
+    border-radius: 0 8px 8px 0;
+    display: flex;
+    align-items: center;
 }
 
 .rawText {
-    background: #1E293B;
+    background: #0F172A;
     color: #E2E8F0;
     padding: 1.5rem;
-    border-radius: 12px;
+    border-radius: 16px;
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 0.9rem;
     line-height: 1.6;
     white-space: pre-wrap;
     overflow-x: auto;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 .fileContainer {
@@ -306,46 +352,55 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #000;
+    background: #F1F5F9;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 400px;
 }
 
 .attachmentImg {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 /* Prescription View Styles */
 .prescriptionView {
     background: white;
-    padding: 2.5rem;
-    border-radius: 12px;
+    padding: 3rem;
+    border-radius: 16px;
     min-height: 100%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
     color: #1a1a1a;
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .prescriptionHeader {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 1.5rem;
-    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
 }
 
 .brand h1 {
     color: var(--primary);
     margin: 0;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 800;
-    letter-spacing: -0.5px;
+    letter-spacing: -1px;
+    line-height: 1;
 }
 
 .brand p {
     color: var(--text-secondary);
-    margin: 0;
-    font-size: 0.95rem;
+    margin: 4px 0 0 0;
+    font-size: 1rem;
     font-weight: 500;
 }
 
@@ -355,112 +410,101 @@
 
 .docInfo h3 {
     margin: 0;
-    font-size: 1.25rem;
-    color: var(--text-primary);
+    font-size: 1.4rem;
+    color: #1E293B;
 }
 
 .docInfo p {
     margin: 4px 0;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+    color: #64748B;
+    font-size: 0.95rem;
     font-weight: 500;
 }
 
 .patientBar {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
-    background: #f8fafc;
-    padding: 1.25rem;
-    border-radius: 10px;
-    margin-bottom: 2.5rem;
-    font-size: 0.95rem;
-    border: 1px solid #e2e8f0;
-}
-
-.rxSection {
-    margin-top: 1rem;
+    background: #F8FAFC;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+    font-size: 1rem;
+    border: 1px solid #E2E8F0;
 }
 
 .rxSection h2 {
     font-family: "Playfair Display", serif;
-    font-size: 3.5rem;
+    font-size: 4rem;
     margin: 0 0 1.5rem 0;
-    color: var(--text-primary);
+    color: var(--primary);
     font-style: italic;
-    opacity: 0.9;
+    opacity: 1;
+    line-height: 0.8;
 }
 
 .rxList {
-    margin-bottom: 3rem;
-    padding-left: 2.5rem;
+    margin-bottom: 4rem;
+    padding-left: 1rem;
 }
 
 .medItem {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     position: relative;
-}
-
-.medItem::before {
-    content: '•';
-    position: absolute;
-    left: -20px;
-    color: var(--primary);
-    font-weight: bold;
+    padding-left: 1.5rem;
+    border-left: 3px solid #E2E8F0;
 }
 
 .medItem strong {
-    font-size: 1.15rem;
-    color: #1e293b;
+    font-size: 1.25rem;
+    color: #1E293B;
+    font-weight: 700;
 }
 
 .medItem span {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin-top: 2px;
+    font-size: 1rem;
+    color: #64748B;
+    margin-top: 4px;
 }
 
 .adviceBox {
     margin-top: 3rem;
-    padding: 1.5rem;
-    background: #fffbeb;
-    border-left: 5px solid #f59e0b;
-    border-radius: 8px;
+    padding: 2rem;
+    background: #FFFBEB;
+    border-left: 6px solid #F59E0B;
+    border-radius: 12px;
 }
 
 .adviceBox h4 {
-    margin: 0 0 8px 0;
-    color: #92400e;
-    font-size: 1rem;
+    margin: 0 0 10px 0;
+    color: #92400E;
+    font-size: 1.1rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.adviceBox p {
-    margin: 0;
-    color: #b45309;
-    line-height: 1.6;
+    letter-spacing: 1px;
 }
 
 .signatureArea {
     margin-top: 6rem;
     text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .sigLine {
-    width: 220px;
-    height: 1.5px;
-    background: #475569;
-    display: inline-block;
+    width: 240px;
+    height: 2px;
+    background: #94A3B8;
+    margin-bottom: 8px;
 }
 
 .signatureArea p {
-    margin: 8px 0 0 0;
+    margin: 0;
     font-weight: 600;
-    color: #475569;
-    font-size: 0.9rem;
+    color: #64748B;
+    font-size: 0.95rem;
 }
 
 /* Print Specific */
@@ -486,13 +530,132 @@
         width: 100%;
         background: white;
     }
+}
 
-    .prescriptionView {
-        padding: 0;
-        box-shadow: none;
+/* Responsive */
+@media (max-width: 768px) {
+    .overlay {
+        padding: 20px;
+        align-items: center;
     }
 
-    .overlay {
-        display: none !important;
+    .modal {
+        height: 80vh;
+        max-height: 80vh;
+        border-radius: 20px;
+        width: 100%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .headerInfo {
+        width: 100%;
+    }
+
+    .actions {
+        top: 15px;
+        right: 15px;
+    }
+
+    .meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .tabs {
+        padding: 0 1rem;
+        gap: 1rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .prescriptionView {
+        padding: 1.5rem;
+    }
+
+    .brand h1 {
+        font-size: 1.8rem;
+    }
+
+    .patientBar {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        /* Decrease patient bar font */
+        padding: 1rem;
+    }
+
+    /* Small Screen Font Adjustments */
+    .title {
+        font-size: 1.1rem;
+        /* Smaller title */
+        padding-right: 120px;
+    }
+
+    .metaItem {
+        font-size: 0.8rem;
+    }
+
+    .tabBtn {
+        font-size: 0.85rem;
+        padding: 0.75rem 0;
+    }
+
+    .vitalValue {
+        font-size: 1.25rem;
+    }
+
+    .vitalLabel {
+        font-size: 0.75rem;
+    }
+
+    .summaryText {
+        font-size: 0.9rem;
+    }
+
+    .docInfo h3 {
+        font-size: 1.1rem;
+    }
+
+    .docInfo p {
+        font-size: 0.85rem;
+    }
+
+    .rxSection h2 {
+        font-size: 2.5rem;
+        /* Smaller Rx */
+    }
+
+    .medItem strong {
+        font-size: 1rem;
+    }
+
+    .medItem span {
+        font-size: 0.85rem;
+    }
+
+    .brand p {
+        font-size: 0.85rem;
+    }
+
+    .iconBtn {
+        width: 32px;
+        height: 32px;
     }
 }
