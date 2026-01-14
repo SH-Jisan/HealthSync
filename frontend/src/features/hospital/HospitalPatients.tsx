@@ -100,7 +100,7 @@ export default function HospitalPatients() {
                             <div>
                                 <h3 className={styles.patientName}>{p.profiles?.full_name}</h3>
                                 <p className={styles.patientContact}>{p.profiles?.phone || p.profiles?.email}</p>
-                                <span className={styles.admissionDate}>Admitted: {new Date(p.admission_date).toLocaleDateString()}</span>
+                                <span className={styles.admissionDate}>{t('dashboard.hospital.patients.admitted_date')} {new Date(p.admission_date).toLocaleDateString()}</span>
                             </div>
 
                             <button

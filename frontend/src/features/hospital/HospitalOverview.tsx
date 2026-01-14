@@ -47,7 +47,7 @@ export default function HospitalOverview() {
                         </div>
                         <div>
                             <h3 className={styles.statValue}>56</h3>
-                            <p className={styles.statLabel}>{t('common.total')} {t('dashboard.doctor.patients.title')}</p>
+                            <p className={styles.statLabel}>{t('dashboard.hospital.overview.total_patients')}</p>
                         </div>
                     </div>
                 </div>

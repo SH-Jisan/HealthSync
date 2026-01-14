@@ -150,6 +150,13 @@
           "patients": "My Patients",
           "chambers": "My Chambers"
         },
+        "alerts": {
+          "user_not_found": "User not found with this email.",
+          "patient_exists": "Patient is already in your list.",
+          "add_failed": "Failed to add patient.",
+          "add_success": "Patient Added Successfully!",
+          "unknown": "Unknown"
+        },
         "appointments": {
           "title": "Patient Appointments",
           "no_appointments": "No appointments scheduled yet.",
@@ -196,6 +203,73 @@
           "validation_alert": "Add medicine/test names first.",
           "success_alert": "Submitted Successfully!",
           "prescribed_title": "Prescribed: {{count}} Tests"
+        }
+      },
+      "hospital": {
+        "tabs": {
+          "overview": "Overview",
+          "doctors": "Doctors List",
+          "patients": "Patients",
+          "blood": "Blood Bank"
+        },
+        "overview": {
+          "title": "Hospital Dashboard",
+          "manage": "Manage",
+          "doctors_staff": "Doctors & Staff",
+          "appointments": "Appointments",
+          "view_schedule": "View Schedule",
+          "quick_actions": "Quick Actions",
+          "assign_doctor": "Assign New Doctor",
+          "assign_desc": "Add a doctor to your hospital.",
+          "manage_patient": "Manage Patient",
+          "manage_desc": "Book appointments or upload reports.",
+          "modal_assign": "Assign Doctor",
+          "modal_desc": "Enter doctor's registered email address.",
+          "adding": "Adding...",
+          "add_action": "Add Doctor",
+          "update_inventory": "Update Inventory",
+          "view_analytics": "View Analytics",
+          "total_patients": "Total Patients"
+        },
+        "doctors": {
+          "title": "Assigned Doctors",
+          "no_doctors": "No doctors assigned yet.",
+          "remove_confirm": "Do you want to remove this doctor?",
+          "add_new": "Add New",
+          "add_modal_title": "Add New Doctor",
+          "email_placeholder": "Doctor's Email",
+          "joined": "Joined {{date}}",
+          "loading": "Loading Doctors..."
+        },
+        "patients": {
+          "title": "Admitted / Appointment Patients",
+          "no_patients": "No patient records found.",
+          "admit_new": "Admit New",
+          "admit": "Admit",
+          "add_modal_title": "Admit Patient",
+          "email_placeholder": "Patient Email",
+          "discharge_confirm": "Do you want to discharge this patient?",
+          "patient_id": "Patient ID:",
+          "ref_dr": "Ref: Dr.",
+          "view_history": "View History",
+          "back_list": "Back to List",
+          "history_title": "Patient Medical History",
+          "loading": "Loading Patients...",
+          "admitted_date": "Admitted:"
+        },
+        "blood": {
+          "title": "Blood Inventory",
+          "desc": "Manage blood bags in hospital.",
+          "update_inventory": "Update Inventory",
+          "modal_title": "Update Blood Inventory",
+          "blood_group": "Blood Group",
+          "units_to_add": "No. of Bags",
+          "units": "Bags",
+          "last_updated": "Last Updated",
+          "saving": "Saving...",
+          "save_changes": "Save Changes",
+          "bags_available": "Bags Available",
+          "loading": "Loading Inventory..."
         }
       },
       "diagnostic": {
@@ -297,23 +371,26 @@
       "title": "Find a Specialist",
       "subtitle": "Book appointments with top doctors.",
       "filter_by": "Filtered by:",
-      "no_doctors": "No doctors found.",
-      "view_all": "View All Doctors",
-      "book_btn": "Book Appointment",
       "tabs": {
         "app_doctors": "HealthSync Doctors",
         "google_doctors": "From Google"
       },
       "specialties": {
-        "All": "All",
-        "Cardiology": "Cardiology",
-        "General Medicine": "General Medicine",
-        "Neurology": "Neurology",
-        "Pediatrics": "Pediatrics",
-        "Dermatology": "Dermatology",
-        "Orthopedics": "Orthopedics",
-        "Gynecology": "Gynecology"
-      }
+        "all": "All",
+        "cardiology": "Cardiology",
+        "general_medicine": "General Medicine",
+        "neurology": "Neurology",
+        "pediatrics": "Pediatrics",
+        "dermatology": "Dermatology",
+        "orthopedics": "Orthopedics",
+        "gynecology": "Gynecology"
+      },
+      "loading": "Loading Doctors...",
+      "no_results": "No doctors found for {{spec}}",
+      "general_physician": "General Physician",
+      "book_btn": "Book Appointment",
+      "no_internet": "No results found on Google Maps.",
+      "view_map": "View on Map"
     },
     "ai_doctor": {
       "title": "AI Health Assistant",

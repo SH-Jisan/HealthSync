@@ -58,7 +58,7 @@ export default function DoctorMyPatients() {
                 .single();
 
             if (searchError || !profile) {
-                alert('User not found with this email.');
+                alert(t('dashboard.doctor.alerts.user_not_found'));
                 return;
             }
 
@@ -72,10 +72,10 @@ export default function DoctorMyPatients() {
             });
 
             if (insertError) {
-                if (insertError.code === '23505') alert('Patient is already in your list.');
-                else alert('Failed to add patient.');
+                if (insertError.code === '23505') alert(t('dashboard.doctor.alerts.patient_exists'));
+                else alert(t('dashboard.doctor.alerts.add_failed'));
             } else {
-                alert('Patient Added Successfully!');
+                alert(t('dashboard.doctor.alerts.add_success'));
                 setShowAddModal(false);
                 setSearchEmail('');
                 await fetchPatients();
@@ -114,7 +114,7 @@ export default function DoctorMyPatients() {
                                     <User size={24} />
                                 </div>
                                 <div>
-                                    <h4 className={styles.patientName}>{row.profiles?.full_name || 'Unknown'}</h4>
+                                    <h4 className={styles.patientName}>{row.profiles?.full_name || t('dashboard.doctor.alerts.unknown')}</h4>
                                     <p className={styles.contactInfo}>{row.profiles?.phone || row.profiles?.email}</p>
                                 </div>
                             </div>

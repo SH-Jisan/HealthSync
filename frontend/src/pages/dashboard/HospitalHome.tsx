@@ -1,50 +1,73 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import HospitalOverview from '../../features/hospital/HospitalOverview.tsx';
-import HospitalDoctors from '../../features/hospital/HospitalDoctors.tsx';
-import HospitalPatients from '../../features/hospital/HospitalPatients.tsx';
-import HospitalBloodBank from "../../features/hospital/HospitalBloodBank.tsx";
+import { House, User, Users, Drop } from 'phosphor-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import HospitalOverview from '../../features/hospital/HospitalOverview';
+import HospitalDoctors from '../../features/hospital/HospitalDoctors';
+import HospitalPatients from '../../features/hospital/HospitalPatients';
+import HospitalBloodBank from "../../features/hospital/HospitalBloodBank";
 import styles from './styles/HospitalHome.module.css';
 
 export default function HospitalHome() {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients' | 'blood'>('overview');
 
+    const tabs = [
+        { id: 'overview', label: t('dashboard.hospital.tabs.overview'), Icon: House },
+        { id: 'doctors', label: t('dashboard.hospital.tabs.doctors'), Icon: User },
+        { id: 'patients', label: t('dashboard.hospital.tabs.patients'), Icon: Users },
+        { id: 'blood', label: t('dashboard.hospital.tabs.blood'), Icon: Drop },
+    ] as const;
+
     return (
-        <div>
-            {/* Tab Navigation */}
+        <motion.div
+            className={styles.container}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+            {/* Tab Navigation with Sliding Pill */}
             <div className={styles.tabsContainer}>
-                <button
-                    onClick={() => setActiveTab('overview')}
-                    className={`${styles.tabButton} ${activeTab === 'overview' ? styles.active : ''}`}
-                >
-                    {t('dashboard.hospital.tabs.overview')}
-                </button>
-                <button
-                    onClick={() => setActiveTab('doctors')}
-                    className={`${styles.tabButton} ${activeTab === 'doctors' ? styles.active : ''}`}
-                >
-                    {t('dashboard.hospital.tabs.doctors')}
-                </button>
-                <button
-                    onClick={() => setActiveTab('patients')}
-                    className={`${styles.tabButton} ${activeTab === 'patients' ? styles.active : ''}`}
-                >
-                    {t('dashboard.hospital.tabs.patients')}
-                </button>
-                <button
-                    onClick={() => setActiveTab('blood')}
-                    className={`${styles.tabButton} ${activeTab === 'blood' ? styles.active : ''}`}
-                >
-                    {t('dashboard.hospital.tabs.blood')}
-                </button>
+                <div className={styles.tabs}>
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`${styles.tabBtn} ${activeTab === tab.id ? styles.active : ''}`}
+                        >
+                            {activeTab === tab.id && (
+                                <motion.div
+                                    layoutId="hospitalActivePill"
+                                    className={styles.activePill}
+                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                />
+                            )}
+                            <span className={styles.tabContent}>
+                                <tab.Icon size={20} weight={activeTab === tab.id ? 'fill' : 'regular'} />
+                                {tab.label}
+                            </span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            {/* Tab Content */}
-            {activeTab === 'overview' && <HospitalOverview />}
-            {activeTab === 'doctors' && <HospitalDoctors />}
-            {activeTab === 'patients' && <HospitalPatients />}
-            {activeTab === 'blood' && <HospitalBloodBank />}
-        </div>
+            {/* Tab Content Area with Staggered Fade */}
+            <div className={styles.contentArea}>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeTab}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {activeTab === 'overview' && <HospitalOverview />}
+                        {activeTab === 'doctors' && <HospitalDoctors />}
+                        {activeTab === 'patients' && <HospitalPatients />}
+                        {activeTab === 'blood' && <HospitalBloodBank />}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        </motion.div>
     );
 }
