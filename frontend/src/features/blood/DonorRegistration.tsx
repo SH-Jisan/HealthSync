@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
+import { UserPlus, Heart, CheckCircle, Spinner } from 'phosphor-react';
+import { motion } from 'framer-motion';
 import styles from './styles/DonorRegistration.module.css';
 
 export default function DonorRegistration() {
@@ -66,53 +68,96 @@ export default function DonorRegistration() {
         }
     };
 
-    if (loading) return <div>{t('common.loading')}</div>;
+    if (loading) return (
+        <div className={styles.loadingWrapper}>
+            <Spinner size={32} className={styles.spinner} />
+        </div>
+    );
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>
-                {isAlreadyDonor ? t('blood.register.title_update') : t('blood.register.title_register')}
-            </h2>
-
-            <form onSubmit={handleSave} className={styles.form}>
-                <div className={styles.formGroup}>
-                    <label className={styles.label}>{t('blood.request.group_label')}</label>
-                    <select
-                        value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}
-                        className={styles.select}
-                    >
-                        {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(g => <option key={g} value={g}>{g}</option>)}
-                    </select>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`${styles.card} t-card-glass`}
+            >
+                <div className={styles.header}>
+                    <div className={styles.iconCircle}>
+                        <UserPlus size={32} />
+                    </div>
+                    <h2 className={styles.title}>
+                        {isAlreadyDonor ? t('blood.register.title_update') : t('blood.register.title_register')}
+                    </h2>
+                    <p className={styles.subtitle}>
+                        {t('blood.register.subtitle', 'Join our hero community and save lives.')}
+                    </p>
                 </div>
 
-                <div className={styles.formGroup}>
-                    <label className={styles.label}>{t('blood.search.district_label')}</label>
-                    <input
-                        type="text" required value={district} onChange={(e) => setDistrict(e.target.value)}
-                        className={styles.input}
-                    />
-                </div>
+                <form onSubmit={handleSave} className={styles.form}>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>{t('blood.request.group_label')}</label>
+                        <select
+                            value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}
+                            className={styles.select}
+                        >
+                            {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(g => <option key={g} value={g}>{g}</option>)}
+                        </select>
+                    </div>
 
-                <div className={styles.formGroup}>
-                    <label className={styles.label}>{t('blood.register.phone_label')}</label>
-                    <input
-                        type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
-                        className={styles.input}
-                    />
-                </div>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>{t('blood.search.district_label')}</label>
+                        <input
+                            type="text" required value={district} onChange={(e) => setDistrict(e.target.value)}
+                            className={styles.input}
+                            placeholder="e.g. Dhaka"
+                        />
+                    </div>
 
-                <div className={styles.checkboxGroup}>
-                    <input
-                        type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)}
-                        className={styles.checkbox}
-                    />
-                    <label>{t('blood.register.available_label')}</label>
-                </div>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label}>{t('blood.register.phone_label')}</label>
+                        <input
+                            type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
+                            className={styles.input}
+                            placeholder="+880..."
+                        />
+                    </div>
 
-                <button type="submit" disabled={saving} className={styles.submitBtn}>
-                    {saving ? t('blood.register.saving') : (isAlreadyDonor ? t('blood.register.update_btn') : t('blood.register.register_btn'))}
-                </button>
-            </form>
+                    <div className={`${styles.checkboxGroup} ${available ? styles.checkActive : ''}`}>
+                        <input
+                            type="checkbox"
+                            className={styles.hiddenCheck}
+                            id="availability"
+                            checked={available}
+                            onChange={(e) => setAvailable(e.target.checked)}
+                        />
+                        <label htmlFor="availability" className={styles.checkLabel}>
+                            <div className={styles.checkIcon}>
+                                <Heart weight={available ? "fill" : "regular"} />
+                            </div>
+                            <div className={styles.checkText}>
+                                <span className={styles.checkTitle}>{t('blood.register.available_label')}</span>
+                                <span className={styles.checkDesc}>
+                                    {available ? 'You are visible in search results' : 'You are currently hidden'}
+                                </span>
+                            </div>
+                            <div className={styles.checkToggle}>
+                                <div className={styles.toggleKnob} />
+                            </div>
+                        </label>
+                    </div>
+
+                    <button type="submit" disabled={saving} className={`${styles.submitBtn} t-btn-primary`}>
+                        {saving ? (
+                            <Spinner size={20} className={styles.spinner} />
+                        ) : (
+                            <>
+                                <CheckCircle size={20} weight="bold" />
+                                {isAlreadyDonor ? t('blood.register.update_btn') : t('blood.register.register_btn')}
+                            </>
+                        )}
+                    </button>
+                </form>
+            </motion.div>
         </div>
     );
 }

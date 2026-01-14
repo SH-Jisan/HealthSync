@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { formatDistanceToNow } from 'date-fns';
 import type { BloodRequest } from '../../types';
-import { Drop, Clock, Warning } from 'phosphor-react';
+import { Drop, Clock, Warning, Heart, User } from 'phosphor-react';
 import { bn } from 'date-fns/locale';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './styles/BloodFeed.module.css';
 
 export default function BloodFeed() {
@@ -51,60 +52,103 @@ export default function BloodFeed() {
         }
     };
 
-    if (loading) return <div className="text-center mt-8">{t('blood.feed.loading')}</div>;
+    if (loading) return (
+        <div className={styles.loadingWrapper}>
+            <div className={styles.spinner}></div>
+            <p>{t('blood.feed.loading')}</p>
+        </div>
+    );
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.header}>
-                <span className={styles.liveDot}></span>
-                {t('blood.feed.title')}
-            </h2>
+            <div className={styles.header}>
+                <div className={styles.titleWrapper}>
+                    <h2 className={styles.pageTitle}>
+                        <span className="t-text-gradient">{t('blood.feed.title')}</span>
+                    </h2>
+                    <span className={styles.liveBadge}>
+                        <span className={styles.pulseDot}></span>
+                        LIVE
+                    </span>
+                </div>
+                <p className={styles.subtitle}>{t('blood.feed.subtitle', 'Real-time blood requests from potential recipients.')}</p>
+            </div>
 
-            {requests.length === 0 ? (
-                <div className="text-center text-gray-500">{t('blood.feed.no_requests')}</div>
-            ) : (
-                requests.map(req => {
-                    const isCritical = req.urgency === 'CRITICAL';
-                    return (
-                        <div key={req.id} className={`${styles.card} ${isCritical ? styles.cardCritical : ''}`}>
-                            <div className={styles.cardHeader}>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    <div className={`${styles.bloodGroup} ${isCritical ? styles.bgCritical : ''}`}>
-                                        {req.blood_group}
+            <div className={styles.feedGrid}>
+                <AnimatePresence>
+                    {requests.length === 0 ? (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className={styles.emptyState}
+                        >
+                            <Drop size={48} weight="duotone" color="#e5e7eb" />
+                            <p>{t('blood.feed.no_requests')}</p>
+                        </motion.div>
+                    ) : (
+                        requests.map((req, idx) => {
+                            const isCritical = req.urgency === 'CRITICAL';
+                            return (
+                                <motion.div
+                                    key={req.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.05 }}
+                                    className={`${styles.card} t-card-glass ${isCritical ? styles.cardCritical : ''}`}
+                                >
+                                    <div className={styles.cardHeader}>
+                                        <div className={styles.userInfo}>
+                                            <div className={styles.avatar}>
+                                                <User weight="fill" />
+                                            </div>
+                                            <div>
+                                                <div className={styles.requesterName}>
+                                                    {req.profiles?.full_name || t('common.unknown')}
+                                                </div>
+                                                <div className={styles.timeInfo}>
+                                                    <Clock size={14} />
+                                                    {req.created_at && formatDistanceToNow(new Date(req.created_at), {
+                                                        addSuffix: true,
+                                                        locale: i18n.language === 'bn' ? bn : undefined
+                                                    })}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {isCritical && (
+                                            <div className={styles.criticalBadge}>
+                                                <Warning size={16} weight="fill" />
+                                                {t('blood.request.critical')}
+                                            </div>
+                                        )}
                                     </div>
-                                    <div>
-                                        <h3 className={styles.hospitalName}>{req.hospital_name}</h3>
-                                        <div className={styles.timeInfo}>
-                                            <Clock size={16} />
-                                            {req.created_at && formatDistanceToNow(new Date(req.created_at), {
-                                                addSuffix: true,
-                                                locale: i18n.language === 'bn' ? bn : undefined
-                                            })}
+
+                                    <div className={styles.cardBody}>
+                                        <div className={styles.bloodGroupWrapper}>
+                                            <div className={`${styles.bloodGroup} ${isCritical ? styles.bgCritical : ''}`}>
+                                                {req.blood_group}
+                                            </div>
+                                        </div>
+                                        <div className={styles.requestDetails}>
+                                            <h3 className={styles.hospitalName}>{req.hospital_name}</h3>
+                                            {req.reason && <p className={styles.reasonBox}>"{req.reason}"</p>}
                                         </div>
                                     </div>
-                                </div>
 
-                                {isCritical && (
-                                    <span className={styles.criticalBadge}>
-                                        <Warning size={16} weight="fill" /> {t('blood.request.critical')}
-                                    </span>
-                                )}
-                            </div>
-
-                            {req.reason && <p className={styles.reasonBox}>"{req.reason}"</p>}
-
-                            <div className={styles.cardFooter}>
-                                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                    {t('blood.feed.requested_by')} <strong>{req.profiles?.full_name || t('common.unknown')}</strong>
-                                </div>
-                                <button onClick={() => handleDonate(req)} className={styles.donateBtn}>
-                                    <Drop weight="fill" /> {t('blood.feed.donate_btn')}
-                                </button>
-                            </div>
-                        </div>
-                    );
-                })
-            )}
+                                    <div className={styles.cardFooter}>
+                                        <button
+                                            onClick={() => handleDonate(req)}
+                                            className={`${styles.donateBtn} ${isCritical ? styles.btnCritical : ''}`}
+                                        >
+                                            <Heart size={20} weight="fill" />
+                                            <span>{t('blood.feed.donate_btn')}</span>
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            );
+                        })
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 }
