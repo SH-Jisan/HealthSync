@@ -199,6 +199,13 @@
         }
       }
     },
+    "diagnostic": {
+      "tabs": {
+        "assigned": "Assigned Patients",
+        "pending": "Pending Reports",
+        "search": "Search & Register"
+      }
+    },
     "health_plan": {
       "title": "Your Personalized Health Plan",
       "subtitle": "AI-driven recommendations based on your medical history.",
