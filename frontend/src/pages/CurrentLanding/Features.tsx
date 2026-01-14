@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import {
-    Robot, FileText, Sparkle, Drop,
-    SquaresFour, Translate, FirstAid, Heart, ShieldCheck
+    Robot, FileText, Drop,
+    SquaresFour, Heart, ShieldCheck
 } from 'phosphor-react';
 import { motion } from 'framer-motion';
 import styles from './styles/Features.module.css';

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
 import { Sparkle, Syringe, MapPin, Ticket, PaperPlaneRight, MagicWand, Phone, Heartbeat } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import styles from './styles/RequestBlood.module.css';
 
 export default function RequestBlood() {
@@ -72,7 +72,7 @@ export default function RequestBlood() {
         }
     };
 
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -82,9 +82,9 @@ export default function RequestBlood() {
         }
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, y: 15 },
-        visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } }
+        visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
     };
 
     return (

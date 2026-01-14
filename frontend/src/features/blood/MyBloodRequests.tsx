@@ -21,23 +21,23 @@ export default function MyBloodRequests() {
     const [requests, setRequests] = useState<BloodRequest[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchMyRequests = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const { data, error } = await supabase
-            .from('blood_requests')
-            .select('*')
-            .eq('requester_id', user.id)
-            .order('created_at', { ascending: false });
-
-        if (!error && data) {
-            setRequests(data as BloodRequest[]);
-        }
-        setLoading(false);
-    };
-
     useEffect(() => {
+        const fetchMyRequests = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const { data, error } = await supabase
+                .from('blood_requests')
+                .select('*')
+                .eq('requester_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (!error && data) {
+                setRequests(data as BloodRequest[]);
+            }
+            setLoading(false);
+        };
+
         fetchMyRequests();
     }, []);
 

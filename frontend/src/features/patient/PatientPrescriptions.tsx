@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../lib/supabaseClient';
 import {
-    Prescription, Flask, Calendar, User,
-    ArrowRight, Robot, CheckCircle, Clock, FileText, Receipt
+    Prescription, Flask, User,
+    ArrowRight, Robot, Clock, FileText, Receipt
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import EventDetailsModal from '../timeline/EventDetailsModal';

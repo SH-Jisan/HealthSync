@@ -28,28 +28,28 @@ export default function EditProfile() {
         'Dermatology', 'Orthopedics', 'Gynecology', 'Dental', 'Eye Specialist'
     ];
 
-    const fetchProfile = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-        if (data) {
-            setRole(data.role || 'CITIZEN');
-            setFullName(data.full_name || '');
-            setPhone(data.phone || '');
-
-            if (data.role === 'DOCTOR') {
-                setSpecialty(data.specialty || '');
-                setDegree(data.degree || '');
-                setExperience(data.experience || '');
-                setConsultationFee(data.consultation_fee || '');
-                setAbout(data.about || '');
-            }
-        }
-        setLoading(false);
-    };
-
     useEffect(() => {
+        const fetchProfile = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+            if (data) {
+                setRole(data.role || 'CITIZEN');
+                setFullName(data.full_name || '');
+                setPhone(data.phone || '');
+
+                if (data.role === 'DOCTOR') {
+                    setSpecialty(data.specialty || '');
+                    setDegree(data.degree || '');
+                    setExperience(data.experience || '');
+                    setConsultationFee(data.consultation_fee || '');
+                    setAbout(data.about || '');
+                }
+            }
+            setLoading(false);
+        };
+
         fetchProfile();
     }, []);
 

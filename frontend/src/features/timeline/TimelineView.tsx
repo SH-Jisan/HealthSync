@@ -15,39 +15,39 @@ export default function TimelineView({ userId }: { userId?: string }) {
     const [loading, setLoading] = useState(true);
     const [selectedEvent, setSelectedEvent] = useState<MedicalEvent | null>(null);
 
-    const fetchTimeline = async () => {
-        setLoading(true);
-
-        let targetId = userId;
-        if (!targetId) {
-            const { data } = await supabase.auth.getUser();
-            targetId = data.user?.id;
-        }
-        if (!targetId) return;
-
-        // [UPDATED] Filter to show ONLY REPORTS (and Vaccinations/Surgeries if any)
-        // Excluding 'PRESCRIPTION' and 'TEST_ORDER' as requested
-        const { data, error } = await supabase
-            .from('medical_events')
-            .select(
-                '*, uploader:uploader_id(full_name, specialty), profiles:patient_id(full_name, phone)'
-            )
-            .eq('patient_id', targetId)
-            .in('event_type', ['REPORT', 'VACCINATION', 'SURGERY', 'GENERIC']) // Whitelist types
-            .order('event_date', { ascending: false });
-
-        if (error) {
-            console.error('Error fetching timeline:', error);
-        }
-
-        if (!error && data) {
-            setEvents(data as unknown as MedicalEvent[]);
-        }
-
-        setLoading(false);
-    };
-
     useEffect(() => {
+        const fetchTimeline = async () => {
+            setLoading(true);
+
+            let targetId = userId;
+            if (!targetId) {
+                const { data } = await supabase.auth.getUser();
+                targetId = data.user?.id;
+            }
+            if (!targetId) return;
+
+            // [UPDATED] Filter to show ONLY REPORTS (and Vaccinations/Surgeries if any)
+            // Excluding 'PRESCRIPTION' and 'TEST_ORDER' as requested
+            const { data, error } = await supabase
+                .from('medical_events')
+                .select(
+                    '*, uploader:uploader_id(full_name, specialty), profiles:patient_id(full_name, phone)'
+                )
+                .eq('patient_id', targetId)
+                .in('event_type', ['REPORT', 'VACCINATION', 'SURGERY', 'GENERIC']) // Whitelist types
+                .order('event_date', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching timeline:', error);
+            }
+
+            if (!error && data) {
+                setEvents(data as unknown as MedicalEvent[]);
+            }
+
+            setLoading(false);
+        };
+
         fetchTimeline();
     }, [userId]);
 
