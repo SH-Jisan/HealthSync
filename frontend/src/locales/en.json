@@ -202,7 +202,15 @@
           "confirm_send": "Confirm & Send",
           "validation_alert": "Add medicine/test names first.",
           "success_alert": "Submitted Successfully!",
-          "prescribed_title": "Prescribed: {{count}} Tests"
+          "prescribed_title": "Prescribed: {{count}} Tests",
+          "back": "Back",
+          "not_found": "Patient not found",
+          "order_diagnostics_desc": "Order diagnostics",
+          "write_rx_desc": "Add medicines & advice",
+          "patient_info": "Patient Info",
+          "age": "Age: {{age}} Years",
+          "last_visit": "Last Visit: {{visit}}",
+          "unknown_location": "Unknown Location"
         }
       },
       "hospital": {
@@ -496,6 +504,7 @@
       },
       "my_requests": {
         "title": "My Blood Requests",
+        "subtitle": "Manage your requests and check their status.",
         "loading": "Loading Requests...",
         "no_requests": "You haven't posted any requests.",
         "posted": "Posted",

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Trash, Megaphone, Clock, CheckCircle, Spinner } from 'phosphor-react';
 import { formatDistanceToNow } from 'date-fns';
+import { bn } from 'date-fns/locale';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabaseClient';
@@ -8,7 +9,7 @@ import { bloodApi } from '@/services/api/blood';
 import styles from './styles/MyBloodRequests.module.css';
 
 export default function MyBloodRequests() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const queryClient = useQueryClient();
 
     // 1. Fetch User ID
@@ -56,7 +57,7 @@ export default function MyBloodRequests() {
                     <Megaphone size={32} weight="duotone" />
                     <span className="t-text-gradient">{t('blood.my_requests.title')}</span>
                 </h2>
-                <p className={styles.subtitle}>{t('blood.my_requests.subtitle', 'Manage your requests and check their status.')}</p>
+                <p className={styles.subtitle}>{t('blood.my_requests.subtitle')}</p>
             </div>
 
             <div className={styles.list}>
@@ -99,7 +100,7 @@ export default function MyBloodRequests() {
                                         <div className={styles.metadata}>
                                             <span className={styles.timeText}>
                                                 <Clock size={14} />
-                                                {formatDistanceToNow(new Date(req.created_at))} ago
+                                                {formatDistanceToNow(new Date(req.created_at), { addSuffix: true, locale: i18n.language === 'bn' ? bn : undefined })}
                                             </span>
                                         </div>
                                         {req.reason && <p className={styles.reasonText}>"{req.reason}"</p>}

@@ -202,7 +202,15 @@
           "confirm_send": "নিশ্চিত করুন",
           "validation_alert": "দয়া করে ওষুধের নাম দিন।",
           "success_alert": "সফলভাবে পাঠানো হয়েছে!",
-          "prescribed_title": "প্রেসক্রাইব করা হয়েছে: {{count}} টি টেস্ট"
+          "prescribed_title": "প্রেসক্রাইব করা হয়েছে: {{count}} টি টেস্ট",
+          "back": "ফিরে যান",
+          "not_found": "রোগী খুঁজে পাওয়া যায়নি",
+          "order_diagnostics_desc": "ডায়াগনস্টিক অর্ডার করুন",
+          "write_rx_desc": "ঔষধ এবং পরামর্শ যোগ করুন",
+          "patient_info": "রোগীর তথ্য",
+          "age": "বয়স: {{age}} বছর",
+          "last_visit": "শেষ ভিজিট: {{visit}}",
+          "unknown_location": "অজানা অবস্থান"
         }
       },
       "hospital": {
@@ -497,6 +505,7 @@
     },
     "my_requests": {
       "title": "আমার রক্তের অনুরোধ",
+      "subtitle": "আপনার অনুরোধ এবং তাদের অবস্থা দেখুন।",
       "loading": "রিকোয়েস্ট লোড হচ্ছে...",
       "no_requests": "আপনি কোনো অনুরোধ পোস্ট করেননি।",
       "posted": "পোস্ট করা হয়েছে",

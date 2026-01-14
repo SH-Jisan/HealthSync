@@ -69,7 +69,7 @@ export default function DoctorPatientProfile() {
                     <p className={styles.contactText}><Phone size={16} weight="fill" style={{ marginRight: 6 }} />{patient.phone || patient.email}</p>
                     <div className={styles.badges}>
                         {patient.blood_group && <span className={styles.bloodBadge}><Drop size={16} weight="fill" style={{ marginRight: 4 }} />{patient.blood_group}</span>}
-                        <span className={styles.locationBadge}><MapPin size={16} weight="fill" style={{ marginRight: 4 }} />{patient.district || 'Unknown Location'}</span>
+                        <span className={styles.locationBadge}><MapPin size={16} weight="fill" style={{ marginRight: 4 }} />{patient.district || t('dashboard.doctor.profile.unknown_location')}</span>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@ export default function DoctorPatientProfile() {
                             style={{ background: '#EEF2FF', color: '#4338ca', borderColor: '#C7D2FE' }}
                         >
                             <Flask size={32} weight="duotone" />
-                            <div><strong>{t('dashboard.doctor.profile.assign_test') || 'Assign Tests'}</strong><span>Order diagnostics</span></div>
+                            <div><strong>{t('dashboard.doctor.profile.assign_test') || 'Assign Tests'}</strong><span>{t('dashboard.doctor.profile.order_diagnostics_desc')}</span></div>
                         </button>
 
                         <button
@@ -99,13 +99,13 @@ export default function DoctorPatientProfile() {
                             style={{ background: '#ECFDF5', color: '#047857', borderColor: '#6EE7B7' }}
                         >
                             <Prescription size={32} weight="duotone" />
-                            <div><strong>{t('dashboard.doctor.profile.write_rx') || 'Write Prescription'}</strong><span>Add medicines & advice</span></div>
+                            <div><strong>{t('dashboard.doctor.profile.write_rx') || 'Write Prescription'}</strong><span>{t('dashboard.doctor.profile.write_rx_desc')}</span></div>
                         </button>
 
                         <div className={styles.infoBlock}>
-                            <h4>Patient Info</h4>
-                            <div className={styles.statRow}><Calendar size={20} /><span>Age: {getAge(patient.dob)} Years</span></div>
-                            <div className={styles.statRow}><Clock size={20} /><span>Last Visit: Today</span></div>
+                            <h4>{t('dashboard.doctor.profile.patient_info')}</h4>
+                            <div className={styles.statRow}><Calendar size={20} /><span>{t('dashboard.doctor.profile.age', { age: getAge(patient.dob) })}</span></div>
+                            <div className={styles.statRow}><Clock size={20} /><span>{t('dashboard.doctor.profile.last_visit', { visit: 'Today' })}</span></div>
                         </div>
                     </div>
                 </div>
