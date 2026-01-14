@@ -1,5 +1,13 @@
 // File: HealthSync/web/src/types/index.ts
 
+export interface DiseaseInsight {
+    disease_name: string;
+    local_name?: string;
+    symptoms?: string[];
+    causes?: string[];
+    seriousness?: 'High' | 'Moderate' | 'Low';
+}
+
 export interface AIAnalysisDetails {
     simple_explanation_en?: string;
     simple_explanation_bn?: string;
@@ -7,8 +15,8 @@ export interface AIAnalysisDetails {
     detailed_analysis_bn?: string;
 
     // [NEW] Disease Insight Fields
-    disease_insight_en?: string;
-    disease_insight_bn?: string;
+    disease_insight_en?: string | DiseaseInsight;
+    disease_insight_bn?: string | DiseaseInsight;
 
     medicine_safety_check?: string;
     key_findings?: string[];

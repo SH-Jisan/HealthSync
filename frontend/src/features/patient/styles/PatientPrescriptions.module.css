@@ -265,3 +265,37 @@
         transform: rotate(360deg);
     }
 }
+/* File: HealthSync/web/src/features/patient/styles/PatientPrescriptions.module.css */
+
+/* ... আগের স্টাইলগুলো থাকবে ... */
+
+.typeBadge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.statusRow {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.statusPill {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.paid { background: #dcfce7; color: #166534; }
+.due { background: #fee2e2; color: #991b1b; }
+
+.completed { background: #dbeafe; color: #1e40af; }
+.pending { background: #f3f4f6; color: #4b5563; }
+
+/* ... বাকি স্টাইল অপরিবর্তিত ... */

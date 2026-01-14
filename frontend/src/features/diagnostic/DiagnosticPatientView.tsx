@@ -1,134 +1,111 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabaseClient';
-import { ArrowLeft, CheckCircle, Upload, Plus } from 'phosphor-react';
+import { ArrowLeft, CheckCircle, Upload, Plus, Prescription, Flask } from 'phosphor-react';
 import UploadModal from '../upload/UploadModal';
+import SharedTestModal from '../dashboard/widgets/SharedTestModal'; // Shared Modal Import
 import styles from './styles/DiagnosticPatientView.module.css';
 
-interface Patient {
-    id: string;
-    full_name: string;
-    email: string;
-    phone?: string;
-}
+interface Patient { id: string; full_name: string; email: string; phone?: string; }
+interface Order { id: string; test_names: string[]; total_amount: number; status: 'PAID' | 'DUE'; report_status: 'PENDING' | 'COMPLETED'; created_at: string; }
+// [NEW] Doctor Order Interface
+interface DoctorTestOrder { id: string; title: string; key_findings: string[]; created_at: string; uploader: { full_name: string; }; }
 
-interface Order {
-    id: string;
-    test_names: string[];
-    total_amount: number;
-    status: 'PAID' | 'DUE';
-    report_status: 'PENDING' | 'COMPLETED';
-    created_at: string;
-}
-
-interface Test {
-    id: string;
-    name: string;
-    base_price: number;
-}
-
-interface Props {
-    patient: Patient;
-    onBack: () => void;
-}
+interface Props { patient: Patient; onBack: () => void; }
 
 export default function DiagnosticPatientView({ patient, onBack }: Props) {
     const { t } = useTranslation();
     const [orders, setOrders] = useState<Order[]>([]);
-    const [availableTests, setAvailableTests] = useState<Test[]>([]);
+    const [doctorOrders, setDoctorOrders] = useState<DoctorTestOrder[]>([]); // State for doctor orders
     const [showNewOrder, setShowNewOrder] = useState(false);
     const [uploadOrderId, setUploadOrderId] = useState<string | null>(null);
-
-    // New Order State
-    const [selectedTests, setSelectedTests] = useState<string[]>([]);
-    const [totalAmount, setTotalAmount] = useState(0);
+    const [testsToBill, setTestsToBill] = useState<string[]>([]);
 
     const fetchOrders = async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
-
-        const { data } = await supabase
-            .from('patient_payments')
-            .select('*')
-            .eq('patient_id', patient.id)
-            .eq('provider_id', user.id)
-            .order('created_at', { ascending: false });
-
+        const { data } = await supabase.from('patient_payments').select('*').eq('patient_id', patient.id).eq('provider_id', user.id).order('created_at', { ascending: false });
         if (data) setOrders(data as Order[]);
     };
 
-    const fetchAvailableTests = async () => {
-        const { data } = await supabase.from('available_tests').select('*').order('name');
-        if (data) setAvailableTests(data as Test[]);
+    // [IMPORTANT] Fetch Doctor's Orders logic
+    const fetchDoctorOrders = async () => {
+        const { data, error } = await supabase.from('medical_events')
+            .select('id, title, key_findings, created_at, uploader:uploader_id(full_name)')
+            .eq('patient_id', patient.id)
+            .eq('event_type', 'TEST_ORDER')
+            .order('created_at', { ascending: false }).limit(5);
+
+        if (error) {
+            console.error("Error fetching doctor orders:", error);
+        } else if (data) {
+            setDoctorOrders(data as any[]);
+        }
     };
 
     useEffect(() => {
         fetchOrders();
-        fetchAvailableTests();
+        fetchDoctorOrders();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [patient.id]); // Added patient.id as dependency for safety
-
-    const handleCreateOrder = async () => {
-        if (selectedTests.length === 0) return alert(t('dashboard.diagnostic.view.alert_select_test'));
-
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-
-        const { error } = await supabase.from('patient_payments').insert({
-            patient_id: patient.id,
-            provider_id: user.id,
-            test_names: selectedTests,
-            total_amount: totalAmount,
-            paid_amount: 0,
-            status: 'DUE',
-            report_status: 'PENDING'
-        });
-
-        if (error) alert(t('dashboard.diagnostic.view.alert_fail'));
-        else {
-            alert(t('dashboard.diagnostic.view.order_created'));
-            setShowNewOrder(false);
-            await fetchOrders();
-            setSelectedTests([]);
-            setTotalAmount(0);
-        }
-    };
+    }, [patient.id]);
 
     const togglePayment = async (order: Order) => {
         const newStatus = order.status === 'PAID' ? 'DUE' : 'PAID';
         await supabase.from('patient_payments').update({ status: newStatus }).eq('id', order.id);
-        await fetchOrders();
+        fetchOrders();
     };
 
     const markCompleted = async (orderId: string) => {
         await supabase.from('patient_payments').update({ report_status: 'COMPLETED' }).eq('id', orderId);
-        await fetchOrders();
+        fetchOrders();
+    };
+
+    // Helper to open modal with pre-selected tests
+    const handleConvertOrder = (testNames: string[]) => {
+        setTestsToBill(testNames);
+        setShowNewOrder(true);
     };
 
     return (
         <div>
             <div className={styles.header}>
-                <button onClick={onBack} className={styles.backBtn}>
-                    <ArrowLeft size={24} />
-                </button>
+                <button onClick={onBack} className={styles.backBtn}><ArrowLeft size={24} /></button>
                 <h2 className={styles.patientName}>{patient.full_name}</h2>
                 <span className={styles.patientContact}>{patient.phone || patient.email}</span>
             </div>
 
-            <button
-                onClick={() => setShowNewOrder(true)}
-                className={styles.newOrderBtn}
-            >
+            {/* [NEW] Doctor's Pending Orders Section */}
+            {doctorOrders.length > 0 && (
+                <div className={styles.doctorOrdersSection}>
+                    <h3 className={styles.sectionTitle} style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <Prescription size={20} color="#6366f1" />
+                        {t('dashboard.diagnostic.view.doctor_orders') || 'Doctor Prescribed Tests'}
+                    </h3>
+                    <div className={styles.doctorOrdersGrid}>
+                        {doctorOrders.map(docOrder => (
+                            <div key={docOrder.id} className={styles.docOrderCard}>
+                                <div className={styles.docOrderHeader}>
+                                    <span className={styles.docName}>Dr. {docOrder.uploader?.full_name}</span>
+                                    <span className={styles.docDate}>{new Date(docOrder.created_at).toLocaleDateString()}</span>
+                                </div>
+                                <p className={styles.testListText}>{docOrder.key_findings && docOrder.key_findings.join(', ')}</p>
+                                {/* Opens SharedModal with pre-filled tests */}
+                                <button className={styles.convertBtn} onClick={() => handleConvertOrder(docOrder.key_findings)}>
+                                    <Flask size={16} /> Create Bill
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <button onClick={() => { setTestsToBill([]); setShowNewOrder(true); }} className={styles.newOrderBtn}>
                 <Plus size={20} /> {t('dashboard.diagnostic.view.new_order_btn')}
             </button>
 
-            {/* Orders List */}
             <div className={styles.ordersGrid}>
                 {orders.map(order => (
-                    <div
-                        key={order.id}
-                        className={`${styles.orderCard} ${order.report_status === 'PENDING' ? styles.orderCardPending : styles.orderCardCompleted}`}
-                    >
+                    <div key={order.id} className={`${styles.orderCard} ${order.report_status === 'PENDING' ? styles.orderCardPending : styles.orderCardCompleted}`}>
                         <div className={styles.orderHeader}>
                             <div>
                                 <h4 className={styles.testNames}>{order.test_names.join(', ')}</h4>
@@ -136,83 +113,35 @@ export default function DiagnosticPatientView({ patient, onBack }: Props) {
                             </div>
                             <div className={styles.orderRight}>
                                 <div className={styles.amount}>৳{order.total_amount}</div>
-                                <div
-                                    onClick={() => togglePayment(order)}
-                                    className={`${styles.paymentStatus} ${order.status === 'PAID' ? styles.statusPaid : styles.statusDue}`}
-                                >
-                                    {order.status}
-                                </div>
+                                <div onClick={() => togglePayment(order)} className={`${styles.paymentStatus} ${order.status === 'PAID' ? styles.statusPaid : styles.statusDue}`}>{order.status}</div>
                             </div>
                         </div>
-
                         <div className={styles.orderActions}>
                             {order.report_status === 'PENDING' ? (
-                                <button
-                                    onClick={() => setUploadOrderId(order.id)}
-                                    className={styles.uploadBtn}
-                                >
-                                    <Upload size={18} /> {t('dashboard.diagnostic.view.upload_report')}
-                                </button>
+                                <button onClick={() => setUploadOrderId(order.id)} className={styles.uploadBtn}><Upload size={18} /> {t('dashboard.diagnostic.view.upload_report')}</button>
                             ) : (
-                                <span className={styles.completedStatus}>
-                                    <CheckCircle size={20} /> {t('dashboard.diagnostic.view.completed')}
-                                </span>
+                                <span className={styles.completedStatus}><CheckCircle size={20} /> {t('dashboard.diagnostic.view.completed')}</span>
                             )}
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* New Order Modal */}
             {showNewOrder && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <h3>{t('dashboard.diagnostic.view.select_tests_title')}</h3>
-                        <div className={styles.testList}>
-                            {availableTests.map(test => (
-                                <div key={test.id} className={styles.testItem}>
-                                    <label className={styles.testLabel}>
-                                        <input
-                                            type="checkbox"
-                                            onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    setSelectedTests([...selectedTests, test.name]);
-                                                    setTotalAmount(prev => prev + test.base_price);
-                                                } else {
-                                                    setSelectedTests(selectedTests.filter(t => t !== test.name));
-                                                    setTotalAmount(prev => prev - test.base_price);
-                                                }
-                                            }}
-                                        />
-                                        {test.name}
-                                    </label>
-                                    <span>৳{test.base_price}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className={styles.totalAmount}>
-                            <span>{t('dashboard.diagnostic.view.total')}</span>
-                            <span>৳{totalAmount}</span>
-                        </div>
-
-                        <div className={styles.modalActions}>
-                            <button onClick={() => setShowNewOrder(false)} className={styles.cancelBtn}>{t('common.cancel')}</button>
-                            <button onClick={handleCreateOrder} className={styles.createBtn}>{t('dashboard.diagnostic.view.create_order_btn')}</button>
-                        </div>
-                    </div>
-                </div>
+                <SharedTestModal
+                    patientId={patient.id}
+                    role="DIAGNOSTIC"
+                    onClose={() => setShowNewOrder(false)}
+                    onSuccess={() => fetchOrders()}
+                    preSelectedTests={testsToBill}
+                />
             )}
 
-            {/* Upload Modal */}
             {uploadOrderId && (
                 <UploadModal
                     onClose={() => setUploadOrderId(null)}
-                    onSuccess={() => {
-                        markCompleted(uploadOrderId);
-                        setUploadOrderId(null);
-                    }}
-                    patientId={patient.id} // <--- এই লাইনটি যোগ করা হয়েছে
+                    onSuccess={() => { markCompleted(uploadOrderId); setUploadOrderId(null); }}
+                    patientId={patient.id}
                 />
             )}
         </div>

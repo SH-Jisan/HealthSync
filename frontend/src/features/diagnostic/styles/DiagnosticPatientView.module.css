@@ -57,7 +57,8 @@
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
-    border-left: 5px solid transparent; /* Default */
+    border-left: 5px solid transparent;
+    /* Default */
 }
 
 /* Status Borders for Order Card */

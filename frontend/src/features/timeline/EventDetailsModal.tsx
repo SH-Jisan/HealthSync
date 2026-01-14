@@ -7,17 +7,24 @@ import ReactMarkdown from 'react-markdown';
 import {
     X, Printer, Calendar, User, FileText, Image as ImageIcon,
     DownloadSimple, Pill, Heartbeat, Thermometer, Drop, Eye, WarningCircle,
-    Robot, CheckCircle, Warning, ShieldCheck, FirstAid
+    Robot, CheckCircle, Warning, ShieldCheck, FirstAid, Info
 } from 'phosphor-react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { supabase } from '../../lib/supabaseClient';
 import type { MedicalEvent } from '../../types';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import styles from './styles/EventDetailsModal.module.css';
 
 interface EventDetailsProps {
     event: MedicalEvent;
     onClose: () => void;
 }
+
+const safeFormat = (dateString: string | undefined, dateFormat: string) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return isValid(date) ? format(date, dateFormat) : 'Invalid Date';
+};
 
 export default React.forwardRef(function EventDetailsModal(
     { event, onClose }: EventDetailsProps,
@@ -86,10 +93,47 @@ export default React.forwardRef(function EventDetailsModal(
 
     // Helper for Safety Badge
     const getSafetyBadge = (status: string) => {
-        if (status === 'Safe') return <span className={`${styles.safetyBadge} ${styles.safe}`}><ShieldCheck size={16} weight="fill"/> Safe</span>;
-        if (status === 'Caution') return <span className={`${styles.safetyBadge} ${styles.caution}`}><Warning size={16} weight="fill"/> Caution</span>;
-        if (status === 'Danger') return <span className={`${styles.safetyBadge} ${styles.danger}`}><WarningCircle size={16} weight="fill"/> Danger</span>;
+        if (status === 'Safe') return <span className={`${styles.safetyBadge} ${styles.safe}`}><ShieldCheck size={16} weight="fill" /> Safe</span>;
+        if (status === 'Caution') return <span className={`${styles.safetyBadge} ${styles.caution}`}><Warning size={16} weight="fill" /> Caution</span>;
+        if (status === 'Danger') return <span className={`${styles.safetyBadge} ${styles.danger}`}><WarningCircle size={16} weight="fill" /> Danger</span>;
         return null;
+    };
+
+    const renderDiseaseInsight = (insight: string | any) => {
+        if (!insight) return null;
+
+        // If simple string
+        if (typeof insight === 'string') {
+            return <div className={styles.diseaseText}>{insight}</div>;
+        }
+
+        // If Object (Structured)
+        return (
+            <div className={styles.structuredInsight}>
+                <div className={styles.insightHeader}>
+                    <h4>{insight.disease_name} <span className={styles.localName}>({insight.local_name})</span></h4>
+                    {insight.seriousness && (
+                        <span className={`${styles.seriousnessBadge} ${styles[insight.seriousness.toLowerCase()]}`}>
+                            {insight.seriousness}
+                        </span>
+                    )}
+                </div>
+
+                {insight.symptoms && insight.symptoms.length > 0 && (
+                    <div className={styles.insightSection}>
+                        <strong><WarningCircle size={14} /> Symptoms:</strong>
+                        <p>{Array.isArray(insight.symptoms) ? insight.symptoms.join(', ') : insight.symptoms}</p>
+                    </div>
+                )}
+
+                {insight.causes && insight.causes.length > 0 && (
+                    <div className={styles.insightSection}>
+                        <strong><Info size={14} /> Causes:</strong>
+                        <p>{Array.isArray(insight.causes) ? insight.causes.join(', ') : insight.causes}</p>
+                    </div>
+                )}
+            </div>
+        );
     };
 
     return (
@@ -108,300 +152,301 @@ export default React.forwardRef(function EventDetailsModal(
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
             >
-                {/* Header */}
-                <div className={styles.header}>
-                    <div className={styles.headerInfo}>
-                        <div className={`${styles.iconBox} ${event.event_type === 'PRESCRIPTION' ? styles.prescriptionIcon : styles.reportIcon}`}>
-                            {event.event_type === 'PRESCRIPTION' ? <FileText size={28} /> : <Heartbeat size={28} />}
-                        </div>
-                        <div>
-                            <h2 className={styles.title}>{event.title}</h2>
-                            <div className={styles.meta}>
-                                <span className={styles.metaItem}><Calendar size={16} /> {format(new Date(event.event_date), 'dd MMM yyyy')}</span>
-                                <span className={styles.metaItem}><User size={16} /> Dr. {event.uploader?.full_name || 'System/Self'}</span>
+                <ErrorBoundary>
+                    {/* Header */}
+                    <div className={styles.header}>
+                        <div className={styles.headerInfo}>
+                            <div className={`${styles.iconBox} ${event.event_type === 'PRESCRIPTION' ? styles.prescriptionIcon : styles.reportIcon}`}>
+                                {event.event_type === 'PRESCRIPTION' ? <FileText size={28} /> : <Heartbeat size={28} />}
                             </div>
+                            <div>
+                                <h2 className={styles.title}>{event.title}</h2>
+                                <div className={styles.meta}>
+                                    <span className={styles.metaItem}><Calendar size={16} /> {safeFormat(event.event_date, 'dd MMM yyyy')}</span>
+                                    <span className={styles.metaItem}><User size={16} /> Dr. {event.uploader?.full_name || 'System/Self'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={styles.actions}>
+                            <button onClick={handleDownload} title="Download File" className={styles.iconBtn}><DownloadSimple size={20} /></button>
+                            <button onClick={handlePrint} title="Print" className={styles.iconBtn}><Printer size={20} /></button>
+                            <button onClick={onClose} title="Close" className={`${styles.iconBtn} ${styles.closeBtn}`}><X size={20} /></button>
                         </div>
                     </div>
 
-                    <div className={styles.actions}>
-                        <button onClick={handleDownload} title="Download File" className={styles.iconBtn}><DownloadSimple size={20} /></button>
-                        <button onClick={handlePrint} title="Print" className={styles.iconBtn}><Printer size={20} /></button>
-                        <button onClick={onClose} title="Close" className={`${styles.iconBtn} ${styles.closeBtn}`}><X size={20} /></button>
+                    {/* Tabs */}
+                    <div className={styles.tabs}>
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab as any)}
+                                className={`${styles.tabBtn} ${activeTab === tab ? styles.tabActive : ''}`}
+                            >
+                                {/* Simple Tab Localization */}
+                                {tab === 'analysis' ? (isBangla ? 'বিশ্লেষণ (AI)' : 'AI Analysis') :
+                                    tab === 'overview' ? (isBangla ? 'ওভারভিউ' : 'Overview') :
+                                        tab === 'medicines' ? (isBangla ? 'ঔষধ' : 'Medicines') :
+                                            tab === 'file' ? (isBangla ? 'ফাইল' : 'File') :
+                                                tab === 'prescription' ? (isBangla ? 'প্রেসক্রিপশন' : 'Prescription') :
+                                                    tab.charAt(0).toUpperCase() + tab.slice(1)}
+                            </button>
+                        ))}
                     </div>
-                </div>
 
-                {/* Tabs */}
-                <div className={styles.tabs}>
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab as any)}
-                            className={`${styles.tabBtn} ${activeTab === tab ? styles.tabActive : ''}`}
-                        >
-                            {/* Simple Tab Localization */}
-                            {tab === 'analysis' ? (isBangla ? 'বিশ্লেষণ (AI)' : 'AI Analysis') :
-                                tab === 'overview' ? (isBangla ? 'ওভারভিউ' : 'Overview') :
-                                    tab === 'medicines' ? (isBangla ? 'ঔষধ' : 'Medicines') :
-                                        tab === 'file' ? (isBangla ? 'ফাইল' : 'File') :
-                                            tab === 'prescription' ? (isBangla ? 'প্রেসক্রিপশন' : 'Prescription') :
-                                                tab.charAt(0).toUpperCase() + tab.slice(1)}
-                        </button>
-                    ))}
-                </div>
+                    {/* Content Area */}
+                    <div className={styles.content}>
 
-                {/* Content Area */}
-                <div className={styles.content}>
-
-                    {/* TAB: PRESCRIPTION */}
-                    {activeTab === 'prescription' && (
-                        <div className={styles.prescriptionView}>
-                            <div className={styles.prescriptionHeader}>
-                                <div className={styles.brand}>
-                                    <h1>HealthSync</h1>
-                                    <p>Smart Healthcare Solution</p>
-                                </div>
-                                <div className={styles.docInfo}>
-                                    <h3>Dr. {event.uploader?.full_name}</h3>
-                                    <p>{event.uploader?.specialty}</p>
-                                    <p>{format(new Date(event.event_date), 'dd MMM yyyy')}</p>
-                                </div>
-                            </div>
-
-                            <div className={styles.patientBar}>
-                                <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
-                                <span><strong>Phone:</strong> {event.profiles?.phone}</span>
-                            </div>
-
-                            <div className={styles.rxSection}>
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                    <h2>Rx</h2>
-                                    {getSafetyBadge(safetyStatus)}
-                                </div>
-
-                                <div className={styles.rxList}>
-                                    {event.medicines && event.medicines.length > 0 ? (
-                                        event.medicines.map((med, i) => (
-                                            <div key={i} className={styles.medItem}>
-                                                <strong>{med.name}</strong>
-                                                <span>{med.dosage} — {med.duration}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p>{event.summary || event.extracted_text}</p>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Show AI Summary on Prescription if available */}
-                            {simpleExplanation && activeTab === 'prescription' && (
-                                <div className={styles.adviceBox}>
-                                    <h4>AI Explanation:</h4>
-                                    <p>{simpleExplanation}</p>
-                                </div>
-                            )}
-
-                            <div className={styles.signatureArea}>
-                                <div className={styles.sigLine}></div>
-                                <p>Doctor's Signature</p>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* TAB: OVERVIEW */}
-                    {activeTab === 'overview' && (
-                        <div className={styles.innerContent}>
-                            {/* Vitals */}
-                            {(event.vitals?.bp || event.vitals?.hr || event.vitals?.temp || event.vitals?.weight) && (
-                                <div className={styles.vitalsGrid}>
-                                    <VitalCard icon={<Drop size={24} weight="fill" />} label="Blood Pressure" value={event.vitals?.bp || 'N/A'} unit={event.vitals?.bp ? 'mmHg' : ''} color="#EF4444" bg="#FEE2E2" />
-                                    <VitalCard icon={<Heartbeat size={24} weight="fill" />} label="Heart Rate" value={event.vitals?.hr || 'N/A'} unit={event.vitals?.hr ? 'bpm' : ''} color="#EC4899" bg="#FCE7F3" />
-                                    <VitalCard icon={<Thermometer size={24} weight="fill" />} label="Temperature" value={event.vitals?.temp || 'N/A'} unit={event.vitals?.temp ? '°F' : ''} color="#F59E0B" bg="#FEF3C7" />
-                                    <VitalCard icon={<Eye size={24} weight="fill" />} label="Weight" value={event.vitals?.weight || 'N/A'} unit={event.vitals?.weight ? 'kg' : ''} color="#10B981" bg="#D1FAE5" />
-                                </div>
-                            )}
-
-                            {/* --- AI SIMPLE EXPLANATION --- */}
-                            {aiData ? (
-                                <div className={styles.simpleCard}>
-                                    <div className={styles.simpleCardHeader}>
-                                        <Robot size={32} color="#059669" weight="fill" />
-                                        <div>
-                                            <h3 className={styles.simpleCardTitle}>{isBangla ? 'সহজ ব্যাখ্যা' : 'Simple Explanation'}</h3>
-                                            <p className={styles.simpleCardSubtitle}>{isBangla ? 'বাচ্চাদের মতো সহজ করে বুঝুন' : 'Easy to understand summary'}</p>
-                                        </div>
+                        {/* TAB: PRESCRIPTION */}
+                        {activeTab === 'prescription' && (
+                            <div className={styles.prescriptionView}>
+                                <div className={styles.prescriptionHeader}>
+                                    <div className={styles.brand}>
+                                        <h1>HealthSync</h1>
+                                        <p>Smart Healthcare Solution</p>
                                     </div>
-                                    <div className={styles.simpleText}>
-                                        "{simpleExplanation}"
+                                    <div className={styles.docInfo}>
+                                        <h3>Dr. {event.uploader?.full_name}</h3>
+                                        <p>{event.uploader?.specialty}</p>
+                                        <p>{safeFormat(event.event_date, 'dd MMM yyyy')}</p>
                                     </div>
                                 </div>
-                            ) : (
-                                <div className={styles.summarySection}>
-                                    <h3 className={styles.sectionTitle}>
-                                        <FileText size={24} color="var(--primary)" /> Medical Summary
-                                    </h3>
-                                    <p className={styles.summaryText}>
-                                        {event.summary || 'No summary available provided by the doctor or AI.'}
-                                    </p>
-                                </div>
-                            )}
 
-                            {/* Key Findings Tags */}
-                            {event.key_findings && event.key_findings.length > 0 && (
-                                <div className={styles.findingTags} style={{marginTop: '1rem', justifyContent: 'center'}}>
-                                    {event.key_findings.map((tag: string, i: number) => (
-                                        <span key={i} className={styles.tag}>#{tag}</span>
-                                    ))}
+                                <div className={styles.patientBar}>
+                                    <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
+                                    <span><strong>Phone:</strong> {event.profiles?.phone}</span>
                                 </div>
-                            )}
-                        </div>
-                    )}
 
-                    {/* TAB: MEDICINES */}
-                    {activeTab === 'medicines' && (
-                        <div className={`${styles.innerContent} ${styles.medicineTableWrapper}`}>
-                            {event.medicines && event.medicines.length > 0 ? (
-                                <table className={styles.medTable}>
-                                    <thead>
-                                    <tr>
-                                        <th>Medicine Name</th>
-                                        <th>Dosage</th>
-                                        <th>Duration</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {event.medicines.map((med, idx) => (
-                                        <tr key={idx}>
-                                            <td><div className={styles.medName}><Pill color="var(--primary)" /> {med.name}</div></td>
-                                            <td>{med.dosage || '-'}</td>
-                                            <td>{med.duration || '-'}</td>
-                                        </tr>
-                                    ))}
-                                    </tbody>
-                                </table>
-                            ) : (
-                                <div className={styles.emptyState}>
-                                    <div style={{ color: '#94A3B8' }}>
-                                        <WarningCircle size={48} style={{ opacity: 0.5, marginBottom: '10px' }} />
-                                        <p>No structured medicine data found.</p>
+                                <div className={styles.rxSection}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <h2>Rx</h2>
+                                        {getSafetyBadge(safetyStatus)}
+                                    </div>
+
+                                    <div className={styles.rxList}>
+                                        {event.medicines && event.medicines.length > 0 ? (
+                                            event.medicines.map((med, i) => (
+                                                <div key={i} className={styles.medItem}>
+                                                    <strong>{med.name}</strong>
+                                                    <span>{med.dosage} — {med.duration}</span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p>{event.summary || event.extracted_text}</p>
+                                        )}
                                     </div>
                                 </div>
-                            )}
-                        </div>
-                    )}
 
-                    {/* TAB: ANALYSIS (Enhanced with Disease Insight) */}
-                    {activeTab === 'analysis' && (
-                        <div className={styles.innerContent}>
-                            {aiData ? (
-                                <>
-                                    {/* 1. Simple Summary Refresher */}
-                                    <div className={styles.simpleCard} style={{background: '#F0F9FF', borderColor: '#BAE6FD'}}>
+                                {/* Show AI Summary on Prescription if available */}
+                                {simpleExplanation && activeTab === 'prescription' && (
+                                    <div className={styles.adviceBox}>
+                                        <h4>AI Explanation:</h4>
+                                        <p>{simpleExplanation}</p>
+                                    </div>
+                                )}
+
+                                <div className={styles.signatureArea}>
+                                    <div className={styles.sigLine}></div>
+                                    <p>Doctor's Signature</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB: OVERVIEW */}
+                        {activeTab === 'overview' && (
+                            <div className={styles.innerContent}>
+                                {/* Vitals */}
+                                {(event.vitals?.bp || event.vitals?.hr || event.vitals?.temp || event.vitals?.weight) && (
+                                    <div className={styles.vitalsGrid}>
+                                        <VitalCard icon={<Drop size={24} weight="fill" />} label="Blood Pressure" value={event.vitals?.bp || 'N/A'} unit={event.vitals?.bp ? 'mmHg' : ''} color="#EF4444" bg="#FEE2E2" />
+                                        <VitalCard icon={<Heartbeat size={24} weight="fill" />} label="Heart Rate" value={event.vitals?.hr || 'N/A'} unit={event.vitals?.hr ? 'bpm' : ''} color="#EC4899" bg="#FCE7F3" />
+                                        <VitalCard icon={<Thermometer size={24} weight="fill" />} label="Temperature" value={event.vitals?.temp || 'N/A'} unit={event.vitals?.temp ? '°F' : ''} color="#F59E0B" bg="#FEF3C7" />
+                                        <VitalCard icon={<Eye size={24} weight="fill" />} label="Weight" value={event.vitals?.weight || 'N/A'} unit={event.vitals?.weight ? 'kg' : ''} color="#10B981" bg="#D1FAE5" />
+                                    </div>
+                                )}
+
+                                {/* --- AI SIMPLE EXPLANATION --- */}
+                                {aiData ? (
+                                    <div className={styles.simpleCard}>
                                         <div className={styles.simpleCardHeader}>
-                                            <CheckCircle size={24} color="#0284C7" weight="fill" />
-                                            <h3 className={styles.simpleCardTitle} style={{color:'#0369A1'}}>
-                                                {isBangla ? 'এক নজরে' : 'Overview'}
-                                            </h3>
+                                            <Robot size={32} color="#059669" weight="fill" />
+                                            <div>
+                                                <h3 className={styles.simpleCardTitle}>{isBangla ? 'সহজ ব্যাখ্যা' : 'Simple Explanation'}</h3>
+                                                <p className={styles.simpleCardSubtitle}>{isBangla ? 'বাচ্চাদের মতো সহজ করে বুঝুন' : 'Easy to understand summary'}</p>
+                                            </div>
                                         </div>
-                                        <p style={{margin:0, color:'#075985'}}>{simpleExplanation}</p>
+                                        <div className={styles.simpleText}>
+                                            "{simpleExplanation}"
+                                        </div>
                                     </div>
+                                ) : (
+                                    <div className={styles.summarySection}>
+                                        <h3 className={styles.sectionTitle}>
+                                            <FileText size={24} color="var(--primary)" /> Medical Summary
+                                        </h3>
+                                        <p className={styles.summaryText}>
+                                            {event.summary || 'No summary available provided by the doctor or AI.'}
+                                        </p>
+                                    </div>
+                                )}
 
-                                    {/* 2. [NEW] Disease / Condition Insight Card */}
-                                    {diseaseInsight && (
-                                        <div className={styles.diseaseCard}>
-                                            <div className={styles.diseaseCardHeader}>
-                                                <FirstAid size={24} color="#4338ca" weight="fill" />
-                                                <h3 className={styles.diseaseCardTitle}>
-                                                    {isBangla ? 'সম্ভাব্য রোগ ও অবস্থা' : 'Condition Insight'}
+                                {/* Key Findings Tags */}
+                                {event.key_findings && event.key_findings.length > 0 && (
+                                    <div className={styles.findingTags} style={{ marginTop: '1rem', justifyContent: 'center' }}>
+                                        {event.key_findings.map((tag: string, i: number) => (
+                                            <span key={i} className={styles.tag}>#{tag}</span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* TAB: MEDICINES */}
+                        {activeTab === 'medicines' && (
+                            <div className={`${styles.innerContent} ${styles.medicineTableWrapper}`}>
+                                {event.medicines && event.medicines.length > 0 ? (
+                                    <table className={styles.medTable}>
+                                        <thead>
+                                            <tr>
+                                                <th>Medicine Name</th>
+                                                <th>Dosage</th>
+                                                <th>Duration</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {event.medicines.map((med, idx) => (
+                                                <tr key={idx}>
+                                                    <td><div className={styles.medName}><Pill color="var(--primary)" /> {med.name}</div></td>
+                                                    <td>{med.dosage || '-'}</td>
+                                                    <td>{med.duration || '-'}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                ) : (
+                                    <div className={styles.emptyState}>
+                                        <div style={{ color: '#94A3B8' }}>
+                                            <WarningCircle size={48} style={{ opacity: 0.5, marginBottom: '10px' }} />
+                                            <p>No structured medicine data found.</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* TAB: ANALYSIS (Enhanced with Disease Insight) */}
+                        {activeTab === 'analysis' && (
+                            <div className={styles.innerContent}>
+                                {aiData ? (
+                                    <>
+                                        {/* 1. Simple Summary Refresher */}
+                                        <div className={styles.simpleCard} style={{ background: '#F0F9FF', borderColor: '#BAE6FD' }}>
+                                            <div className={styles.simpleCardHeader}>
+                                                <CheckCircle size={24} color="#0284C7" weight="fill" />
+                                                <h3 className={styles.simpleCardTitle} style={{ color: '#0369A1' }}>
+                                                    {isBangla ? 'এক নজরে' : 'Overview'}
                                                 </h3>
                                             </div>
-                                            <div className={styles.diseaseText}>
-                                                {diseaseInsight}
+                                            <p style={{ margin: 0, color: '#075985' }}>{simpleExplanation}</p>
+                                        </div>
+
+                                        {/* 2. [NEW] Disease / Condition Insight Card */}
+                                        {diseaseInsight && (
+                                            <div className={styles.diseaseCard}>
+                                                <div className={styles.diseaseCardHeader}>
+                                                    <FirstAid size={24} color="#4338ca" weight="fill" />
+                                                    <h3 className={styles.diseaseCardTitle}>
+                                                        {isBangla ? 'সম্ভাব্য রোগ ও অবস্থা' : 'Condition Insight'}
+                                                    </h3>
+                                                </div>
+                                                {renderDiseaseInsight(diseaseInsight)}
+                                            </div>
+                                        )}
+
+                                        {/* 3. Detailed Markdown Analysis */}
+                                        <div className={styles.detailedSection}>
+                                            <div className={styles.detailHeader}>
+                                                <FileText size={24} color="var(--primary)" />
+                                                <h3 className={styles.detailTitle}>
+                                                    {isBangla ? 'বিস্তারিত রিপোর্ট বিশ্লেষণ' : 'Detailed Report Analysis'}
+                                                </h3>
+                                            </div>
+                                            <div className={styles.markdownContent}>
+                                                <ReactMarkdown>
+                                                    {detailedAnalysis || ''}
+                                                </ReactMarkdown>
                                             </div>
                                         </div>
-                                    )}
-
-                                    {/* 3. Detailed Markdown Analysis */}
-                                    <div className={styles.detailedSection}>
-                                        <div className={styles.detailHeader}>
-                                            <FileText size={24} color="var(--primary)" />
-                                            <h3 className={styles.detailTitle}>
-                                                {isBangla ? 'বিস্তারিত রিপোর্ট বিশ্লেষণ' : 'Detailed Report Analysis'}
-                                            </h3>
+                                    </>
+                                ) : (
+                                    <div className={styles.analysisCard}>
+                                        <h3 style={{ marginTop: 0 }}>Raw Text Extraction (OCR)</h3>
+                                        <div className={styles.infoNote}>
+                                            <WarningCircle size={16} style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+                                            Note: This text is automatically extracted from the image. It may contain multi-language text or errors.
                                         </div>
-                                        <div className={styles.markdownContent}>
-                                            <ReactMarkdown>
-                                                {detailedAnalysis || ''}
-                                            </ReactMarkdown>
+                                        <div className={styles.rawText}>
+                                            {event.extracted_text || 'No text extracted from the document.'}
                                         </div>
                                     </div>
-                                </>
-                            ) : (
-                                <div className={styles.analysisCard}>
-                                    <h3 style={{ marginTop: 0 }}>Raw Text Extraction (OCR)</h3>
-                                    <div className={styles.infoNote}>
-                                        <WarningCircle size={16} style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                                        Note: This text is automatically extracted from the image. It may contain multi-language text or errors.
-                                    </div>
-                                    <div className={styles.rawText}>
-                                        {event.extracted_text || 'No text extracted from the document.'}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
+                                )}
+                            </div>
+                        )}
 
-                    {/* TAB: FILE */}
-                    {activeTab === 'file' && (
-                        <div className={styles.fileContainer}>
-                            {event.attachment_urls && event.attachment_urls.length > 0 ? (
-                                <img
-                                    src={getImageUrl(event.attachment_urls[0])!}
-                                    alt="Document"
-                                    className={styles.attachmentImg}
-                                />
-                            ) : (
-                                <div style={{ textAlign: 'center', color: '#94A3B8' }}>
-                                    <ImageIcon size={64} />
-                                    <p>No attachment found.</p>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                        {/* TAB: FILE */}
+                        {activeTab === 'file' && (
+                            <div className={styles.fileContainer}>
+                                {event.attachment_urls && event.attachment_urls.length > 0 ? (
+                                    <img
+                                        src={getImageUrl(event.attachment_urls[0])!}
+                                        alt="Document"
+                                        className={styles.attachmentImg}
+                                    />
+                                ) : (
+                                    <div style={{ textAlign: 'center', color: '#94A3B8' }}>
+                                        <ImageIcon size={64} />
+                                        <p>No attachment found.</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </ErrorBoundary>
             </motion.div>
 
-            {/* PRINT-ONLY ELEMENT */}
-            <div className={styles.printOnly} ref={printRef}>
-                <div className={styles.prescriptionView}>
-                    <div className={styles.prescriptionHeader}>
-                        <div className={styles.brand}>
-                            <h1>HealthSync</h1>
+            <ErrorBoundary>
+                <div className={styles.printOnly} ref={printRef}>
+                    <div className={styles.prescriptionView}>
+                        <div className={styles.prescriptionHeader}>
+                            <div className={styles.brand}>
+                                <h1>HealthSync</h1>
+                            </div>
+                            <div className={styles.docInfo}>
+                                <h3>Dr. {event.uploader?.full_name}</h3>
+                                <p>{event.uploader?.specialty}</p>
+                                <p>{safeFormat(event.event_date, 'dd MMM yyyy')}</p>
+                            </div>
                         </div>
-                        <div className={styles.docInfo}>
-                            <h3>Dr. {event.uploader?.full_name}</h3>
-                            <p>{event.uploader?.specialty}</p>
-                            <p>{format(new Date(event.event_date), 'dd MMM yyyy')}</p>
+                        <div className={styles.patientBar}>
+                            <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
+                            <span><strong>Phone:</strong> {event.profiles?.phone}</span>
                         </div>
-                    </div>
-                    <div className={styles.patientBar}>
-                        <span><strong>Patient:</strong> {event.profiles?.full_name}</span>
-                        <span><strong>Phone:</strong> {event.profiles?.phone}</span>
-                    </div>
 
-                    <div className={styles.adviceBox}>
-                        <h4>AI Summary:</h4>
-                        <p>{simpleExplanation || event.summary}</p>
-                    </div>
-
-                    {/* Print Disease Insight if available */}
-                    {diseaseInsight && (
-                        <div className={styles.adviceBox} style={{marginTop: '20px', background: '#eef2ff', borderLeftColor: '#4338ca'}}>
-                            <h4>Possible Condition:</h4>
-                            <p>{diseaseInsight}</p>
+                        <div className={styles.adviceBox}>
+                            <h4>AI Summary:</h4>
+                            <p>{simpleExplanation || event.summary}</p>
                         </div>
-                    )}
+
+                        {/* Print Disease Insight if available */}
+                        {diseaseInsight && (
+                            <div className={styles.adviceBox} style={{ marginTop: '20px', background: '#eef2ff', borderLeftColor: '#4338ca' }}>
+                                <h4>Possible Condition:</h4>
+                                {renderDiseaseInsight(diseaseInsight)}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </ErrorBoundary>
         </motion.div>
     );
 });
