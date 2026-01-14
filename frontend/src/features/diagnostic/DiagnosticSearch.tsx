@@ -46,7 +46,7 @@ export default function DiagnosticSearch() {
                 setShowRegister(true);
             }
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : 'Search failed';
+            const message = err instanceof Error ? err.message : t('dashboard.diagnostic.search.search_fail');
             alert(t('common.error') + ': ' + message);
         } finally {
             setLoading(false);
@@ -75,7 +75,7 @@ export default function DiagnosticSearch() {
                 setEmail('');
             }
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : 'Assignment failed';
+            const message = err instanceof Error ? err.message : t('dashboard.diagnostic.search.assign_fail');
             alert(t('common.error') + ': ' + message);
         } finally {
             setLoading(false);
@@ -101,7 +101,7 @@ export default function DiagnosticSearch() {
             setEmail(newEmail);
             await handleSearch();
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : 'Registration failed';
+            const message = err instanceof Error ? err.message : t('dashboard.diagnostic.search.reg_fail');
             alert(t('common.error') + ': ' + message);
         } finally {
             setLoading(false);
@@ -123,7 +123,7 @@ export default function DiagnosticSearch() {
                     disabled={loading}
                     className={styles.searchBtn}
                 >
-                    {loading ? '...' : <MagnifyingGlass size={20} />}
+                    {loading ? t('common.processing') : <MagnifyingGlass size={20} />}
                 </button>
             </div>
 

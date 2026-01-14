@@ -78,7 +78,7 @@ export default function DiagnosticPendingReports({ onSelectPatient }: Props) {
     ======================= */
 
     if (loading) {
-        return <div>{t('common.loading') || 'Loading...'}</div>;
+        return <div>{t('common.loading')}</div>;
     }
 
     if (orders.length === 0) {
@@ -86,8 +86,7 @@ export default function DiagnosticPendingReports({ onSelectPatient }: Props) {
             <div className={styles.emptyState}>
                 <ClipboardText size={48} />
                 <p>
-                    {t('dashboard.diagnostic.no_pending_reports') ||
-                        'No pending reports found.'}
+                    {t('dashboard.diagnostic.pending.no_reports')}
                 </p>
             </div>
         );
@@ -110,10 +109,10 @@ export default function DiagnosticPendingReports({ onSelectPatient }: Props) {
                     </div>
 
                     <div className={styles.info}>
-                        <h4>{order.profiles?.full_name || 'Unknown'}</h4>
+                        <h4>{order.profiles?.full_name || t('common.unknown')}</h4>
 
                         <p className={styles.tests}>
-                            Tests: <strong>{order.test_names.join(', ')}</strong>
+                            {t('dashboard.diagnostic.pending.tests_label')} <strong>{order.test_names.join(', ')}</strong>
                         </p>
 
                         <small>

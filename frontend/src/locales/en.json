@@ -197,13 +197,44 @@
           "success_alert": "Submitted Successfully!",
           "prescribed_title": "Prescribed: {{count}} Tests"
         }
-      }
-    },
-    "diagnostic": {
-      "tabs": {
-        "assigned": "Assigned Patients",
-        "pending": "Pending Reports",
-        "search": "Search & Register"
+      },
+      "diagnostic": {
+        "tabs": {
+          "assigned": "Assigned Patients",
+          "pending": "Pending Reports",
+          "search": "Search & Register"
+        },
+        "view": {
+          "doctor_orders": "Doctor Prescribed Tests",
+          "create_bill": "Create Bill",
+          "new_order_btn": "New Test Order",
+          "upload_report": "Upload Report",
+          "completed": "Completed",
+          "dr_prefix": "Dr.",
+          "findings": "Key Findings"
+        },
+        "search": {
+          "placeholder": "Search patient by email...",
+          "not_found_alert": "Patient not found! You can register them.",
+          "register_title": "Register New Patient",
+          "name_ph": "Full Name",
+          "email_ph": "Email",
+          "phone_ph": "Phone",
+          "register_btn": "Register",
+          "success_reg": "Patient registered! Default password '123456'.",
+          "assign_btn": "Assign to Center",
+          "assign_success": "Patient assigned successfully! Check 'Assigned' tab.",
+          "already_assigned": "Patient already assigned!",
+          "assign_fail": "Assignment failed",
+          "reg_fail": "Registration failed"
+        },
+        "patients": {
+          "no_assigned": "No assigned patients."
+        },
+        "pending": {
+          "no_reports": "No pending reports found.",
+          "tests_label": "Tests:"
+        }
       }
     },
     "health_plan": {
