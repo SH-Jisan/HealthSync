@@ -26,7 +26,95 @@
 
 .header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+}
+
+/* Tabs */
+.tabContainer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: var(--surface);
+    padding: 0.5rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tabBtn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-full);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tabBtn:hover {
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.activeTab {
+    background: var(--primary);
+    color: white;
+}
+
+.activeTab:hover {
+    background: var(--primary-dark);
+    color: white;
+}
+
+/* Content Sections */
+.infoSection {
+    margin-bottom: 2rem;
+}
+
+.infoDesc {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.featureList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.featureItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-primary);
+    background: var(--surface);
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.devBox {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.devTitle {
+    font-size: 1.5rem;
+    color: var(--primary);
+    font-weight: 700;
+    margin: 0;
 }
 
 .logoBox {

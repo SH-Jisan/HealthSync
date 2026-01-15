@@ -337,6 +337,21 @@
       "title": "HealthSync Pro",
       "version": "Version 1.0.0 (Web)",
       "how_to_use": "How to use",
+      "tabs": {
+        "about_app": "About & How to Use the App",
+        "developers": "Developers"
+      },
+      "purpose_title": "Purpose",
+      "purpose_desc": "HealthSync is a comprehensive digital health platform designed to help you manage your medical records, get AI-powered health insights, and connect with blood donors seamlessly.",
+      "features_title": "Main Features",
+      "feature_list": [
+        "Smart Medical History Timeline",
+        "AI-Powered Report Analysis",
+        "AI Doctor & Symptom Triage",
+        "Live Blood Bank & Donor Network",
+        "Personalized Health Plans"
+      ],
+      "developers_text": "Developed By Team Syntax_Samuraies",
       "step_1": "Upload medical reports or prescriptions to maintain history.",
       "step_2": "AI analyzes reports and creates a timeline automatically.",
       "step_3": "Consult AI Doctor for instant symptom checking.",
