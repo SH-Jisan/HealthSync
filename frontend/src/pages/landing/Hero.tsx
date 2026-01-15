@@ -9,10 +9,10 @@ export default function Hero() {
     const { t } = useTranslation();
 
     const stats = [
-        { icon: <Clock weight="fill" />, end: "24/7", label: "Service" },
-        { icon: <Users weight="fill" />, end: "50+", label: "Specialists" },
-        { icon: <FileText weight="fill" />, end: "Instant", label: "Reports" },
-        { icon: <ShieldCheck weight="fill" />, end: "100%", label: "Secure" },
+        { icon: <Clock weight="fill" />, end: "Full Medical", label: "History" },
+        { icon: <FileText weight="fill" />, end: "Medical report", label: "by AI summarized" },
+        { icon: <ShieldCheck weight="fill" />, end: "Enhanced", label: "Health Routine" },
+        { icon: <Users weight="fill" />, end: "Emergency", label: "Blood" },
     ];
 
     return (
