@@ -1,9 +1,55 @@
 // src/features/about/AboutPage.tsx
 import { useState, type ReactNode } from 'react';
-import { Code, Database, Brain, MagnifyingGlass, ArrowLeft } from 'phosphor-react';
+import { Code, Database, Brain, MagnifyingGlass, ArrowLeft, Phone } from 'phosphor-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styles from './AboutPage.module.css';
+
+// Developer Assets
+import rizviImg from '../../assets/developers/rizvi.jpg';
+import nahidImg from '../../assets/developers/Nahid Vai.jpg';
+import jisanImg from '../../assets/developers/jisan.png';
+import muniraImg from '../../assets/developers/munira.jpeg';
+import anisurImg from '../../assets/developers/anisur.jpeg';
+import teamImg from '../../assets/developers/syntax_samuraies team.jpeg';
+
+const developers = [
+    {
+        name: "Md Rifat Islam Rizvi",
+        role: "Project Lead, AI/ML Developer",
+        dept: "Department of CSE, Gopalganj Science & Technology University",
+        contact: "01305612767",
+        img: rizviImg
+    },
+    {
+        name: "Md Nahid Hossain",
+        role: "AI/ML Developer",
+        dept: "Department of CSE, Gopalganj Science & Technology University",
+        contact: "01859232959",
+        img: nahidImg
+    },
+    {
+        name: "Sanjid Hasan Jisan",
+        role: "Frontend & Backend Developer",
+        dept: "Department of CSE, Gopalganj Science & Technology University",
+        contact: "01537284797",
+        img: jisanImg
+    },
+    {
+        name: "Munira Khondoker",
+        role: "Data Analyst and Researcher",
+        dept: "Department of CSE, Gopalganj Science & Technology University",
+        contact: "01876541001",
+        img: muniraImg
+    },
+    {
+        name: "Anisur Rahman",
+        role: "Video Editor & Graphic Designer",
+        dept: "Department of CSE, Gopalganj Science & Technology University",
+        contact: "01616414541",
+        img: anisurImg
+    }
+];
 
 export default function AboutPage() {
     const { t } = useTranslation();
@@ -87,9 +133,26 @@ export default function AboutPage() {
             )}
 
             {activeTab === 'developers' && (
-                <div className={styles.devBox}>
-                    <Code size={48} weight="duotone" color="var(--primary)" style={{ marginBottom: '1.5rem' }} />
-                    <h2 className={styles.devTitle}>{t('about.developers_text')}</h2>
+                <div className={styles.teamSection}>
+                    <div className={styles.teamImgWrapper}>
+                        <img src={teamImg} alt="Team Syntax Samuraies" className={styles.teamImg} />
+                    </div>
+
+                    <h2 className={styles.sectionTitle}>{t('about.developers_text', 'Developed By Team Syntax_Samuraies')}</h2>
+
+                    <div className={styles.devGrid}>
+                        {developers.map((dev, idx) => (
+                            <div key={idx} className={styles.devCard}>
+                                <img src={dev.img} alt={dev.name} className={styles.devAvatar} />
+                                <h3 className={styles.devName}>{dev.name}</h3>
+                                <div className={styles.devRole}>{dev.role}</div>
+                                <p className={styles.devDept}>{dev.dept}</p>
+                                <div className={styles.devContact}>
+                                    <Phone size={16} weight="fill" /> {dev.contact}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
 

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Md Rifat Islam Rizvi",
+    "role": "Project Lead, AI/ML Developer",
+    "department": "Department of CSE, Gopalganj Science & Technology University",
+    "contact": "01305612767"
+  },
+  {
+    "name": "Md Nahid Hossain",
+    "role": "AI/ML Developer",
+    "department": "Department of CSE, Gopalganj Science & Technology University",
+    "contact": "01859232959"
+  },
+  {
+    "name": "Sanjid Hasan Jisan",
+    "role": "Frontend & Backend Developer",
+    "department": "Department of CSE, Gopalganj Science & Technology University",
+    "contact": "01537284797"
+  },
+  {
+    "name": "Munira Khondoker",
+    "role": "Data Analyst and Researcher",
+    "department": "Department of CSE, Gopalganj Science & Technology University",
+    "contact": "01876541001"
+  },
+  {
+    "name": "Anisur Rahman",
+    "role": "Video Editor & Graphic Designer",
+    "department": "Department of CSE, Gopalganj Science & Technology University",
+    "contact": "01616414541"
+  }
+]
