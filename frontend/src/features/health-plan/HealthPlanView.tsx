@@ -20,18 +20,27 @@ export default function HealthPlanView() {
     const [isSaved, setIsSaved] = useState(false);
     const [lastSaved, setLastSaved] = useState<string | null>(null);
     const [saveLoading, setSaveLoading] = useState(false);
+    const [pageLoading, setPageLoading] = useState(true);
 
     // Initial Fetch (Load Saved Plan)
     useEffect(() => {
         const fetchSavedPlan = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
+            // Artificial Delay 2 seconds
+            const delayPromise = new Promise(resolve => setTimeout(resolve, 2000));
 
-            const { data, error } = await supabase
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                setPageLoading(false);
+                return;
+            }
+
+            const dbPromise = supabase
                 .from('ai_health_plans')
                 .select('*')
                 .eq('user_id', user.id)
                 .single();
+
+            const [_, { data, error }] = await Promise.all([delayPromise, dbPromise]);
 
             if (data && !error) {
                 setPlan({
@@ -43,9 +52,21 @@ export default function HealthPlanView() {
                 setIsSaved(true);
                 setLastSaved(data.created_at);
             }
+            setPageLoading(false);
         };
         fetchSavedPlan();
     }, []);
+
+    if (pageLoading) {
+        return (
+            <div className={styles.container}>
+                <div className={styles.pageLoader}>
+                    <Sparkle size={48} weight="fill" className={styles.spin} />
+                    <p className={styles.loaderText}>{t('health_plan.analyzing') || "Loading Health Plan..."}</p>
+                </div>
+            </div>
+        );
+    }
 
     const generatePlan = async () => {
         setLoading(true);

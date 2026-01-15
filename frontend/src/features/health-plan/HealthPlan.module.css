@@ -108,3 +108,34 @@
     gap: 0.5rem;
     font-weight: 500;
 }
+
+/* Page Loader */
+.pageLoader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 1rem;
+    color: var(--primary);
+}
+
+.loaderText {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}
