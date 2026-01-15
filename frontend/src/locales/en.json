@@ -379,6 +379,53 @@
       "footer": {
         "made_with": "Made with ❤️ for Better Healthcare",
         "copyright": "© 2024 HealthSync Inc."
+      },
+      "guide": {
+        "title": "User Guide",
+        "account": {
+          "title": "1. Account & Registration",
+          "steps": [
+            "Click on 'Sign Up' from the login screen.",
+            "Choose your role: Citizen, Doctor, Hospital, or Diagnostic Center.",
+            "Fill in your details accurately. Your email is your unique ID.",
+            "Verify your email to activate your account."
+          ]
+        },
+        "dashboard": {
+          "title": "2. Navigating the Dashboard",
+          "steps": [
+            "The Sidebar gives you quick access to all features.",
+            "View your health overview, upcoming appointments, and alerts instantly.",
+            "Use the 'Add Report' button to quickly upload new medical documents."
+          ]
+        },
+        "appointments": {
+          "title": "3. Booking Appointments",
+          "steps": [
+            "Go to 'Doctors' from the sidebar.",
+            "Filter by specialty (e.g., Cardiology) or search by name.",
+            "Click 'Book Appointment', select a date/time, and add a reason.",
+            "Confirm to send request. Check 'My Appointments' for updates."
+          ]
+        },
+        "history": {
+          "title": "4. Medical History & AI",
+          "steps": [
+            "Upload prescriptions or reports in 'Medical History'.",
+            "AI automatically extracts details to create a digital timeline.",
+            "Consult 'AI Doctor' to check symptoms and get triage advice.",
+            "Generate a personalized 'Health Plan' based on your data."
+          ]
+        },
+        "blood": {
+          "title": "5. Blood Bank & Emergency",
+          "steps": [
+            "Go to 'Blood Bank' to find donors or request blood.",
+            "Use 'Request Blood' for emergencies. AI helps autofill details.",
+            "View live requests in the 'Feed' and contact donors directly.",
+            "Register as a donor to help others in your community."
+          ]
+        }
       }
     },
     "book_appointment": {

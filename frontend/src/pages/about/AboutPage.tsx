@@ -111,12 +111,19 @@ export default function AboutPage() {
                     </div>
 
                     {/* How to use Section */}
-                    <h2 className={styles.sectionTitle}>{t('about.how_to_use')}</h2>
-                    <div className={styles.stepsBox}>
-                        <StepRow num="1" text={t('about.step_1')} />
-                        <StepRow num="2" text={t('about.step_2')} />
-                        <StepRow num="3" text={t('about.step_3')} />
-                        <StepRow num="4" text={t('about.step_4')} />
+                    <div className={styles.guideContainer}>
+                        <h2 className={styles.sectionTitle}>{t('about.how_to_use')}</h2>
+
+                        {['account', 'dashboard', 'appointments', 'history', 'blood'].map((section) => (
+                            <div key={section} className={styles.guideSection}>
+                                <h3 className={styles.guideTitle}>{t(`about.guide.${section}.title`)}</h3>
+                                <div className={styles.stepsBox}>
+                                    {(t(`about.guide.${section}.steps`, { returnObjects: true }) as string[]).map((step, idx) => (
+                                        <StepRow key={idx} num={(idx + 1).toString()} text={step} />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
                     </div>
 
                     <div className={styles.spacer} />

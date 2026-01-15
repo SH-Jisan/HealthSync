@@ -325,3 +325,25 @@
     padding-top: 1rem;
     border-top: 1px solid var(--border);
 }
+
+/* User Guide */
+.guideContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.guideSection {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+}
+
+.guideTitle {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
