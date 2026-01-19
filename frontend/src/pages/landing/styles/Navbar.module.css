@@ -34,11 +34,10 @@
     cursor: pointer;
 }
 
-.logoImage {
+.gapFromLogo {
     height: 48px;
     width: 48px;
     object-fit: contain;
-    margin-right: 12px;
 }
 
 .navItems {

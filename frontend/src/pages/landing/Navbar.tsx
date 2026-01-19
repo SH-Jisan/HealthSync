@@ -31,10 +31,8 @@ export default function Navbar({ showLogo = true }: NavbarProps) {
                         display: 'flex',
                         alignItems: 'center'
                     }}>
-                        <img
-                            src="/icon.png"
-                            alt="HealthSync Logo"
-                            className={styles.logoImage}
+                        <div
+                            className={styles.gapFromLogo}
                         />
                         <span className={styles.logoText}>
                             <span style={{ color: 'var(--gradient-start)' }}>Health</span>
