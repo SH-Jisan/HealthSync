@@ -56,7 +56,7 @@ serve(async (req) => {
 
     // 4. AI Configuration
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" }) // বা "gemini-1.5-pro" যদি আপনার এক্সেস থাকে
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }) // বা "gemini-1.5-pro" যদি আপনার এক্সেস থাকে
 
     // 5. YOUR NEW ENHANCED PROMPT
     const prompt = `
