@@ -20,6 +20,7 @@ import {
 import { motion } from 'framer-motion';
 import styles from './Sidebar.module.css';
 import LanguageSwitcher from '../common/LanguageSwitcher';
+import { useTheme } from '@/app/providers/ThemeContext';
 
 // Update Props to include isOpen for mobile control
 interface SidebarProps {
@@ -32,21 +33,13 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
     const location = useLocation();
 
     const { t } = useTranslation();
+    const { theme, toggleTheme } = useTheme();
 
     const [user, setUser] = useState<any>(null);
-    const [isDark, setIsDark] = useState(false);
 
     useEffect(() => {
         supabase.auth.getUser().then(({ data }) => setUser(data.user));
-        setIsDark(document.body.classList.contains('dark-theme'));
     }, []);
-
-    // 🌙 Theme Toggle
-    const toggleTheme = () => {
-        const next = !isDark;
-        setIsDark(next);
-        document.body.classList.toggle('dark-theme', next);
-    };
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -151,7 +144,7 @@ export default function Sidebar({ onClose, isOpen = false }: SidebarProps) {
                 <div className={styles.settingsGroup}>
                     {/* 🌙 Dark Mode */}
                     <div className={styles.navItem} onClick={toggleTheme} style={{ justifyContent: 'center' }}>
-                        {isDark ? <Moon size={24} color="#F59E0B" /> : <Sun size={24} />}
+                        {theme === 'dark' ? <Moon size={24} color="#F59E0B" /> : <Sun size={24} />}
                     </div>
 
                     {/* 🌐 Language Switcher */}

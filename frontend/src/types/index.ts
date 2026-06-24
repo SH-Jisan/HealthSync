@@ -105,6 +105,14 @@ export interface Appointment {
     appointment_date: string;
     status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'Accepted';
     reason?: string;
+    doctor?: {
+        full_name: string;
+        specialty: string;
+    };
+    hospital?: {
+        full_name: string;
+        address: string;
+    };
 }
 export interface AvailableTest {
     id: string;

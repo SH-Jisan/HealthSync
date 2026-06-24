@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { X, Flask, CheckCircle, Spinner, Plus, FloppyDisk, ArrowLeft } from 'phosphor-react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -21,7 +20,6 @@ interface Props {
 }
 
 export default function SharedTestModal({ patientId, role, onClose, onSuccess, preSelectedTests = [] }: Props) {
-    const { t } = useTranslation();
     const queryClient = useQueryClient();
 
     // UI States

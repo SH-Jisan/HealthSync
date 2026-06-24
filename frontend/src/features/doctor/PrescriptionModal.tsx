@@ -56,7 +56,12 @@ export default function PrescriptionModal({ patientId, onClose, onSuccess }: Pro
         if (!user) return;
 
         // Strip IDs before sending
-        const cleanMedicines = medicines.map(({ id, ...rest }) => rest);
+        const cleanMedicines = medicines.map(m => ({
+            name: m.name,
+            dosage: m.dosage,
+            duration: m.duration,
+            instruction: m.instruction
+        }));
 
         const { error } = await supabase.from('medical_events').insert({
             patient_id: patientId,

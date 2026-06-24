@@ -1,25 +1,15 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/shared/lib/supabaseClient';
 import {
     Calendar, Clock, MapPin, CheckCircle, XCircle, Hourglass,
-    Prescription as PrescriptionIcon, TestTube, Buildings, FileText, CalendarBlank
+    TestTube, CalendarBlank
 } from 'phosphor-react';
 import { format } from 'date-fns';
 import styles from './PatientAppointments.module.css';
-
-// Types
-interface Appointment {
-    id: string;
-    created_at: string;
-    appointment_date: string;
-    status: string;
-    reason: string;
-    doctor: { full_name: string; specialty: string };
-    hospital?: { full_name: string; address: string };
-}
+import type { Appointment } from '@/types';
 
 
 
@@ -169,8 +159,8 @@ export default function PatientAppointments() {
                                                 </div>
 
                                                 <div className={styles.infoSection}>
-                                                    <div className={styles.mainTitle}>{app.doctor.full_name}</div>
-                                                    <div className={styles.subTitle}>{t(`specialties.${app.doctor.specialty}`)}</div>
+                                                    <div className={styles.mainTitle}>{app.doctor?.full_name}</div>
+                                                    <div className={styles.subTitle}>{app.doctor?.specialty ? t(`specialties.${app.doctor.specialty}`) : ''}</div>
 
                                                     <div className={styles.metaInfo}>
                                                         {app.hospital && (

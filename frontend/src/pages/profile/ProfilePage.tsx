@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/shared/lib/supabaseClient';
 import {
-    Phone, Envelope, SignOut, User, Drop, CalendarCheck, CaretRight,
+    Phone, Envelope, SignOut, User, Drop, CaretRight,
     PencilSimple, Heartbeat, GraduationCap, Wallet
 } from 'phosphor-react';
 import styles from './Profile.module.css';

@@ -40,7 +40,7 @@ export default function HealthPlanView() {
                 .eq('user_id', user.id)
                 .single();
 
-            const [_, { data, error }] = await Promise.all([delayPromise, dbPromise]);
+            const [, { data, error }] = await Promise.all([delayPromise, dbPromise]);
 
             if (data && !error) {
                 setPlan({

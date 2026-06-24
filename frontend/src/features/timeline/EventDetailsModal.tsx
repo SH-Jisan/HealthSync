@@ -1,6 +1,6 @@
 // File: HealthSync/web/src/features/timeline/EventDetailsModal.tsx
 
-import React, { useState, useRef, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
@@ -48,7 +48,7 @@ const EventDetailsModal = React.forwardRef<HTMLDivElement, EventDetailsProps>(fu
     ref
 ) {
     // 1. Language Setup
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
     const isBangla = i18n.language === 'bn';
 
     // 2. Tab Setup

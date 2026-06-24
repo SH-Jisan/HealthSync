@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/shared/lib/supabaseClient';
-import { Sparkle, Syringe, MapPin, Ticket, PaperPlaneRight, MagicWand, Phone, Heartbeat } from 'phosphor-react';
+import { Sparkle, Syringe, MapPin, Ticket, PaperPlaneRight, MagicWand, Heartbeat } from 'phosphor-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, type Variants } from 'framer-motion';
 import styles from './styles/RequestBlood.module.css';
